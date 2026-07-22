@@ -1,6 +1,7 @@
 # tests/test_prepare.py
 import pandas as pd
 from curricumap.prepare import prepare
+from curricumap.prepare import reconstruct_study_year
 
 def _prov():
     return pd.DataFrame({
@@ -43,3 +44,16 @@ def test_coverage_filter_drops_students_below_min_domains():
     # student 2 covers language_skills(=60) and pedagogy(=90) => 2 domains -> kept.
     assert 1 not in res.wide.index
     assert 2 in res.wide.index
+
+def test_study_year_from_dates():
+    dates = pd.to_datetime(["2019-11-01", "2020-05-01", "2022-11-01"])
+    enroll = pd.Series([2019, 2019, 2019])
+    yrs = reconstruct_study_year(pd.Series(dates), enroll, term_boundary="09-01", max_year=4)
+    # 2019-11 fall of enrollment year -> year 1; 2020-05 -> still year 1 (spring); 2022-11 -> year 4
+    assert yrs.tolist() == [1, 1, 4]
+
+def test_study_year_clipped_to_max():
+    dates = pd.to_datetime(["2030-11-01"])
+    yrs = reconstruct_study_year(pd.Series(dates), pd.Series([2019]),
+                                 term_boundary="09-01", max_year=4)
+    assert yrs.tolist() == [4]
