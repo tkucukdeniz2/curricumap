@@ -1,0 +1,11 @@
+{# src/curricumap/templates/audit.html.j2 #}
+<h1>CurricuMap audit — {{ a.taxonomy }}</h1>
+<h2>Coverage</h2>
+<p>Unmapped: {{ a.coverage.n_unmapped }} · Ambiguous: {{ a.coverage.n_ambiguous }}</p>
+<ul>{% for c in a.coverage.unmapped_courses %}<li>{{ c }}</li>{% endfor %}</ul>
+<h2>Domains</h2>
+<table border="1"><tr><th>domain</th><th>alpha</th><th>k</th><th>n</th><th>mean</th><th>sd</th><th>missing %</th></tr>
+{% for d, v in a.domains.items() %}
+<tr><td>{{ d }}</td><td>{{ v.alpha }}</td><td>{{ v.k }}</td><td>{{ v.n_students }}</td><td>{{ v.mean }}</td><td>{{ v.sd }}</td><td>{{ v.missing_pct }}</td></tr>
+{% endfor %}
+</table>
