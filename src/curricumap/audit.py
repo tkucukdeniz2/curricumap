@@ -1,6 +1,6 @@
 # src/curricumap/audit.py
 from __future__ import annotations
-import numpy as np, pandas as pd
+import pandas as pd
 
 def cronbach_alpha(item_matrix: pd.DataFrame, missing: str = "column_mean") -> tuple[float, int]:
     """Cronbach's alpha over an (respondents x items) matrix.
@@ -24,17 +24,29 @@ def cronbach_alpha(item_matrix: pd.DataFrame, missing: str = "column_mean") -> t
 
 def audit(transcript, provenance, wide, tax, config) -> dict:
     prov = provenance
-    unmapped = prov[prov["domain"].isna()]["course_name"].tolist()
+    unmapped_rows = prov[prov["domain"].isna()]
+    n_unmapped = int(len(unmapped_rows))
+    unmapped = sorted(unmapped_rows["course_name"].astype(str).unique().tolist())
     n_ambiguous = int(prov["ambiguous"].sum()) if "ambiguous" in prov else 0
     course_domain = prov.dropna(subset=["domain"]).set_index("course_id")["domain"]
+
+    # Clean the transcript with the SAME sentinel/dedup policy prepare() applies,
+    # so Cronbach's alpha describes the same data as the output matrix.
+    pcfg = config.get("prepare", {})
+    t = transcript.copy()
+    sent = pcfg.get("sentinel_grades", {})
+    if sent.get("action") == "drop" and sent.get("values"):
+        t = t[~t["grade"].isin(sent["values"])]
+    keep = pcfg.get("dedup", {}).get("keep", "max")
+    aggfunc = {"max": "max", "last": "last", "mean": "mean"}.get(keep, "max")
 
     domains = {}
     miss_cfg = config.get("audit", {}).get("cronbach", {}).get("missing", "column_mean")
     for d in tax.domains:
         course_ids = course_domain[course_domain == d.id].index
-        sub = transcript[transcript["course_id"].isin(course_ids)]
+        sub = t[t["course_id"].isin(course_ids)]
         item_matrix = sub.pivot_table(index="student_id", columns="course_id",
-                                      values="grade", aggfunc="max")
+                                      values="grade", aggfunc=aggfunc)
         alpha, k = cronbach_alpha(item_matrix, missing=miss_cfg) if item_matrix.shape[1] >= 2 else (float("nan"), item_matrix.shape[1])
         col = wide[d.id] if d.id in wide.columns else pd.Series(dtype=float)
         domains[d.id] = {
@@ -49,7 +61,7 @@ def audit(transcript, provenance, wide, tax, config) -> dict:
     return {
         "taxonomy": tax.id,
         "coverage": {
-            "n_unmapped": len(unmapped), "unmapped_courses": unmapped,
+            "n_unmapped": n_unmapped, "unmapped_courses": unmapped,
             "n_ambiguous": n_ambiguous,
             "domain_sizes": {d.id: domains[d.id]["n_courses"] for d in tax.domains},
         },
