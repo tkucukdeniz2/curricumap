@@ -27,3 +27,25 @@ def test_generate_has_required_columns_and_students(tmp_path):
     assert {"student_id", "course_id", "course_name", "grade"}.issubset(t.columns)
     assert t["student_id"].nunique() == 15
     assert len(catalog) >= 2
+
+def test_generated_courses_classify_under_turkish_locale(tmp_path):
+    from curricumap.classify import classify_courses
+    p = tmp_path / "tr.yaml"
+    p.write_text("""
+taxonomy:
+  id: tr
+  label: TR
+  locale: { language: tr, casefold: locale-aware }
+  domains: [{id: lang, label: Lang}]
+  match: { strategy: ordered_rules, fuzzy: { enabled: false, threshold: 0.9, scorer: ratio } }
+  rules: [{domain: lang, any: ["ingilizce"]}]
+  defaults: { unmatched: flag }
+""", encoding="utf-8")
+    tax = load_taxonomy(p)
+    _, catalog = generate(tax, n_students=5, seed=3)
+    prov = classify_courses(catalog, tax)
+    assert prov["domain"].notna().all()
+
+def test_every_student_has_at_least_one_enrollment(tmp_path):
+    t, _ = generate(_tax(tmp_path), n_students=40, seed=9)
+    assert t["student_id"].nunique() == 40
