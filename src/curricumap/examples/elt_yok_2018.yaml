@@ -1,0 +1,32 @@
+taxonomy:
+  id: elt_yok_2018
+  label: "ELT Teacher Education Curriculum (YÖK 2018)"
+  locale: { language: tr, casefold: locale-aware }
+  domains:
+    - { id: language_skills, label: "Language Skills" }
+    - { id: pedagogy, label: "Pedagogy" }
+    - { id: linguistics, label: "Linguistics" }
+    - { id: literature, label: "Literature" }
+    - { id: general_ed, label: "General Education" }
+  match:
+    strategy: ordered_rules
+    fuzzy: { enabled: false, threshold: 0.9, scorer: token_set_ratio }
+  # NOTE: rule order matters (first match wins). Literature is listed first
+  # because compound course titles such as "Çocuk Edebiyatı ve Öğretimi"
+  # (Children's Literature and its Teaching) contain both a literature
+  # keyword ("edebiyat") and a pedagogy keyword ("öğretim"); such a course
+  # is fundamentally a literature course and must not be miscaught by the
+  # pedagogy rule, so literature is evaluated before pedagogy (and before
+  # every other domain).
+  rules:
+    - domain: literature
+      any: ["edebiyat", "literature", "roman", "şiir", "drama", "poetry"]
+    - domain: linguistics
+      any: ["dilbilim", "linguistic", "sesbilim", "phonolog", "syntax", "morpholog"]
+    - domain: language_skills
+      any: ["okuma", "yazma", "dinleme", "konuşma", "reading", "writing", "grammar", "dilbilgisi"]
+    - domain: pedagogy
+      any: ["öğretim", "öğretmenlik", "ölçme", "değerlendirme", "yöntem", "teaching", "assessment", "curriculum", "methodolog"]
+    - domain: general_ed
+      any: ["atatürk", "türkçe", "topluma hizmet", "bilişim", "seçmeli"]
+  defaults: { unmatched: flag }
