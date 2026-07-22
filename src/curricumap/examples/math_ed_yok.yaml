@@ -1,0 +1,28 @@
+taxonomy:
+  id: math_ed_yok
+  label: "Mathematics Education Curriculum (YÖK)"
+  locale: { language: tr, casefold: locale-aware }
+  domains:
+    - { id: mathematics_content, label: "Mathematics Content" }
+    - { id: math_pedagogy, label: "Mathematics Pedagogy" }
+    - { id: pedagogy, label: "Pedagogy" }
+    - { id: general_ed, label: "General Education" }
+  match:
+    strategy: ordered_rules
+    fuzzy: { enabled: false, threshold: 0.9, scorer: token_set_ratio }
+  # NOTE: rule order matters (first match wins). Compound course titles such
+  # as "Matematik Öğretimi" and "Matematik Eğitimi" contain both a
+  # math_pedagogy keyword and a general pedagogy keyword ("öğretim" /
+  # "eğitim" are substrings of "öğretimi" / "eğitimi"); such a course is a
+  # mathematics-specific pedagogy course and must not be miscaught by the
+  # generic pedagogy rule, so math_pedagogy is evaluated before pedagogy.
+  rules:
+    - domain: mathematics_content
+      any: ["analiz", "cebir", "geometri", "kalkülüs", "calculus", "algebra", "topoloji"]
+    - domain: math_pedagogy
+      any: ["matematik öğretimi", "matematik eğitimi", "ölçme", "değerlendirme", "assessment"]
+    - domain: pedagogy
+      any: ["eğitim", "öğretim", "gelişim", "psikoloji", "education", "development"]
+    - domain: general_ed
+      any: ["atatürk", "türk dili", "yabancı dil", "bilişim", "seçmeli"]
+  defaults: { unmatched: flag }
