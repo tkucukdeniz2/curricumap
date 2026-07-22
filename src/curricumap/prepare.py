@@ -48,3 +48,18 @@ def prepare(transcript: pd.DataFrame, provenance: pd.DataFrame, config: dict) ->
     long = long[long["student_id"].isin(wide.index)]
 
     return PrepareResult(wide=wide, long=long, dropped=dropped)
+
+def reconstruct_study_year(dates: pd.Series, enroll_year: pd.Series,
+                           term_boundary: str = "09-01", max_year: int = 4) -> pd.Series:
+    """Map an exam date to an academic study year (1..max_year).
+
+    An academic year starts at `term_boundary` (MM-DD). Dates on/after the
+    boundary belong to the academic year starting that calendar year; earlier
+    dates belong to the academic year that started the previous calendar year.
+    """
+    d = pd.to_datetime(dates)
+    bnd_month, bnd_day = (int(x) for x in term_boundary.split("-"))
+    after = (d.dt.month > bnd_month) | ((d.dt.month == bnd_month) & (d.dt.day >= bnd_day))
+    academic_start = d.dt.year.where(after, d.dt.year - 1)
+    year = (academic_start - enroll_year.values) + 1
+    return year.clip(lower=1, upper=max_year).astype(int)
