@@ -1,0 +1,23 @@
+taxonomy:
+  id: bologna
+  label: "Bologna Process / EQF Learning Outcome Descriptors"
+  locale: { language: en, casefold: locale-aware }
+  domains:
+    - { id: knowledge, label: "Knowledge" }
+    - { id: skills, label: "Skills" }
+    - { id: competence, label: "Competence" }
+  match:
+    strategy: ordered_rules
+    fuzzy: { enabled: false, threshold: 0.9, scorer: token_set_ratio }
+  # NOTE: rule order mirrors the EQF descriptor hierarchy (knowledge ->
+  # skills -> competence). No keyword collisions were found across domains
+  # for this taxonomy, so evaluation order does not change any outcome,
+  # but the ordering is kept for readability and future-proofing.
+  rules:
+    - domain: knowledge
+      any: ["theory", "principles", "foundations", "concepts"]
+    - domain: skills
+      any: ["practical", "application", "laboratory", "methods", "techniques"]
+    - domain: competence
+      any: ["project", "internship", "autonomy", "responsibility", "professional practice"]
+  defaults: { unmatched: flag }

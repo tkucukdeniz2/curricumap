@@ -1,0 +1,36 @@
+taxonomy:
+  id: canmeds
+  label: "CanMEDS Physician Competency Framework"
+  locale: { language: en, casefold: locale-aware }
+  domains:
+    - { id: medical_expert, label: "Medical Expert" }
+    - { id: communicator, label: "Communicator" }
+    - { id: collaborator, label: "Collaborator" }
+    - { id: leader, label: "Leader" }
+    - { id: health_advocate, label: "Health Advocate" }
+    - { id: scholar, label: "Scholar" }
+    - { id: professional, label: "Professional" }
+  match:
+    strategy: ordered_rules
+    fuzzy: { enabled: false, threshold: 0.9, scorer: token_set_ratio }
+  # NOTE: rule order mirrors the CanMEDS role hierarchy (medical expert at
+  # the centre, surrounded by the six intrinsic roles). No keyword
+  # collisions were found across domains for this taxonomy, so evaluation
+  # order does not change any outcome, but the ordering is kept for
+  # readability and future-proofing.
+  rules:
+    - domain: medical_expert
+      any: ["anatomy", "physiology", "pathology", "pharmacology", "clinical", "diagnosis"]
+    - domain: communicator
+      any: ["communication", "interview", "counseling"]
+    - domain: collaborator
+      any: ["teamwork", "interprofessional", "collaboration"]
+    - domain: leader
+      any: ["management", "leadership", "quality improvement", "health systems"]
+    - domain: health_advocate
+      any: ["public health", "advocacy", "prevention", "population health"]
+    - domain: scholar
+      any: ["research", "evidence", "teaching", "epidemiology"]
+    - domain: professional
+      any: ["ethics", "professionalism", "law"]
+  defaults: { unmatched: flag }
