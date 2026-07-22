@@ -2,10 +2,10 @@
 from __future__ import annotations
 import json
 from pathlib import Path
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+from jinja2 import Environment, FileSystemLoader
 
 _ENV = Environment(loader=FileSystemLoader(str(Path(__file__).parent / "templates")),
-                   autoescape=select_autoescape())
+                   autoescape=True)
 
 def write_reports(audit_data: dict, out_dir: str | Path) -> None:
     out = Path(out_dir); out.mkdir(parents=True, exist_ok=True)
