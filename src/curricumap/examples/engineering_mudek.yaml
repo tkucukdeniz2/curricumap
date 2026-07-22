@@ -1,0 +1,30 @@
+taxonomy:
+  id: engineering_mudek
+  label: "Engineering Curriculum (MÜDEK/ABET Knowledge Areas)"
+  locale: { language: tr, casefold: locale-aware }
+  domains:
+    - { id: math_science, label: "Mathematics & Basic Sciences" }
+    - { id: engineering_science, label: "Engineering Science" }
+    - { id: engineering_design, label: "Engineering Design" }
+    - { id: computing, label: "Computing & Programming" }
+    - { id: general_ed, label: "General Education" }
+  match:
+    strategy: ordered_rules
+    fuzzy: { enabled: false, threshold: 0.9, scorer: token_set_ratio }
+  # NOTE: rule order mirrors the MÜDEK/ABET knowledge-area hierarchy
+  # (basic sciences -> engineering science -> design -> computing ->
+  # general education). No keyword collisions were found across domains
+  # for this taxonomy, so evaluation order does not change any outcome,
+  # but the ordering is kept for readability and future-proofing.
+  rules:
+    - domain: math_science
+      any: ["matematik", "kalkülüs", "calculus", "fizik", "physics", "diferansiyel", "olasılık", "statistics", "istatistik"]
+    - domain: engineering_science
+      any: ["statik", "dinamik", "termodinamik", "thermodynamics", "malzeme", "devre", "circuit", "akışkanlar", "mukavemet"]
+    - domain: engineering_design
+      any: ["tasarım", "design", "proje", "project", "bitirme", "capstone"]
+    - domain: computing
+      any: ["programlama", "programming", "algoritma", "algorithm", "bilgisayar", "yazılım", "software", "veri yapı"]
+    - domain: general_ed
+      any: ["ekonomi", "economics", "etik", "ethics", "işletme", "yönetim", "atatürk", "türk dili"]
+  defaults: { unmatched: flag }
