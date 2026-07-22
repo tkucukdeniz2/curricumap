@@ -16,14 +16,14 @@ def generate(tax: Taxonomy, n_students: int = 60, seed: int = 0) -> tuple[pd.Dat
         for j in range(3):
             base = pats[j % len(pats)]
             catalog.append({"course_id": f"{d.id}_{j}",
-                            "course_name": f"{base.title()} {j + 1}", "domain": d.id})
+                            "course_name": f"{base} {j + 1}", "domain": d.id})
     catalog_df = pd.DataFrame(catalog)
 
     rows = []
     for sid in range(1, n_students + 1):
         ability = rng.normal(70, 10)
-        for _, c in catalog_df.iterrows():
-            if rng.random() < 0.1:            # 10% of enrollments missing
+        for j_idx, (_, c) in enumerate(catalog_df.iterrows()):
+            if j_idx > 0 and rng.random() < 0.1:   # first course always kept; 10% of the rest missing
                 continue
             grade = float(np.clip(rng.normal(ability, 8), 0, 100).round(0))
             rows.append({"student_id": sid, "course_id": c["course_id"],
