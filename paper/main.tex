@@ -8,14 +8,16 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[a4paper,margin=0.85in]{geometry}
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{graphicx}
 \usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
 
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.45em}
+\setlength{\parskip}{0.32em}
+\emergencystretch=2em
+\hyphenpenalty=1000
 
 \title{CurricuMap: an open-source Python pipeline for converting
 registrar transcript exports into auditable
@@ -94,7 +96,7 @@ C9 & Support email for questions & \texttt{tkdeniz@iuc.edu.tr} \\
 
 Learning-analytics studies increasingly ask questions at the level of competency domains rather than individual courses: whether curricular knowledge areas are separable, how coursework in one domain predicts performance in another, or how student profiles differ within a program. Answering such questions requires a student $\times$ competency-domain matrix, in which each cell summarizes a student's attainment in a domain. Institutions do not store data in this form. Registrars export transcripts as flat grade records, one row per student per course, with inconsistent column names, mixed-language course titles, retaken courses, administrative sentinel grades, and courses that belong to no competency domain. Converting such an export into an analysis-ready matrix is a routine prerequisite for secondary analysis of existing records, and it is almost always done by hand.
 
-The manual route is laborious and fragile. An analyst must decide which course maps to which domain, how to resolve retakes, which grades are real, and which students have enough coverage to include. These decisions are consequential: they change the matrix and therefore the study's results. Yet they are typically buried in spreadsheet formulas or one-off scripts, undocumented and unreproducible. A reviewer cannot see why a course was assigned to a given domain, and a second team cannot reconstruct the cleaning. The step that most directly shapes the data is the least transparent one.
+The manual route is laborious and fragile. An analyst must decide which course maps to which domain, how to resolve retakes, which grades are real, and which students have enough coverage to include. These decisions change the matrix and therefore the study's results, yet they are typically buried in spreadsheet formulas or one-off scripts, undocumented and unreproducible. The step that most directly shapes the data is usually the least transparent one.
 
 No open-source, installable package fills this gap. General curriculum mapping is served by commercial and institutional platforms such as HelioCampus, eLumen, and ABET-oriented tools, but these address a different, design-time problem: aligning an intended curriculum with program outcomes before students enroll. They do not ingest actual student grade records, and they are closed, so their mapping logic cannot be inspected or cited in a methods section. The R package \texttt{ouladFormat} prepares one specific public dataset and does not generalize to arbitrary exports. Researchers are left to rebuild the same pipeline for every study, with no shared, auditable tooling.
 
@@ -113,7 +115,7 @@ CurricuMap is organised library-first: the Python package exposes every processi
 
 The \texttt{io} stage ingests transcript exports into a canonical tidy schema with the required columns \texttt{student\_id}, \texttt{course\_id}, \texttt{course\_name}, and \texttt{grade}, plus optional \texttt{term}, \texttt{date}, and \texttt{credits}. Because registrar systems name and order their columns arbitrarily, a column-mapping adapter renames the fields of any CSV or Excel export (the latter read through \texttt{openpyxl}) onto this schema, so no source file has to be edited by hand. The \texttt{classify} stage assigns each course to a competency domain and records how the decision was made. The \texttt{prepare} stage applies registrar hygiene and aggregates grades to one value per student per domain. The \texttt{audit} stage measures coverage, reliability, and distribution. The \texttt{report} stage serialises the results. Two further modules sit beside the pipeline: \texttt{synth} generates synthetic transcripts and course catalogues, and \texttt{cli} exposes the \texttt{validate-taxonomy}, \texttt{synth}, and \texttt{run} subcommands. A full run is a single command: given an input file, a taxonomy, and a configuration that holds the cleaning options, \texttt{curricumap run} executes \texttt{io} through \texttt{report} and writes the matrices, the provenance table, and the audit to one output directory. In all, the package comprises ten modules (\texttt{text}, \texttt{taxonomy}, \texttt{io}, \texttt{classify}, \texttt{prepare}, \texttt{audit}, \texttt{report}, \texttt{synth}, \texttt{cli}, and \texttt{\_\_init\_\_}).
 
-The reuse contract is the declarative taxonomy specification written in YAML. It names the competency domains and the rules that map courses onto them, and CurricuMap validates it against a JSON Schema, then cross-checks that every rule and override refers to a defined domain. Adopting the tool for a new curriculum therefore means writing or editing a specification, not writing code. Five example taxonomies ship with the package, each with a synthetic dataset and a golden end-to-end test, so the shipped specifications double as worked references for a new one; Section~\ref{sec:examples} describes them.
+The reuse contract is the declarative taxonomy specification written in YAML. It names the competency domains and the rules that map courses onto them, and CurricuMap validates it against a JSON Schema, then cross-checks that every rule and override refers to a defined domain. Adopting the tool for a new curriculum therefore means writing or editing a specification, not writing code; the five example taxonomies of Section~\ref{sec:examples} serve as worked references.
 
 \subsection{Software functionalities}
 
@@ -153,14 +155,14 @@ The audit stage computes Cronbach's alpha \cite{cronbach1951} for each domain, w
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.94\linewidth]{figures/fig1_audit_report.png}
+\includegraphics[width=0.80\linewidth]{figures/fig1_audit_report.png}
 \caption{The self-contained \texttt{audit.html} report from the illustrative run (ELT-YOK taxonomy, seed 7, 60 synthetic students). It pairs the coverage summary (five domains, fifteen mapped courses, one unmapped, none ambiguous) with per-domain descriptives and Cronbach's alpha shown as banded bars.}
 \label{fig:audit}
 \end{figure}
 
 \subsection{Shipped taxonomies}
 
-CurricuMap ships five example taxonomies that span distinct disciplines and two languages, which shows the tool is not tied to one institution or field. Three target Turkish teacher education and accreditation: ELT-YOK, described above; a Mathematics-Education YOK specification; and an Engineering ABET/MUDEK specification that maps a cross-disciplinary course catalog onto accreditation outcomes. Two are English-language: CanMEDS, which encodes the seven physician competency roles, and a generic Bologna/EQF specification organized around knowledge, skills, and competence. Each taxonomy ships with its own synthetic dataset and a golden end-to-end test that asserts every synthetic course classifies as the specification intends. The continuous-integration suite therefore exercises the complete ingest-to-report pipeline on all five taxonomies on each commit and guards against regressions, while the specifications themselves double as worked templates that a user adapts to a new program by editing YAML rather than code.
+CurricuMap ships five example taxonomies that span distinct disciplines and two languages, which shows the tool is not tied to one institution or field. Three target Turkish teacher education and accreditation: ELT-YOK, described above; a Mathematics-Education YOK specification; and an Engineering ABET/MUDEK specification that maps a cross-disciplinary course catalog onto accreditation outcomes. Two are English-language: CanMEDS, which encodes the seven physician competency roles, and a generic Bologna/EQF specification organized around knowledge, skills, and competence. Each taxonomy ships with a synthetic dataset and a golden end-to-end test that asserts every synthetic course classifies as intended, so continuous integration exercises the complete ingest-to-report pipeline on all five taxonomies at each commit.
 
 %% ============================================================
 \section{Impact}
@@ -177,7 +179,7 @@ The broader contribution is methodological. Replacing a hand-built spreadsheet w
 \section{Conclusions}
 \label{sec:conclusions}
 
-CurricuMap converts a raw registrar transcript export and a declarative YAML taxonomy into an analysis-ready student-by-domain competency matrix. Its five-stage pipeline (ingest, classify, prepare, audit, report) automates the course-to-domain mapping, registrar hygiene, and per-domain reliability reporting that competency-level learning-analytics studies otherwise carry out by hand and rarely document. Four design choices distinguish the tool. The taxonomy specification, validated by JSON Schema, is the reuse contract, so adopting CurricuMap for a new program means writing a spec rather than editing code. Every course assignment carries provenance, and a coverage-and-quality audit ships as a first-class output, making each matrix reproducible and inspectable. The pipeline is deterministic and golden-file tested, and the package is MIT-licensed and pip-installable, with a synthetic transcript generator so reviewers can run it without any personal data.
+CurricuMap converts a raw registrar transcript export and a declarative YAML taxonomy into an analysis-ready student-by-domain competency matrix. Its five-stage pipeline automates the course-to-domain mapping, registrar hygiene, and per-domain reliability reporting that competency-level studies otherwise carry out by hand and rarely document. Four design choices distinguish the tool. The JSON-Schema-validated taxonomy specification is the reuse contract, so adoption means writing a spec rather than editing code. Every course assignment carries provenance, and a coverage-and-quality audit is a first-class output. The pipeline is deterministic and golden-file tested, and the package is MIT-licensed and pip-installable, with a synthetic transcript generator so reviewers run it without any personal data.
 
 Future work will broaden the shipped taxonomy library beyond the five current examples, add ingestion adapters for further registrar export formats, and offer an optional analytics layer that packages common downstream models. We invite curriculum and learning-analytics researchers to contribute taxonomies and adapters through the public repository.
 
