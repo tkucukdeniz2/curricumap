@@ -1,11 +1,115 @@
-{# src/curricumap/templates/audit.html.j2 #}
-<h1>CurricuMap audit — {{ a.taxonomy }}</h1>
-<h2>Coverage</h2>
-<p>Unmapped: {{ a.coverage.n_unmapped }} · Ambiguous: {{ a.coverage.n_ambiguous }}</p>
-<ul>{% for c in a.coverage.unmapped_courses %}<li>{{ c }}</li>{% endfor %}</ul>
-<h2>Domains</h2>
-<table border="1"><tr><th>domain</th><th>alpha</th><th>k</th><th>n</th><th>mean</th><th>sd</th><th>missing %</th></tr>
-{% for d, v in a.domains.items() %}
-<tr><td>{{ d }}</td><td>{{ v.alpha }}</td><td>{{ v.k }}</td><td>{{ v.n_students }}</td><td>{{ v.mean }}</td><td>{{ v.sd }}</td><td>{{ v.missing_pct }}</td></tr>
-{% endfor %}
-</table>
+<!DOCTYPE html>
+{# src/curricumap/templates/audit.html.j2 — self-contained, theme-aware audit report #}
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CurricuMap audit — {{ a.taxonomy }}</title>
+<style>
+  :root{
+    --bg:#f5f6fb; --surface:#fff; --surface-2:#eef0f8; --ink:#15171f; --ink-soft:#4b5061;
+    --ink-faint:#7b8296; --line:#e2e4ef; --line-strong:#cbcfde; --accent:#3b45b5; --accent-ink:#2b3390;
+    --accent-soft:#e9ebfb; --good:#2c8a6a; --good-bg:#e4f1eb; --mid:#b0801f; --mid-bg:#f6ecd3;
+    --crit:#bc4b3c; --crit-bg:#f6e2de;
+    --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0e0f15; --surface:#171a24; --surface-2:#1e2130; --ink:#eceef5; --ink-soft:#aeb4c4;
+      --ink-faint:#7c8498; --line:#2a2e3d; --line-strong:#3a3f52; --accent:#8b93f1; --accent-ink:#aab1f6;
+      --accent-soft:#22263a; --good:#52c199; --good-bg:#16302a; --mid:#d8ab53; --mid-bg:#312814;
+      --crit:#e0705f; --crit-bg:#33211c;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:900px;margin:0 auto;padding:40px 22px 64px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint)}
+  .eyebrow b{color:var(--accent-ink)}
+  h1{font-size:26px;font-weight:650;letter-spacing:-.01em;margin:8px 0 0}
+  h1 .tax{font-family:var(--mono);color:var(--accent-ink);font-weight:600}
+  .sub{color:var(--ink-soft);font-size:14px;margin:6px 0 0}
+  h2{font-family:var(--mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-faint);
+    margin:38px 0 14px;display:flex;align-items:center;gap:12px}
+  h2::after{content:"";flex:1;height:1px;background:var(--line)}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+  .tile .n{font-family:var(--mono);font-weight:700;font-size:25px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .tile .l{font-size:12px;color:var(--ink-soft);margin-top:2px}
+  .tile.flag .n{color:var(--mid)}
+  .unmapped{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--mid);
+    border-radius:10px;padding:12px 16px;margin-top:14px}
+  .unmapped .k{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mid)}
+  .unmapped ul{margin:6px 0 0;padding-left:20px;color:var(--ink-soft);font-size:13.5px}
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
+  thead th{background:var(--surface-2);text-align:right;font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink-soft);font-weight:600;padding:11px 12px;border-bottom:1px solid var(--line-strong)}
+  thead th:first-child{text-align:left}
+  tbody td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  tbody td:first-child{text-align:left;font-weight:600}
+  tbody tr:last-child td{border-bottom:none}
+  .acell{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+  .abar{width:52px;height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;flex:none}
+  .abar>i{display:block;height:100%;border-radius:3px}
+  .aval{font-family:var(--mono);font-weight:600;min-width:38px;text-align:right}
+  .good .aval{color:var(--good)} .good .abar>i{background:var(--good)}
+  .acc .aval{color:var(--mid)} .acc .abar>i{background:var(--mid)}
+  .low .aval{color:var(--crit)} .low .abar>i{background:var(--crit)}
+  .na{color:var(--ink-faint)}
+  .foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;
+    color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow"><b>CurricuMap</b> · reliability &amp; coverage audit</div>
+  <h1>Audit — <span class="tax">{{ a.taxonomy }}</span></h1>
+  <p class="sub">Every course→domain assignment is auditable; Cronbach's α is computed on the cleaned course grades of each domain.</p>
+
+  <h2>Coverage</h2>
+  <div class="tiles">
+    <div class="tile"><div class="n">{{ a.domains|length }}</div><div class="l">competency domains</div></div>
+    <div class="tile"><div class="n">{{ a.coverage.domain_sizes.values()|sum }}</div><div class="l">courses mapped</div></div>
+    <div class="tile{% if a.coverage.n_unmapped %} flag{% endif %}"><div class="n">{{ a.coverage.n_unmapped }}</div><div class="l">unmapped</div></div>
+    <div class="tile{% if a.coverage.n_ambiguous %} flag{% endif %}"><div class="n">{{ a.coverage.n_ambiguous }}</div><div class="l">ambiguous</div></div>
+  </div>
+  {% if a.coverage.unmapped_courses %}
+  <div class="unmapped">
+    <div class="k">Unmapped courses — no rule matched</div>
+    <ul>{% for c in a.coverage.unmapped_courses %}<li>{{ c }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  <h2>Domains</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Domain</th><th>items (k)</th><th>n</th><th>mean</th><th>SD</th><th>skew</th><th>missing %</th><th>Cronbach α</th></tr></thead>
+    <tbody>
+    {% for d, v in a.domains.items() %}
+      {% if v.alpha is none %}{% set band = 'na' %}{% elif v.alpha >= 0.8 %}{% set band = 'good' %}{% elif v.alpha >= 0.7 %}{% set band = 'acc' %}{% else %}{% set band = 'low' %}{% endif %}
+      <tr class="{{ band }}">
+        <td>{{ d }}</td><td>{{ v.k }}</td><td>{{ v.n_students }}</td>
+        <td>{{ v.mean }}</td><td>{{ v.sd }}</td><td>{{ v.skew }}</td><td>{{ v.missing_pct }}</td>
+        <td>
+          {% if v.alpha is none %}
+            <span class="na">—</span>
+          {% else %}
+            <span class="acell"><span class="abar"><i style="width:{{ (v.alpha * 100)|round(0, 'floor')|int }}%"></i></span><span class="aval">{{ v.alpha }}</span></span>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="foot">
+    <span>generated by CurricuMap · taxonomy {{ a.taxonomy }}</span>
+    <span>α ≥ .80 good · .70–.80 acceptable · &lt; .70 low</span>
+  </div>
+</div>
+</body>
+</html>
