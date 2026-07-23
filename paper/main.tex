@@ -15,7 +15,7 @@
 \usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
 
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.32em}
+\setlength{\parskip}{0.25em}
 \emergencystretch=2em
 \hyphenpenalty=1000
 
@@ -72,7 +72,8 @@ Competency assessment; Data provenance; Reproducible research
 
 \begin{table}[h]
 \centering
-\small
+\footnotesize
+\renewcommand{\arraystretch}{0.92}
 \begin{tabular}{@{}p{0.6cm}p{6.2cm}p{7.2cm}@{}}
 \toprule
 Nr. & Code metadata description & Metadata \\
@@ -98,7 +99,7 @@ Learning-analytics studies increasingly ask questions at the level of competency
 
 The manual route is laborious and fragile. An analyst must decide which course maps to which domain, how to resolve retakes, which grades are real, and which students have enough coverage to include. These decisions change the matrix and therefore the study's results, yet they are typically buried in spreadsheet formulas or one-off scripts, undocumented and unreproducible. The step that most directly shapes the data is usually the least transparent one.
 
-No open-source, installable package fills this gap. General curriculum mapping is served by commercial and institutional platforms such as HelioCampus, eLumen, and ABET-oriented tools, but these address a different, design-time problem: aligning an intended curriculum with program outcomes before students enroll. They do not ingest actual student grade records, and they are closed, so their mapping logic cannot be inspected or cited in a methods section. The R package \texttt{ouladFormat} prepares one specific public dataset and does not generalize to arbitrary exports. Researchers are left to rebuild the same pipeline for every study, with no shared, auditable tooling.
+No open-source, installable package fills this gap. Curriculum mapping as a practice, aligning course content with program outcomes to expose gaps and overlaps \cite{smith2024}, is served by commercial and institutional platforms such as HelioCampus, eLumen, and accreditation-management tools.\footnote{For example, \texttt{heliocampus.com} and \texttt{elumen.com}.} These address a different, design-time problem: they align an intended curriculum with program outcomes before students enroll. They do not ingest actual student grade records, and they are closed, so their mapping logic cannot be inspected or cited in a methods section. The R package \texttt{ouladFormat} \cite{howard2025} prepares one specific public dataset and does not generalize to arbitrary exports. Researchers are left to rebuild the same pipeline for every study, with no shared, auditable tooling.
 
 CurricuMap is built around the properties this task demands. The course-to-domain mapping is declarative: users describe their taxonomy in a YAML specification validated against a schema, rather than editing code, so adopting the tool means writing a spec. Every classification is provenance-tracked, recording for each course whether it was matched by rule, override, or fuzzy fallback, which pattern matched, and whether the assignment was ambiguous. The pipeline is deterministic and golden-file tested, so identical inputs always yield an identical matrix. A dedicated audit stage treats data quality as a first-class output, reporting unmapped and ambiguous courses, domain sizes, descriptive statistics, and per-domain internal consistency through Cronbach's alpha \cite{cronbach1951}. The cleaning step becomes something a reviewer can read and a colleague can rerun.
 
@@ -155,7 +156,7 @@ The audit stage computes Cronbach's alpha \cite{cronbach1951} for each domain, w
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.80\linewidth]{figures/fig1_audit_report.png}
+\includegraphics[width=0.68\linewidth]{figures/fig1_audit_report.png}
 \caption{The self-contained \texttt{audit.html} report from the illustrative run (ELT-YOK taxonomy, seed 7, 60 synthetic students). It pairs the coverage summary (five domains, fifteen mapped courses, one unmapped, none ambiguous) with per-domain descriptives and Cronbach's alpha shown as banded bars.}
 \label{fig:audit}
 \end{figure}
@@ -169,11 +170,11 @@ CurricuMap ships five example taxonomies that span distinct disciplines and two 
 
 CurricuMap addresses a specific bottleneck in learning analytics. Institutional grade records already document what students learned across a curriculum, yet turning a registrar export into an analysis-ready competency matrix is normally a manual spreadsheet task that is slow to redo and hard to reproduce. By making that conversion declarative, deterministic, and provenance-tracked, the software supports competency-level secondary analysis of existing records while preserving an audit trail of how every course was assigned to a domain.
 
-Two empirical studies by the present authors show the kind of work the tool makes possible. In the first, the student-by-domain matrix produced by CurricuMap was the input to a principal component analysis and a latent-profile analysis that tested whether curricular knowledge domains are empirically separable ($N=183$ students across 143 courses). In the second, per-domain means fed a hierarchical regression and a dominance analysis examining whether pedagogy coursework predicts teaching-practicum performance, framed by Shulman's pedagogical content knowledge \cite{shulman1986} ($N=78$). The substantive findings are reported in those manuscripts; what is relevant here is that both analyses depended on the same preprocessing step, which the software now records and shares rather than leaving in an undocumented worksheet.
+Two empirical studies by the present authors show the kind of work the tool makes possible. In the first, the student-by-domain matrix produced by CurricuMap was the input to a principal component analysis and a latent-profile analysis that tested whether curricular knowledge domains are empirically separable \cite{can2025a} ($N=183$ students across 143 courses). In the second, per-domain means fed a hierarchical regression and a dominance analysis examining whether pedagogy coursework predicts teaching-practicum performance \cite{can2025b}, framed by Shulman's pedagogical content knowledge \cite{shulman1986} ($N=78$). The substantive findings are reported in those manuscripts; what is relevant here is that both analyses depended on the same preprocessing step, which the software now records and shares rather than leaving in an undocumented worksheet.
 
 A concrete user base already exists. The 2018 YOK curriculum \cite{yok2018} is standardized across all 57 Turkish English language teaching programs, so their transcript exports are structurally identical and the shipped ELT-YOK taxonomy applies to each without modification. The same field-by-field standardization holds across Turkish teacher education more broadly, and the bundled mathematics-education taxonomy demonstrates that reach. The engineering ABET/MUDEK taxonomy extends the applicability to accreditation self-studies, where programs must document how course-level performance maps to declared program outcomes.
 
-The broader contribution is methodological. Replacing a hand-built spreadsheet with a versioned specification and a deterministic pipeline makes preprocessing decisions explicit and inspectable: the coverage audit reports unmapped and ambiguous courses, and the provenance table records the rule or override behind each assignment. These outputs lower the barrier to secondary analysis of institutional records and let collaborators and reviewers regenerate a competency matrix exactly from the same inputs, which an ad hoc spreadsheet cannot guarantee. CurricuMap converts a common but opaque data-preparation step into a reproducible and shareable part of the research record.
+Beyond any single study, CurricuMap makes the preprocessing itself reproducible. A versioned specification and a deterministic pipeline replace the hand-built spreadsheet, so the coverage audit and the provenance table document which courses were unmapped or ambiguous and which rule or override produced each assignment. Collaborators and reviewers can then regenerate a competency matrix exactly from the same inputs, which an ad hoc spreadsheet cannot guarantee.
 
 %% ============================================================
 \section{Conclusions}
@@ -184,11 +185,17 @@ CurricuMap converts a raw registrar transcript export and a declarative YAML tax
 Future work will broaden the shipped taxonomy library beyond the five current examples, add ingestion adapters for further registrar export formats, and offer an optional analytics layer that packages common downstream models. We invite curriculum and learning-analytics researchers to contribute taxonomies and adapters through the public repository.
 
 %% ============================================================
+{\small
 \begin{thebibliography}{9}
 \bibitem{cronbach1951} L.~J. Cronbach, Coefficient alpha and the internal structure of tests, Psychometrika 16 (3) (1951) 297--334.
 \bibitem{shulman1986} L.~S. Shulman, Those who understand: Knowledge growth in teaching, Educational Researcher 15 (2) (1986) 4--14.
 \bibitem{yok2018} Council of Higher Education (Y\"OK), New teacher training undergraduate programs, T\"urkiye (2018).
 \bibitem{kvkk} Republic of T\"urkiye, Personal Data Protection Law No.\ 6698 (KVKK), Official Gazette No.\ 29677 (2016).
+\bibitem{smith2024} H.~R. Smith, J. Chittams, Defining best practices and validation for curriculum mapping, Cogent Education 11 (1) (2024) 2342662.
+\bibitem{howard2025} E. Howard, ouladFormat R package: Preparing the Open University Learning Analytics Dataset for analysis, arXiv:2501.08366 (2025).
+\bibitem{can2025a} T. Can, T. K\"u\c{c}\"ukdeniz, General academic ability or domain-specific competencies? A learning analytics investigation of curricular knowledge domains in English language teacher education, manuscript under review (2025).
+\bibitem{can2025b} T. Can, T. K\"u\c{c}\"ukdeniz, Pedagogy coursework as the dominant predictor of teaching practicum performance: a domain-disaggregated analysis of ELT teacher education, manuscript under review (2025).
 \end{thebibliography}
+}
 
 \end{document}
