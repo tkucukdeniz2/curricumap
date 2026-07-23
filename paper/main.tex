@@ -12,6 +12,8 @@
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
 \usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
 
 \setlength{\parindent}{0pt}
@@ -112,9 +114,42 @@ The design also targets a concrete user base. The 2018 curriculum for English La
 
 \subsection{Software architecture}
 
-CurricuMap is organised library-first: the Python package exposes every processing step as an importable function, and a thin command-line interface wraps the common workflows. The core is a five-stage pipeline that carries data from a raw registrar export to an analysis-ready matrix, and each stage writes an explicit intermediate that the next stage consumes.
+CurricuMap is organised library-first: the Python package exposes every processing step as an importable function, and a thin command-line interface wraps the common workflows. The core is a five-stage pipeline that carries data from a raw registrar export to an analysis-ready matrix, and each stage writes an explicit intermediate that the next stage consumes. Figure~\ref{fig:dataflow} shows the overall data flow.
 
-The \texttt{io} stage ingests transcript exports into a canonical tidy schema with the required columns \texttt{student\_id}, \texttt{course\_id}, \texttt{course\_name}, and \texttt{grade}, plus optional \texttt{term}, \texttt{date}, and \texttt{credits}. Because registrar systems name and order their columns arbitrarily, a column-mapping adapter renames the fields of any CSV or Excel export (the latter read through \texttt{openpyxl}) onto this schema, so no source file has to be edited by hand. The \texttt{classify} stage assigns each course to a competency domain and records how the decision was made. The \texttt{prepare} stage applies registrar hygiene and aggregates grades to one value per student per domain. The \texttt{audit} stage measures coverage, reliability, and distribution. The \texttt{report} stage serialises the results. Two further modules sit beside the pipeline: \texttt{synth} generates synthetic transcripts and course catalogues, and \texttt{cli} exposes the \texttt{validate-taxonomy}, \texttt{synth}, and \texttt{run} subcommands. A full run is a single command: given an input file, a taxonomy, and a configuration that holds the cleaning options, \texttt{curricumap run} executes \texttt{io} through \texttt{report} and writes the matrices, the provenance table, and the audit to one output directory. In all, the package comprises ten modules (\texttt{text}, \texttt{taxonomy}, \texttt{io}, \texttt{classify}, \texttt{prepare}, \texttt{audit}, \texttt{report}, \texttt{synth}, \texttt{cli}, and \texttt{\_\_init\_\_}).
+\begin{figure}[t]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[font=\footnotesize,>={Latex[length=1.8mm]},node distance=4mm and 5mm,
+  inp/.style={draw,rounded corners=2pt,fill=black!5,align=center,inner sep=3pt,minimum height=8mm},
+  st/.style={draw,fill=black!10,align=center,minimum height=8mm,minimum width=11mm},
+  outp/.style={draw,dashed,align=center,inner sep=3pt}]
+\node[inp] (tx) {taxonomy spec\\(YAML)};
+\node[inp,above=of tx] (tr) {transcript export\\(CSV/XLSX)};
+\node[inp,below=of tx] (cf) {run-config\\(YAML, opt.)};
+\node[st,right=8mm of tx] (io) {io};
+\node[st,right=of io] (cl) {classify};
+\node[st,right=of cl] (pr) {prepare};
+\node[st,right=of pr] (au) {audit};
+\node[st,right=of au] (rp) {report};
+\node[outp,right=7mm of rp] (o) {matrix,\\provenance,\\audit (JSON/HTML)};
+\draw[->] (tr.east) -- (io.west);
+\draw[->] (tx.east) -- (io.west);
+\draw[->] (cf.east) -- (io.west);
+\draw[->] (io)--(cl);\draw[->](cl)--(pr);\draw[->](pr)--(au);\draw[->](au)--(rp);
+\draw[->] (rp.east) -- (o.west);
+\end{tikzpicture}}
+\caption{Data flow. A transcript export, a taxonomy specification, and an optional run-config feed the five-stage pipeline, which writes the student-by-domain matrix, the per-course classification provenance, and the audit report in JSON and HTML.}
+\label{fig:dataflow}
+\end{figure}
+
+The \texttt{io} stage ingests transcript exports into a canonical tidy schema, one row per student per course, with the required columns \texttt{student\_id}, \texttt{course\_name}, and \texttt{grade} (\texttt{course\_id} is optional and defaults to the course name; \texttt{term}, \texttt{date}, and \texttt{credits} are also optional). A few rows of such an export are:
+\begin{verbatim}
+student_id,course_id,course_name,grade
+1,LIT101,English Literature I,85
+1,PED101,Instructional Methods,78
+1,PE100,Physical Education,74
+\end{verbatim}
+Because registrar systems name and order their columns arbitrarily, a column-mapping adapter renames the fields of any CSV or Excel export (the latter read through \texttt{openpyxl}) onto this schema, so no source file has to be edited by hand. The \texttt{classify} stage assigns each course to a competency domain and records how the decision was made. The \texttt{prepare} stage applies registrar hygiene and aggregates grades to one value per student per domain. The \texttt{audit} stage measures coverage, reliability, and distribution. The \texttt{report} stage serialises the results. Two further modules sit beside the pipeline: \texttt{synth} generates synthetic transcripts and course catalogues, and \texttt{cli} exposes the \texttt{validate-taxonomy}, \texttt{synth}, and \texttt{run} subcommands. A full run is a single command: given an input file, a taxonomy, and a configuration that holds the cleaning options, \texttt{curricumap run} executes \texttt{io} through \texttt{report} and writes the matrices, the provenance table, and the audit to one output directory. In all, the package comprises ten modules (\texttt{text}, \texttt{taxonomy}, \texttt{io}, \texttt{classify}, \texttt{prepare}, \texttt{audit}, \texttt{report}, \texttt{synth}, \texttt{cli}, and \texttt{\_\_init\_\_}).
 
 The reuse contract is the declarative taxonomy specification written in YAML. It names the competency domains and the rules that map courses onto them, and CurricuMap validates it against a JSON Schema, then cross-checks that every rule and override refers to a defined domain. Adopting the tool for a new curriculum therefore means writing or editing a specification, not writing code; the five example taxonomies of Section~\ref{sec:examples} serve as worked references.
 
