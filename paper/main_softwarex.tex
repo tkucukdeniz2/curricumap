@@ -1,0 +1,189 @@
+%% ============================================================
+%% CurricuMap — SoftwareX Original Software Publication
+%% Official Elsevier elsarticle template (submission format).
+%% Compile: pdflatex -> bibtex -> pdflatex -> pdflatex
+%% ============================================================
+\documentclass[preprint,12pt]{elsarticle}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\emergencystretch=2em
+
+\journal{SoftwareX}
+
+\begin{document}
+\begin{frontmatter}
+
+\title{CurricuMap: an open-source Python pipeline for converting registrar transcript exports into auditable student-by-competency-domain matrices}
+
+\author[iue]{Tar{\i}k K\"u\c{c}\"ukdeniz\corref{cor1}}
+\ead{tkdeniz@iuc.edu.tr}
+\author[elt]{Tuncer Can}
+\cortext[cor1]{Corresponding author}
+
+\affiliation[iue]{organization={Department of Industrial Engineering, Faculty of Engineering, \.Istanbul University-Cerrahpa\c{s}a},
+            city={\.Istanbul}, country={T\"urkiye}}
+\affiliation[elt]{organization={Department of English Language Teaching, Hasan Ali Y\"ucel Faculty of Education, \.Istanbul University-Cerrahpa\c{s}a},
+            city={\.Istanbul}, country={T\"urkiye}}
+
+\begin{abstract}
+Competency-level learning-analytics studies require a clean
+student-by-domain matrix, yet institutional records arrive as messy
+registrar transcript exports. Bridging the two is a manual, unauditable
+spreadsheet step, and no installable package performs it. CurricuMap is
+an open-source Python library and command-line tool that converts a
+transcript export into an analysis-ready student-by-competency-domain
+matrix through a five-stage pipeline: ingest, classify, prepare, audit,
+and report. Users adopt the tool by writing a declarative YAML taxonomy
+that is validated against a JSON Schema; courses are assigned to
+competency domains by ordered rules with explicit overrides and an
+optional fuzzy fallback, and every assignment carries full provenance.
+The prepare stage applies registrar-specific cleaning (retake
+deduplication, sentinel-grade removal, coverage filtering); the audit
+stage reports coverage, descriptives, and per-domain Cronbach's alpha
+computed on the cleaned data. A seeded generator produces messy
+synthetic transcripts, so the pipeline runs and is peer-reviewed
+without any personal data. CurricuMap ships with five example taxonomies
+spanning teacher education, engineering, mathematics education, medicine,
+and the Bologna/EQF framework, and it produced the analysis-ready data
+for two empirical studies of English-language-teacher education.
+\end{abstract}
+
+\begin{keyword}
+Learning analytics \sep Curriculum mapping \sep Competency assessment \sep Data provenance \sep Reproducible research
+\end{keyword}
+
+\end{frontmatter}
+
+%% Highlights are submitted separately in SoftwareX; included here for completeness.
+\noindent\textbf{Highlights}
+\begin{itemize}
+\item Converts messy registrar transcript exports into analysis-ready competency matrices.
+\item Course-to-domain mapping via a declarative, JSON-Schema-validated YAML spec.
+\item Provenance-tracked mapping; audit reports coverage and per-domain Cronbach's alpha.
+\item A seeded generator makes messy synthetic transcripts, so no real data is needed.
+\item Ships five cross-discipline example taxonomies with golden end-to-end tests.
+\end{itemize}
+
+%% ---- Required Metadata: code metadata table (mandatory) ----
+\begin{table}[!ht]
+\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{|l|p{5.2cm}|p{5.7cm}|}
+\hline
+\textbf{Nr.} & \textbf{Code metadata description} & \textbf{Metadata} \\ \hline
+C1 & Current code version & v0.1.0 \\ \hline
+C2 & Permanent link to code/repository used for this code version & \texttt{https://github.com/<org>/curricumap} \\ \hline
+C3 & Permanent link to Reproducible Capsule & n/a \\ \hline
+C4 & Legal Code License & MIT \\ \hline
+C5 & Code versioning system used & git \\ \hline
+C6 & Software code languages, tools, and services used & Python ($\geq$3.10) \\ \hline
+C7 & Compilation requirements, operating environments \& dependencies & pandas, numpy, pyyaml, jsonschema, rapidfuzz, openpyxl, jinja2 \\ \hline
+C8 & Link to developer documentation/manual & \texttt{README.md} \\ \hline
+C9 & Support email for questions & \texttt{tkdeniz@iuc.edu.tr} \\ \hline
+\end{tabular}
+\caption{Code metadata.}
+\label{tab:codemeta}
+\end{table}
+
+\section{Motivation and significance}
+
+Learning-analytics studies increasingly ask questions at the level of competency domains rather than individual courses: whether curricular knowledge areas are separable, how coursework in one domain predicts performance in another, or how student profiles differ within a program. Answering such questions requires a student $\times$ competency-domain matrix, in which each cell summarizes a student's attainment in a domain. Institutions do not store data in this form. Registrars export transcripts as flat grade records, one row per student per course, with inconsistent column names, mixed-language course titles, retaken courses, administrative sentinel grades, and courses that belong to no competency domain. Converting such an export into an analysis-ready matrix is a routine prerequisite for secondary analysis of existing records, and it is almost always done by hand.
+
+The manual route is laborious and fragile. An analyst must decide which course maps to which domain, how to resolve retakes, which grades are real, and which students have enough coverage to include. These decisions change the matrix and therefore the study's results, yet they are typically buried in spreadsheet formulas or one-off scripts, undocumented and unreproducible. The step that most directly shapes the data is usually the least transparent one.
+
+No open-source, installable package fills this gap. Curriculum mapping as a practice, aligning course content with program outcomes to expose gaps and overlaps \cite{smith2024}, is served by commercial and institutional platforms such as HelioCampus, eLumen, and accreditation-management tools.\footnote{For example, \texttt{heliocampus.com} and \texttt{elumen.com}.} These address a different, design-time problem: they align an intended curriculum with program outcomes before students enroll. They do not ingest actual student grade records, and they are closed, so their mapping logic cannot be inspected or cited in a methods section. The R package \texttt{ouladFormat} \cite{howard2025} prepares one specific public dataset and does not generalize to arbitrary exports. Researchers are left to rebuild the same pipeline for every study, with no shared, auditable tooling.
+
+CurricuMap is built around the properties this task demands. The course-to-domain mapping is declarative: users describe their taxonomy in a YAML specification validated against a schema, rather than editing code, so adopting the tool means writing a spec. Every classification is provenance-tracked, recording for each course whether it was matched by rule, override, or fuzzy fallback, which pattern matched, and whether the assignment was ambiguous. The pipeline is deterministic and golden-file tested, so identical inputs always yield an identical matrix. A dedicated audit stage treats data quality as a first-class output, reporting unmapped and ambiguous courses, domain sizes, descriptive statistics, and per-domain internal consistency through Cronbach's alpha \cite{cronbach1951}. The cleaning step becomes something a reviewer can read and a colleague can rerun.
+
+A second constraint shapes the design. Real transcripts are personal data protected under Turkey's KVKK (Law 6698) \cite{kvkk} and the GDPR, so the software cannot be distributed with the records it was built to process. CurricuMap therefore includes a seeded generator that produces synthetic transcripts, with the same irregularities as institutional exports, for any taxonomy. Reviewers and new users run the entire pipeline end to end without touching real data, which keeps the tool distributable and peer-reviewable while the underlying study data stay protected.
+
+The design also targets a concrete user base. The 2018 curriculum for English Language Teaching is standardized across all Turkish ELT programs \cite{yok2018}, and comparable standardization applies to other teacher-education fields, so their transcript exports share a structure and one taxonomy specification can serve many institutions. To show that the approach is not specific to one institution, CurricuMap ships five example taxonomies spanning Turkish and English programs in education, engineering, and medicine. This paper describes CurricuMap v0.1.0: its five-stage architecture, its functionalities, an illustrative end-to-end run on synthetic data, and its use in preparing analysis-ready data for empirical curriculum research.
+
+%% ============================================================
+\section{Software description}
+
+\subsection{Software architecture}
+
+CurricuMap is organised library-first: the Python package exposes every processing step as an importable function, and a thin command-line interface wraps the common workflows. The core is a five-stage pipeline that carries data from a raw registrar export to an analysis-ready matrix, and each stage writes an explicit intermediate that the next stage consumes.
+
+The \texttt{io} stage ingests transcript exports into a canonical tidy schema with the required columns \texttt{student\_id}, \texttt{course\_id}, \texttt{course\_name}, and \texttt{grade}, plus optional \texttt{term}, \texttt{date}, and \texttt{credits}. Because registrar systems name and order their columns arbitrarily, a column-mapping adapter renames the fields of any CSV or Excel export (the latter read through \texttt{openpyxl}) onto this schema, so no source file has to be edited by hand. The \texttt{classify} stage assigns each course to a competency domain and records how the decision was made. The \texttt{prepare} stage applies registrar hygiene and aggregates grades to one value per student per domain. The \texttt{audit} stage measures coverage, reliability, and distribution. The \texttt{report} stage serialises the results. Two further modules sit beside the pipeline: \texttt{synth} generates synthetic transcripts and course catalogues, and \texttt{cli} exposes the \texttt{validate-taxonomy}, \texttt{synth}, and \texttt{run} subcommands. A full run is a single command: given an input file, a taxonomy, and a configuration that holds the cleaning options, \texttt{curricumap run} executes \texttt{io} through \texttt{report} and writes the matrices, the provenance table, and the audit to one output directory. In all, the package comprises ten modules (\texttt{text}, \texttt{taxonomy}, \texttt{io}, \texttt{classify}, \texttt{prepare}, \texttt{audit}, \texttt{report}, \texttt{synth}, \texttt{cli}, and \texttt{\_\_init\_\_}).
+
+The reuse contract is the declarative taxonomy specification written in YAML. It names the competency domains and the rules that map courses onto them, and CurricuMap validates it against a JSON Schema, then cross-checks that every rule and override refers to a defined domain. Adopting the tool for a new curriculum therefore means writing or editing a specification, not writing code; the five example taxonomies of Section~\ref{sec:examples} serve as worked references.
+
+\subsection{Software functionalities}
+
+\textbf{Course classification with provenance.} Classification runs ordered keyword and regular-expression rules against each course name. Rules are evaluated in the order the specification lists them and the first match wins, so an author can place specific rules ahead of general ones and predict the outcome. Explicit per-course overrides take precedence over rules, and an optional fuzzy fallback (via \texttt{rapidfuzz}) resolves near-misses that the rules leave unmatched. For every course, CurricuMap emits a provenance record giving the method used (\texttt{rule}, \texttt{override}, \texttt{fuzzy}, or \texttt{unmatched}), the pattern that matched, the match score, and an ambiguity flag, so each assignment can be inspected and reproduced.
+
+\textbf{Locale-aware casefolding.} Keyword matching casefolds course names in a language-aware way. Turkish distinguishes a dotted from a dotless \emph{i}, and the naive \texttt{str.lower()} or \texttt{str.casefold()} used by most pipelines is wrong for it: casefolding \texttt{\.I} yields \texttt{i} followed by a combining dot, so a course title silently fails to match its keyword. CurricuMap maps the Turkish pairs (\texttt{\.I}$\rightarrow$\texttt{i}, \texttt{I}$\rightarrow$\texttt{\i}) before casefolding, and a unit test records the failure of the naive approach. The behaviour is configurable per language.
+
+\textbf{Registrar cleaning.} The \texttt{prepare} stage resolves the irregularities of real grade records. It deduplicates retaken courses under a configurable policy (\texttt{max}, \texttt{last}, or \texttt{mean}), drops sentinel grades that encode non-numeric outcomes, and removes students who cover fewer domains than a minimum-coverage threshold. When exam dates are present, it can reconstruct each student's study year. It then aggregates grades to per-student per-domain means and emits both a wide student-by-domain matrix and a tidy long form.
+
+\textbf{Audit.} The \texttt{audit} stage reports coverage, listing unmapped and ambiguous courses and the number of courses per domain. It computes Cronbach's alpha \cite{cronbach1951} for each domain on the same sentinel-cleaned data that produced the matrix, and summarises each domain with mean, standard deviation, skew, and missing-data percentage. Computing reliability on the cleaned data, rather than on a separate extract, keeps the reported statistics consistent with the delivered matrix.
+
+\textbf{Reporting.} Results are written both as a machine-readable \texttt{audit.json} and as a self-contained, themed \texttt{audit.html} that embeds its own styling and requires no external assets.
+
+\textbf{Synthetic data.} The \texttt{synth} generator produces seeded, deliberately messy transcripts and a matching catalogue for any taxonomy, so a reviewer or new user can run the whole pipeline with zero real student data, and the software stays clear of the personal data governed by KVKK \cite{kvkk} and the GDPR.
+
+\textbf{Reproducibility and packaging.} Every stage is deterministic and golden-file testable, so identical inputs and seeds reproduce identical outputs. CurricuMap is released under the MIT licence, installs from PyPI, and depends only on \texttt{pandas}, \texttt{numpy}, \texttt{pyyaml}, \texttt{jsonschema}, \texttt{rapidfuzz}, \texttt{openpyxl}, and \texttt{jinja2}. A suite of 40 unit and integration tests runs under GitHub Actions continuous integration.
+
+%% ============================================================
+\section{Illustrative examples}
+\label{sec:examples}
+
+We demonstrate CurricuMap on the ELT-YOK taxonomy, which encodes the 2018 Turkish undergraduate English Language Teaching curriculum \cite{yok2018} as five competency domains: Language Skills, Pedagogy, Linguistics, Literature, and General Education. Because real transcripts are personal data, the walkthrough uses the packaged synthetic generator, so it reproduces exactly on any machine without access to student records.
+
+Two commands run the full pipeline (Listing~1). The first synthesizes a messy transcript export and a matching catalog for 60 students from the taxonomy; the second ingests that export, classifies each course, cleans the records, and writes the audit.
+
+\begin{verbatim}
+curricumap synth --taxonomy elt_yok_2018.yaml \
+    --out data/ --n-students 60 --seed 7
+curricumap run --input data/transcript.csv \
+    --taxonomy elt_yok_2018.yaml \
+    --config config.yaml --out out/
+\end{verbatim}
+
+With seed 7 the generator emits 880 grade records across 16 distinct courses. The \texttt{run} command reduces these to a $60\times5$ student-by-domain matrix. Classification maps 15 of the 16 courses to a domain by keyword rule and flags the remaining course, Beden E\u{g}itimi ve Spor (physical education), as unmapped because it lies outside the ELT competency structure; no course is ambiguous. Every per-course decision, with its matched pattern and method, is recorded in \texttt{provenance.csv}, so each cell of the matrix traces back to the rule that produced it.
+
+The audit stage computes Cronbach's alpha \cite{cronbach1951} for each domain, with $n=60$ students and $k=3$ courses per domain: Language Skills .769, Pedagogy .767, Linguistics .761, Literature .819, and General Education .781. All five values fall in the acceptable-to-good range, and reporting them next to the matrix lets a reader judge internal consistency before running any downstream model. The run writes five artifacts to \texttt{out/}: the wide matrix (\texttt{matrix\_wide.csv}), its tidy long form (\texttt{matrix\_long.csv}), the provenance table (\texttt{provenance.csv}), a machine-readable \texttt{audit.json}, and a self-contained \texttt{audit.html} report (Figure~\ref{fig:audit}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.68\linewidth]{figures/fig1_audit_report.png}
+\caption{The self-contained \texttt{audit.html} report from the illustrative run (ELT-YOK taxonomy, seed 7, 60 synthetic students). It pairs the coverage summary (five domains, fifteen mapped courses, one unmapped, none ambiguous) with per-domain descriptives and Cronbach's alpha shown as banded bars.}
+\label{fig:audit}
+\end{figure}
+
+\subsection{Shipped taxonomies}
+
+CurricuMap ships five example taxonomies that span distinct disciplines and two languages, which shows the tool is not tied to one institution or field. Three target Turkish teacher education and accreditation: ELT-YOK, described above; a Mathematics-Education YOK specification; and an Engineering ABET/MUDEK specification that maps a cross-disciplinary course catalog onto accreditation outcomes. Two are English-language: CanMEDS, which encodes the seven physician competency roles, and a generic Bologna/EQF specification organized around knowledge, skills, and competence. Each taxonomy ships with a synthetic dataset and a golden end-to-end test that asserts every synthetic course classifies as intended, so continuous integration exercises the complete ingest-to-report pipeline on all five taxonomies at each commit.
+
+%% ============================================================
+\section{Impact}
+
+CurricuMap addresses a specific bottleneck in learning analytics. Institutional grade records already document what students learned across a curriculum, yet turning a registrar export into an analysis-ready competency matrix is normally a manual spreadsheet task that is slow to redo and hard to reproduce. By making that conversion declarative, deterministic, and provenance-tracked, the software supports competency-level secondary analysis of existing records while preserving an audit trail of how every course was assigned to a domain.
+
+Two empirical studies by the present authors show the kind of work the tool makes possible. In the first, the student-by-domain matrix produced by CurricuMap was the input to a principal component analysis and a latent-profile analysis that tested whether curricular knowledge domains are empirically separable \cite{can2025a} ($N=183$ students across 143 courses). In the second, per-domain means fed a hierarchical regression and a dominance analysis examining whether pedagogy coursework predicts teaching-practicum performance \cite{can2025b}, framed by Shulman's pedagogical content knowledge \cite{shulman1986} ($N=78$). The substantive findings are reported in those manuscripts; what is relevant here is that both analyses depended on the same preprocessing step, which the software now records and shares rather than leaving in an undocumented worksheet.
+
+A concrete user base already exists. The 2018 YOK curriculum \cite{yok2018} is standardized across all 57 Turkish English language teaching programs, so their transcript exports are structurally identical and the shipped ELT-YOK taxonomy applies to each without modification. The same field-by-field standardization holds across Turkish teacher education more broadly, and the bundled mathematics-education taxonomy demonstrates that reach. The engineering ABET/MUDEK taxonomy extends the applicability to accreditation self-studies, where programs must document how course-level performance maps to declared program outcomes.
+
+Beyond any single study, CurricuMap makes the preprocessing itself reproducible. A versioned specification and a deterministic pipeline replace the hand-built spreadsheet, so the coverage audit and the provenance table document which courses were unmapped or ambiguous and which rule or override produced each assignment. Collaborators and reviewers can then regenerate a competency matrix exactly from the same inputs, which an ad hoc spreadsheet cannot guarantee.
+
+%% ============================================================
+\section{Conclusions}
+\label{sec:conclusions}
+
+CurricuMap converts a raw registrar transcript export and a declarative YAML taxonomy into an analysis-ready student-by-domain competency matrix. Its five-stage pipeline automates the course-to-domain mapping, registrar hygiene, and per-domain reliability reporting that competency-level studies otherwise carry out by hand and rarely document. Four design choices distinguish the tool. The JSON-Schema-validated taxonomy specification is the reuse contract, so adoption means writing a spec rather than editing code. Every course assignment carries provenance, and a coverage-and-quality audit is a first-class output. The pipeline is deterministic and golden-file tested, and the package is MIT-licensed and pip-installable, with a synthetic transcript generator so reviewers run it without any personal data.
+
+Future work will broaden the shipped taxonomy library beyond the five current examples, add ingestion adapters for further registrar export formats, and offer an optional analytics layer that packages common downstream models. We invite curriculum and learning-analytics researchers to contribute taxonomies and adapters through the public repository.
+
+\section*{Data availability}
+The source code and the five example taxonomies are openly available under the
+MIT license (Table~\ref{tab:codemeta}). No personal data are distributed: the
+packaged synthetic generator reproduces every example without access to student
+records.
+
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+
+\end{document}
