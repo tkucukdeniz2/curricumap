@@ -5,7 +5,7 @@ SoftwareX-style code-metadata table for CurricuMap.
 | Nr. | Code metadata description | Metadata |
 |---|---|---|
 | C1 | Current code version | 0.1.0 |
-| C2 | Permanent link to code/repository used for this code version | `https://github.com/<org>/curricumap` |
+| C2 | Permanent link to code/repository used for this code version | `https://github.com/tkucukdeniz2/curricumap` |
 | C3 | Permanent link to reproducible capsule | n/a |
 | C4 | Legal code license | MIT |
 | C5 | Code versioning system used | git |
@@ -16,7 +16,7 @@ SoftwareX-style code-metadata table for CurricuMap.
 
 ## Notes
 
-- **C2**: replace `<org>` with the actual GitHub organization/user once the
+- **C2**: replace `tkucukdeniz2` with the actual GitHub organization/user once the
   repository is published; this is a placeholder until then.
 - **C7**: install with `pip install -e .`, which resolves the dependencies
   above from `pyproject.toml`. Optional development dependency: `pytest>=7.0`.
