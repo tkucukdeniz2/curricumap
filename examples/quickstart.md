@@ -3,6 +3,10 @@
 This is a standalone copy of the two-command walkthrough from the top-level
 `README.md`.
 
+> Prefer a ready-made, realistic input? A bundled sample transcript lets you run
+> the pipeline in one command, with no synthesis step — see
+> [`sample_transcript.csv`](sample_transcript.csv) and [`README.md`](README.md).
+
 ## Install
 
 ```bash
