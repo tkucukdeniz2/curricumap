@@ -4,3 +4,5 @@
 *.bbl
 *.blg
 *.pdf
+*.spl
+_twocol_check.*
