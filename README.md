@@ -18,6 +18,60 @@ pip install -e .
 Requires Python >= 3.10. Dependencies: pandas, numpy, pyyaml, jsonschema,
 rapidfuzz, openpyxl, jinja2.
 
+## Input data and data flow
+
+CurricuMap takes three inputs and turns them into an audited matrix:
+
+```
+  transcript export (CSV/XLSX)  ─┐
+  taxonomy spec (YAML)           ├─►  io ─► classify ─► prepare ─► audit ─► report
+  run-config (YAML, optional)   ─┘                                            │
+                                                                              ▼
+              matrix_wide.csv · matrix_long.csv · provenance.csv · audit.json · audit.html
+```
+
+**1. Transcript export** — one row per student-per-course, in a tidy schema:
+
+| column | required | meaning |
+|---|:--:|---|
+| `student_id` | ✅ | student key |
+| `course_name` | ✅ | free-text course title (any language) |
+| `grade` | ✅ | numeric grade |
+| `course_id` | — | defaults to `course_name` |
+| `term`, `date`, `credits` | — | `date` enables study-year reconstruction |
+
+Registrar systems use arbitrary column names; map them onto this schema with
+`io.columns` in the run-config (e.g. `{ student_id: FKOgrenciID, grade: YuzlukNot }`).
+
+**2. Taxonomy spec (YAML)** — the competency domains and the keyword / override /
+fuzzy rules that assign courses to them (see `src/curricumap/examples/`).
+Adopting the tool for a new curriculum means writing this file, not code.
+
+**3. Run-config (YAML, optional)** — the cleaning and aggregation policy: retake
+deduplication, sentinel-grade handling, coverage filtering, aggregation method,
+and the column mapping above.
+
+### Try it on the bundled sample
+
+A small, realistic sample transcript ships in `examples/`, so you can see the
+whole flow without generating synthetic data:
+
+```bash
+curricumap run \
+  --input examples/sample_transcript.csv \
+  --taxonomy src/curricumap/examples/elt_yok_2018.yaml \
+  --config examples/sample_config.yaml \
+  --out out/
+```
+
+`examples/sample_transcript.csv` deliberately contains the mess real exports
+carry: a **retaken** course (two rows for one student/course), a
+**non-attendance** grade encoded as a sentinel `0`, and an **off-curriculum**
+course (`Beden Eğitimi ve Spor`) that maps to no competency domain. The run
+keeps the higher retake grade, drops the sentinel, flags the off-curriculum
+course as unmapped in `provenance.csv`, and writes the 5×5 competency matrix.
+See [`examples/README.md`](examples/README.md) for a full walkthrough.
+
 ## Quickstart
 
 CurricuMap ships with example taxonomies (ELT/YÖK 2018, Bologna, CanMEDS,

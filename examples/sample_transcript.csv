@@ -1,0 +1,52 @@
+student_id,course_id,course_name,grade
+1,LING101,Dilbilime Giriş,83.0
+1,LING202,Sesbilim ve Sesbilgisi,80.0
+1,LIT101,İngiliz Edebiyatı I,86.0
+1,LIT202,Roman İncelemesi,77.0
+1,LS101,Okuma ve Yazma Becerileri,86.0
+1,LS101,Okuma ve Yazma Becerileri,55.0
+1,LS201,İleri Dinleme ve Konuşma,84.0
+1,PED101,Öğretim İlke ve Yöntemleri,82.0
+1,PED202,Ölçme ve Değerlendirme,75.0
+1,GE101,Atatürk İlkeleri ve İnkılap Tarihi,82.0
+1,GE102,Türkçe,79.0
+2,LING101,Dilbilime Giriş,74.0
+2,LING202,Sesbilim ve Sesbilgisi,58.0
+2,LIT101,İngiliz Edebiyatı I,77.0
+2,LIT202,Roman İncelemesi,55.0
+2,LS101,Okuma ve Yazma Becerileri,64.0
+2,LS201,İleri Dinleme ve Konuşma,62.0
+2,PED101,Öğretim İlke ve Yöntemleri,73.0
+2,PED202,Ölçme ve Değerlendirme,66.0
+2,GE101,Atatürk İlkeleri ve İnkılap Tarihi,73.0
+2,GE102,Türkçe,70.0
+3,LING101,Dilbilime Giriş,90.0
+3,LING202,Sesbilim ve Sesbilgisi,87.0
+3,LIT101,İngiliz Edebiyatı I,93.0
+3,LIT202,Roman İncelemesi,84.0
+3,LS101,Okuma ve Yazma Becerileri,93.0
+3,LS201,İleri Dinleme ve Konuşma,91.0
+3,PED101,Öğretim İlke ve Yöntemleri,89.0
+3,PED202,Ölçme ve Değerlendirme,0.0
+3,GE101,Atatürk İlkeleri ve İnkılap Tarihi,89.0
+3,GE102,Türkçe,86.0
+4,LING101,Dilbilime Giriş,63.0
+4,LING202,Sesbilim ve Sesbilgisi,60.0
+4,LS101,Okuma ve Yazma Becerileri,53.0
+4,LS201,İleri Dinleme ve Konuşma,51.0
+4,PED101,Öğretim İlke ve Yöntemleri,62.0
+4,PED202,Ölçme ve Değerlendirme,55.0
+4,GE101,Atatürk İlkeleri ve İnkılap Tarihi,62.0
+4,GE102,Türkçe,59.0
+5,LING101,Dilbilime Giriş,70.0
+5,LING202,Sesbilim ve Sesbilgisi,67.0
+5,LIT101,İngiliz Edebiyatı I,73.0
+5,LIT202,Roman İncelemesi,64.0
+5,LS101,Okuma ve Yazma Becerileri,73.0
+5,LS201,İleri Dinleme ve Konuşma,71.0
+5,PED101,Öğretim İlke ve Yöntemleri,82.0
+5,PED202,Ölçme ve Değerlendirme,62.0
+5,GE101,Atatürk İlkeleri ve İnkılap Tarihi,82.0
+5,GE102,Türkçe,66.0
+1,PE100,Beden Eğitimi ve Spor,88.0
+2,PE100,Beden Eğitimi ve Spor,79.0

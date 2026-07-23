@@ -1,0 +1,8 @@
+# Cleaning + audit policy for the sample transcript.
+prepare:
+  dedup: { on: [student_id, course_id], keep: max }   # retakes: keep the highest grade
+  sentinel_grades: { values: [0], action: drop }      # 0 = did not attend -> drop
+  coverage: { min_domains: 3 }                        # keep students covering >= 3 domains
+  aggregate: { method: mean }                         # domain score = mean of its course grades
+audit:
+  cronbach: { missing: column_mean }
