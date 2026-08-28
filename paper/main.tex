@@ -81,7 +81,7 @@ Competency assessment; Data provenance; Reproducible research
 Nr. & Code metadata description & Metadata \\
 \midrule
 C1 & Current code version & v0.1.0 \\
-C2 & Permanent link to code repository & \texttt{https://github.com/tkucukdeniz2/curricumap} \\
+C2 & Permanent link to code repository & \texttt{https://github.com/tkucukdeniz2/curricumap} (release \texttt{v0.1.0}) \\
 C3 & Permanent link to reproducible capsule & n/a \\
 C4 & Legal code license & MIT \\
 C5 & Code versioning system used & git \\
@@ -167,7 +167,7 @@ The reuse contract is the declarative taxonomy specification written in YAML. It
 
 \textbf{Synthetic data.} The \texttt{synth} generator produces seeded, deliberately messy transcripts and a matching catalogue for any taxonomy, so a reviewer or new user can run the whole pipeline with zero real student data, and the software stays clear of the personal data governed by KVKK \cite{kvkk} and the GDPR.
 
-\textbf{Reproducibility and packaging.} Every stage is deterministic and golden-file testable, so identical inputs and seeds reproduce identical outputs. CurricuMap is released under the MIT licence, installs from PyPI, and depends only on \texttt{pandas}, \texttt{numpy}, \texttt{pyyaml}, \texttt{jsonschema}, \texttt{rapidfuzz}, \texttt{openpyxl}, and \texttt{jinja2}. A suite of 40 unit and integration tests runs under GitHub Actions continuous integration.
+\textbf{Reproducibility and packaging.} Every stage is deterministic and golden-file testable, so identical inputs and seeds reproduce identical outputs. CurricuMap is released under the MIT licence, installs with \texttt{pip} from the public repository, and depends only on \texttt{pandas}, \texttt{numpy}, \texttt{pyyaml}, \texttt{jsonschema}, \texttt{rapidfuzz}, \texttt{openpyxl}, and \texttt{jinja2}. A suite of 40 unit and integration tests runs under GitHub Actions continuous integration.
 
 %% ============================================================
 \section{Illustrative examples}
@@ -185,14 +185,14 @@ curricumap run --input data/transcript.csv \
     --config config.yaml --out out/
 \end{verbatim}
 
-With seed 7 the generator emits 880 grade records across 16 distinct courses. The \texttt{run} command reduces these to a $60\times5$ student-by-domain matrix. Classification maps 15 of the 16 courses to a domain by keyword rule and flags the remaining course, Beden E\u{g}itimi ve Spor (physical education), as unmapped because it lies outside the ELT competency structure; no course is ambiguous. Every per-course decision, with its matched pattern and method, is recorded in \texttt{provenance.csv}, so each cell of the matrix traces back to the rule that produced it.
+With seed 7 the generator emits 878 grade records across 15 distinct courses, including the retakes and sentinel zeros it injects for realism. The \texttt{run} command reduces these to a $60\times5$ student-by-domain matrix. Classification maps all 15 courses to a domain by keyword rule, with none ambiguous and none left unmapped. Coverage is reported either way, so a run in which a course falls outside the taxonomy surfaces it explicitly rather than dropping it silently. Every per-course decision, with its matched pattern and method, is recorded in \texttt{provenance.csv}, so each cell of the matrix traces back to the rule that produced it.
 
 The audit stage computes Cronbach's alpha \cite{cronbach1951} for each domain, with $n=60$ students and $k=3$ courses per domain: Language Skills .769, Pedagogy .767, Linguistics .761, Literature .819, and General Education .781. All five values fall in the acceptable-to-good range, and reporting them next to the matrix lets a reader judge internal consistency before running any downstream model. The run writes five artifacts to \texttt{out/}: the wide matrix (\texttt{matrix\_wide.csv}), its tidy long form (\texttt{matrix\_long.csv}), the provenance table (\texttt{provenance.csv}), a machine-readable \texttt{audit.json}, and a self-contained \texttt{audit.html} report (Figure~\ref{fig:audit}).
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.68\linewidth]{figures/fig1_audit_report.png}
-\caption{The self-contained \texttt{audit.html} report from the illustrative run (ELT-YOK taxonomy, seed 7, 60 synthetic students). It pairs the coverage summary (five domains, fifteen mapped courses, one unmapped, none ambiguous) with per-domain descriptives and Cronbach's alpha shown as banded bars.}
+\caption{The self-contained \texttt{audit.html} report from the illustrative run (ELT-YOK taxonomy, seed 7, 60 synthetic students). It pairs the coverage summary (five domains, fifteen mapped courses, none unmapped, none ambiguous) with per-domain descriptives and Cronbach's alpha shown as banded bars.}
 \label{fig:audit}
 \end{figure}
 
