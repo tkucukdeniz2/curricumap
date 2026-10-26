@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use CurricuMap, please cite it as below."
+title: "CurricuMap: turn registrar transcripts into auditable student-by-domain competency matrices"
+type: software
+version: 0.2.0
+license: MIT
+doi: 10.5281/zenodo.22140689
+repository-code: "https://github.com/tkucukdeniz2/curricumap"
+authors:
+  - family-names: "Küçükdeniz"
+    given-names: "Tarık"
+    email: "tkdeniz@iuc.edu.tr"
+    affiliation: "Department of Industrial Engineering, İstanbul University-Cerrahpaşa"
+  - family-names: "Can"
+    given-names: "Tuncer"
+    affiliation: "Department of English Language Teaching, İstanbul University-Cerrahpaşa"
+keywords:
+  - learning analytics
+  - curriculum mapping
+  - competency assessment
+  - data provenance

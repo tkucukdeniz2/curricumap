@@ -1,0 +1,172 @@
+system,title,stratum,curriculum,official_category,reference,predicted
+claude_zeroshot,BİLİMSEL ARAŞTIRMA YÖNTEMLERİ,exact,2006,GK,general_ed,pedagogy
+claude_zeroshot,DRAMA,exact,2006,GK,general_ed,pedagogy
+curricumap_lookup,AFET KÜLTÜRÜ,unseen,other,none,general_ed,unmatched
+curricumap_lookup,DİL BECERİLERİNİN ÖĞR. I,variant,2006,A,language_skills,unmatched
+curricumap_lookup,EDEBİYAT VE DİL ÖĞR I,variant,2006,A,literature,unmatched
+curricumap_lookup,EĞİTİMDE AHLAK VE ETİK,variant,2018,MB,pedagogy,unmatched
+curricumap_lookup,MEDYA OKUR YAZARLIĞI,variant,2018,GK,general_ed,unmatched
+curricumap_lookup,TÜRKÇE 2SÖZLÜ ANLATIM,variant,2006,GK,general_ed,unmatched
+curricumap_lookup,TÜRKÇE I YAZILI ANLATIM,variant,2006,GK,general_ed,unmatched
+curricumap_lookup,YABANCI DİL 1 (ALMANCA),variant,2018,GK,general_ed,unmatched
+curricumap_lookup,YABANCI DİL 2 (ALMANCA),variant,2018,GK,general_ed,unmatched
+curricumap_lookup,YABANCI DİL OLARAK İNGİLİZCE ÖĞRETİMİNDE TEKNOLOJİ KULLANIMI,unseen,other,AE,pedagogy,unmatched
+curricumap_lookup,YABANCI DİL ÖĞRETİMİNDE ELEŞTİREL DÜŞÜNCE BECERİLERİ,unseen,other,A,pedagogy,unmatched
+curricumap_lookup,YABANCI ÖĞRENCİLER İÇİN ATATÜRK İLKELERİ VE İNKILAP TARİHİ 1,unseen,other,GK,general_ed,unmatched
+curricumap_lookup,YABANCI ÖĞRENCİLER İÇİN ATATÜRK İLKELERİ VE İNKILAP TARİHİ 2,unseen,other,GK,general_ed,unmatched
+curricumap_lookup,İNGİLİZCE TÜRKÇE ÇEVİRİ,variant,2006,A,language_skills,unmatched
+curricumap_lookup,İNGİLİZCE ÖĞRETİMİNDE SINAV HAZIRLAMA,variant,2018,AE,pedagogy,unmatched
+curricumap_v0.1.0,AFET KÜLTÜRÜ,unseen,other,none,general_ed,unmatched
+curricumap_v0.1.0,ANLATIM BECERİLERİ,exact,2006,A,language_skills,unmatched
+curricumap_v0.1.0,AÇIK VE UZAKTAN ÖĞRENME,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,BAĞIMLILIK VE BAĞIMLILIKLA MÜCADELE,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,BESLENME VE SAĞLIK,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,BİLGİSAYAR I,exact,2006,GK,general_ed,unmatched
+curricumap_v0.1.0,BİLGİSAYAR II,exact,2006,GK,general_ed,unmatched
+curricumap_v0.1.0,BİLİM TARİHİ VE FELSEFESİ,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,BİLİM VE ARAŞTIRMA ETİĞİ,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,BİLİMSEL ARAŞTIRMA YÖNTEMLERİ,exact,2006,GK,general_ed,pedagogy
+curricumap_v0.1.0,DRAMA,exact,2006,GK,general_ed,literature
+curricumap_v0.1.0,DİKKAT EKSİKLİĞİ VE HİPERAKTİVİTE BOZUKLUĞU,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,DİL BECERİLERİNİN ÖĞR. I,variant,2006,A,language_skills,unmatched
+curricumap_v0.1.0,DİL EDİNİMİ,exact,2018,AE,linguistics,unmatched
+curricumap_v0.1.0,DİL VE TOPLUM,exact,2018,AE,linguistics,unmatched
+curricumap_v0.1.0,EDİMBİLİMİ VE DİL ÖĞRETİMİ,exact,2018,AE,linguistics,pedagogy
+curricumap_v0.1.0,EKONOMİ VE GİRİŞİMCİLİK,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,ELEŞTİREL VE ANALİTİK DÜŞÜNME,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,ETKİLİ İLETİŞİM,exact,2006,GK,general_ed,unmatched
+curricumap_v0.1.0,EĞİTİM ANTROPOLOJİSİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİM BİLİMİNE GİRİŞ,exact,2006,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİM FELSEFESİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİM HUKUKU,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİM PSİKOLOJİSİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİM SOSYOLOJİSİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİM TARİHİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİMDE AHLAK VE ETİK,variant,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİMDE DRAMA,exact,2018,MB,pedagogy,literature
+curricumap_v0.1.0,EĞİTİMDE PROGRAM DIŞI ETKİNLİKLER,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİMDE PROGRAM GELİŞTİRME,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİMDE PROJE HAZIRLAMA,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,EĞİTİME GİRİŞ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,GELENEKSEL TÜRK EL SANATLARI,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,KAPSAYICI EĞİTİM,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,KARAKTER VE DEĞER EĞİTİMİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,KARİYER PLANLAMA VE GELİŞTİRME,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,KARŞILAŞTIRMALI EĞİTİM,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,KÜLTÜR VE DİL,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,KİTLE İLETİŞİMİNDE İNGİLİZCE,exact,2018,AE,language_skills,unmatched
+curricumap_v0.1.0,MEDYA OKUR YAZARLIĞI,variant,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,MESLEKİ İNGİLİZCE,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,MÜZE EĞİTİMİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,OKUL DENEYİMİ,exact,2006,MB,pedagogy,unmatched
+curricumap_v0.1.0,OKUL DIŞI ÖĞRENME ORTAMLARI,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,OKULLARDA REHBERLİK,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,REHBERLİK,exact,2006,MB,pedagogy,unmatched
+curricumap_v0.1.0,SANAT VE ESTETİK,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,SINIF YÖNETİMİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,SÖYLEM ÇÖZÜMLEMESİ VE DİL ÖĞRETİMİ,exact,2018,AE,linguistics,pedagogy
+curricumap_v0.1.0,SÖZCÜK BİLGİSİ,exact,2006,A,language_skills,unmatched
+curricumap_v0.1.0,SÖZLÜ İLETİŞİM BECERİLERİ 1,exact,2018,AE,language_skills,unmatched
+curricumap_v0.1.0,SÖZLÜ İLETİŞİM BECERİLERİ 2,exact,2018,AE,language_skills,unmatched
+curricumap_v0.1.0,SÖZLÜ İLETİŞİM BECERİLERİ I,exact,2006,A,language_skills,unmatched
+curricumap_v0.1.0,SÖZLÜ İLETİŞİM BECERİLERİ II,exact,2006,A,language_skills,unmatched
+curricumap_v0.1.0,SÜRDÜRÜLEBİLİR KALKINMA VE EĞİTİM,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,TÜMLEŞİK DİL BECERİLERİNİN ÖĞRETİMİ,exact,2018,AE,language_skills,pedagogy
+curricumap_v0.1.0,TÜRK DİLİ 1,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,TÜRK DİLİ 2,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,TÜRK EĞİTİM SİSTEMİ VE OKUL YÖNETİMİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,TÜRK EĞİTİM TARİHİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,TÜRK KÜLTÜR COĞRAFYASI,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,TÜRK MUSİKİSİ,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,TÜRK SANATI TARİHİ,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,TÜRK İŞARET DİLİ,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,TÜRKÇE-İNGİLİZCE ÇEVİRİ,exact,2006,A,language_skills,general_ed
+curricumap_v0.1.0,YABANCI DİL 1,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,YABANCI DİL 1 (ALMANCA),variant,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,YABANCI DİL 2,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,YABANCI DİL 2 (ALMANCA),variant,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,YETİŞKİN EĞİTİMİ VE HAYAT BOYU ÖĞRENME,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,ÇEVİRİ,exact,2018,AE,language_skills,unmatched
+curricumap_v0.1.0,ÇOCUK PSİKOLOJİSİ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,ÖZEL EĞİTİM,exact,2006,MB,pedagogy,unmatched
+curricumap_v0.1.0,ÖZEL EĞİTİM VE KAYNAŞTIRMA,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,ÖĞRENME GÜÇLÜĞÜ,exact,2018,MB,pedagogy,unmatched
+curricumap_v0.1.0,İKİNCİ YABANCI DİL I,exact,2006,A,general_ed,unmatched
+curricumap_v0.1.0,İNGİLİZCE DERS KİTABI İNCELEMESİ,exact,2018,AE,pedagogy,unmatched
+curricumap_v0.1.0,İNGİLİZCE DİL BECERİLERİNİN ÖĞRETİMİ 1,exact,2018,AE,language_skills,pedagogy
+curricumap_v0.1.0,İNGİLİZCE DİL BECERİLERİNİN ÖĞRETİMİ 2,exact,2018,AE,language_skills,pedagogy
+curricumap_v0.1.0,İNGİLİZCE SÖZCÜK BİLGİSİ ÖĞRETİMİ,exact,2018,AE,language_skills,pedagogy
+curricumap_v0.1.0,İNGİLİZCE TÜRKÇE ÇEVİRİ,variant,2006,A,language_skills,general_ed
+curricumap_v0.1.0,İNGİLİZCE ÖĞRETİMİNDE DRAMA,exact,2018,AE,pedagogy,literature
+curricumap_v0.1.0,İNGİLİZCENİN YAPISI,exact,2018,AE,language_skills,unmatched
+curricumap_v0.1.0,İNSAN HAKLARI VE DEMOKRASİ EĞİTİMİ,exact,2018,GK,general_ed,unmatched
+curricumap_v0.1.0,İNSAN İLİŞKİLERİ VE İLETİŞİM,exact,2018,GK,general_ed,unmatched
+e5_zeroshot,AÇIK VE UZAKTAN ÖĞRENME,exact,2018,MB,pedagogy,general_ed
+e5_zeroshot,BAĞIMLILIK VE BAĞIMLILIKLA MÜCADELE,exact,2018,GK,general_ed,pedagogy
+e5_zeroshot,BAĞLAMSAL DİLBİLGİSİ I,exact,2006,A,language_skills,linguistics
+e5_zeroshot,BAĞLAMSAL DİLBİLGİSİ II,exact,2006,A,language_skills,linguistics
+e5_zeroshot,BİLİM TARİHİ VE FELSEFESİ,exact,2018,GK,general_ed,pedagogy
+e5_zeroshot,BİLİM VE ARAŞTIRMA ETİĞİ,exact,2018,GK,general_ed,pedagogy
+e5_zeroshot,BİLİMSEL ARAŞTIRMA YÖNTEMLERİ,exact,2006,GK,general_ed,pedagogy
+e5_zeroshot,DRAMA,exact,2006,GK,general_ed,literature
+e5_zeroshot,DİL VE EDEBİYAT ÖĞRETİMİ 1,exact,2018,AE,literature,language_skills
+e5_zeroshot,DİL VE EDEBİYAT ÖĞRETİMİ 2,exact,2018,AE,literature,language_skills
+e5_zeroshot,DİLBİLİMİ 1,exact,2018,AE,linguistics,language_skills
+e5_zeroshot,DİLBİLİMİ 2,exact,2018,AE,linguistics,language_skills
+e5_zeroshot,EDEBİYAT VE DİL ÖĞR I,variant,2006,A,literature,language_skills
+e5_zeroshot,EDİMBİLİMİ VE DİL ÖĞRETİMİ,exact,2018,AE,linguistics,language_skills
+e5_zeroshot,ELEŞTİREL OKUMA VE YAZMA,exact,2018,AE,language_skills,pedagogy
+e5_zeroshot,ETKİLİ İLETİŞİM,exact,2006,GK,general_ed,language_skills
+e5_zeroshot,KARİYER PLANLAMA VE GELİŞTİRME,exact,2018,GK,general_ed,pedagogy
+e5_zeroshot,MEDYA OKUR YAZARLIĞI,variant,2018,GK,general_ed,language_skills
+e5_zeroshot,MESLEKİ İNGİLİZCE,exact,2018,GK,general_ed,language_skills
+e5_zeroshot,SINIF YÖNETİMİ,exact,2018,MB,pedagogy,language_skills
+e5_zeroshot,SÖYLEM ÇÖZÜMLEMESİ VE DİL ÖĞRETİMİ,exact,2018,AE,linguistics,language_skills
+e5_zeroshot,TÜRK İŞARET DİLİ,exact,2018,GK,general_ed,language_skills
+e5_zeroshot,TÜRKÇE 2SÖZLÜ ANLATIM,variant,2006,GK,general_ed,language_skills
+e5_zeroshot,TÜRKÇE I YAZILI ANLATIM,variant,2006,GK,general_ed,language_skills
+e5_zeroshot,YABANCI DİL 1,exact,2018,GK,general_ed,language_skills
+e5_zeroshot,YABANCI DİL 1 (ALMANCA),variant,2018,GK,general_ed,language_skills
+e5_zeroshot,YABANCI DİL 2,exact,2018,GK,general_ed,language_skills
+e5_zeroshot,YABANCI DİL 2 (ALMANCA),variant,2018,GK,general_ed,language_skills
+e5_zeroshot,YABANCI DİL OLARAK İNGİLİZCE ÖĞRETİMİNDE TEKNOLOJİ KULLANIMI,unseen,other,AE,pedagogy,language_skills
+e5_zeroshot,YABANCI DİL ÖĞRETİMİNDE ELEŞTİREL DÜŞÜNCE BECERİLERİ,unseen,other,A,pedagogy,language_skills
+e5_zeroshot,YABANCI DİL ÖĞRETİMİNDE MATERYAL İNCELEME VE GELİŞTİRME,exact,2006,A,pedagogy,language_skills
+e5_zeroshot,ÇOCUKLARA YABANCI DİL ÖĞRETİMİ 1,exact,2018,AE,pedagogy,language_skills
+e5_zeroshot,ÇOCUKLARA YABANCI DİL ÖĞRETİMİ 2,exact,2018,AE,pedagogy,language_skills
+e5_zeroshot,ÇOCUKLARA YABANCI DİL ÖĞRETİMİ I,exact,2006,A,pedagogy,language_skills
+e5_zeroshot,İNGİLİZCE DERS KİTABI İNCELEMESİ,exact,2018,AE,pedagogy,language_skills
+e5_zeroshot,İNGİLİZCE ÖĞRENME VE ÖĞRETİM YAKLAŞIMLARI,exact,2018,AE,pedagogy,language_skills
+e5_zeroshot,İNGİLİZCE ÖĞRETİM PROGRAMLARI,exact,2018,AE,pedagogy,language_skills
+e5_zeroshot,İNGİLİZCE ÖĞRETİMİNDE DERS İÇERİĞİ GELİŞTİRME,exact,2018,AE,pedagogy,language_skills
+e5_zeroshot,İNGİLİZCE ÖĞRETİMİNDE DRAMA,exact,2018,AE,pedagogy,literature
+e5_zeroshot,İNGİLİZCE ÖĞRETİMİNDE MATERYAL TASARIMI,exact,2018,AE,pedagogy,language_skills
+e5_zeroshot,İNGİLİZCE ÖĞRETİMİNDE SINAV HAZIRLAMA,variant,2018,AE,pedagogy,language_skills
+e5_zeroshot,İNGİLİZCE ÖĞRETİMİNDE YAKLAŞIMLAR I,exact,2006,A,pedagogy,language_skills
+e5_zeroshot,İNGİLİZCE ÖĞRETİMİNDE YAKLAŞIMLAR II,exact,2006,A,pedagogy,language_skills
+e5_zeroshot,İNGİLİZCE ÖĞRETİMİNDE YENİ YAKLAŞIMLAR,exact,2018,AE,pedagogy,language_skills
+e5_zeroshot,İNSAN İLİŞKİLERİ VE İLETİŞİM,exact,2018,GK,general_ed,language_skills
+gemma_zeroshot,BAĞLAMSAL DİLBİLGİSİ I,exact,2006,A,language_skills,linguistics
+gemma_zeroshot,BAĞLAMSAL DİLBİLGİSİ II,exact,2006,A,language_skills,linguistics
+gemma_zeroshot,BİLİM VE ARAŞTIRMA ETİĞİ,exact,2018,GK,general_ed,pedagogy
+gemma_zeroshot,BİLİMSEL ARAŞTIRMA YÖNTEMLERİ,exact,2006,GK,general_ed,pedagogy
+gemma_zeroshot,BİLİŞİM TEKNOLOJİLERİ,exact,2018,GK,general_ed,pedagogy
+gemma_zeroshot,DRAMA,exact,2006,GK,general_ed,pedagogy
+gemma_zeroshot,MESLEKİ İNGİLİZCE,exact,2018,GK,general_ed,language_skills
+gemma_zeroshot,TÜRKÇE 2SÖZLÜ ANLATIM,variant,2006,GK,general_ed,language_skills
+gemma_zeroshot,TÜRKÇE I YAZILI ANLATIM,variant,2006,GK,general_ed,language_skills
+gemma_zeroshot,İNGİLİZCENİN YAPISI,exact,2018,AE,language_skills,linguistics
+gemma_zeroshot_greedy,BAĞLAMSAL DİLBİLGİSİ I,exact,2006,A,language_skills,linguistics
+gemma_zeroshot_greedy,BAĞLAMSAL DİLBİLGİSİ II,exact,2006,A,language_skills,linguistics
+gemma_zeroshot_greedy,BİLİMSEL ARAŞTIRMA YÖNTEMLERİ,exact,2006,GK,general_ed,pedagogy
+gemma_zeroshot_greedy,BİLİŞİM TEKNOLOJİLERİ,exact,2018,GK,general_ed,pedagogy
+gemma_zeroshot_greedy,DRAMA,exact,2006,GK,general_ed,pedagogy
+gemma_zeroshot_greedy,MESLEKİ İNGİLİZCE,exact,2018,GK,general_ed,language_skills
+gemma_zeroshot_greedy,TÜRKÇE 2SÖZLÜ ANLATIM,variant,2006,GK,general_ed,language_skills
+gemma_zeroshot_greedy,TÜRKÇE I YAZILI ANLATIM,variant,2006,GK,general_ed,language_skills
+gemma_zeroshot_greedy,YABANCI DİL 1,exact,2018,GK,general_ed,language_skills
+gemma_zeroshot_greedy,YABANCI DİL 2,exact,2018,GK,general_ed,language_skills
+gemma_zeroshot_greedy,İKİNCİ YABANCI DİL I,exact,2006,A,general_ed,language_skills
+gemma_zeroshot_greedy,İNGİLİZCENİN YAPISI,exact,2018,AE,language_skills,linguistics
+string_1nn,YABANCI DİL OLARAK İNGİLİZCE ÖĞRETİMİNDE TEKNOLOJİ KULLANIMI,unseen,other,AE,pedagogy,general_ed
+string_1nn,YABANCI DİL ÖĞRETİMİNDE ELEŞTİREL DÜŞÜNCE BECERİLERİ,unseen,other,A,pedagogy,general_ed

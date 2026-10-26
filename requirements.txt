@@ -1,0 +1,12 @@
+# Direct-dependency versions used for the paper's illustrative example and benchmarks (Python 3.13.5).
+# These pins need Python >= 3.12 (numpy 2.5.1 requires 3.12); on Python 3.10-3.11 use 'pip install .',
+# which installs the newest versions allowed by the lower bounds in pyproject.toml.
+# The validation baselines are pinned separately in validation/requirements.txt.
+# Reproduce: pip install -r requirements.txt && pip install --no-deps .
+pandas==3.0.3
+numpy==2.5.1
+PyYAML==6.0.3
+jsonschema==4.26.0
+rapidfuzz==3.14.5
+openpyxl==3.1.5
+Jinja2==3.1.6

@@ -17,3 +17,8 @@ env/
 .DS_Store
 .idea/
 .vscode/
+
+# reviewer reports and other submission material (never publish)
+SOFTX-D-26-01137-reviews/
+.coverage
+htmlcov/

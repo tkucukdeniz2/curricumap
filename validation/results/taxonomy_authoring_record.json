@@ -1,0 +1,698 @@
+{
+  "protocol": "Drafted by an LLM coding assistant (Claude Opus 5.5 in Claude Code) from validation/data/yok_programmes.csv; the registrar catalogue was moved out of the repository and the assistants were forbidden to read it; three further assistant instances reviewed the draft for generality, false-positive hazards and convention fidelity; a fifth instance (revise) then revised it. No human edited the rules. Each assistant listed every file it read (files_read); the input of every tool call is in ../authoring/tool_calls.jsonl. The frozen file's SHA-256 is in frozen_taxonomy.sha256.",
+  "author": {
+    "n_rules": 9,
+    "n_keywords": 61,
+    "n_regex": 36,
+    "n_overrides": 0,
+    "source_accuracy": "157/158 correct, 0 unmatched, 14 ambiguous. The one miss is a conflict inside the source list that no title-level taxonomy can resolve: the identical title 'Türk Eğitim Tarihi' is MB→pedagogy (R1) in the 2018 programme but GK→general_ed (R2) in the 2006 programme. The taxonomy follows 2018, the programme it is named after, so the 2006 row (expected general_ed) is assigned pedagogy. All 14 ambiguous titles are compound titles resolved by rule order. Thirteen join a subject to 'Öğretimi': İngilizce Dil Becerilerinin Öğretimi 1/2, Dil ve Edebiyat Öğretimi 1/2, Edimbilimi ve Dil Öğretimi, İngilizce Sözcük Bilgisi Öğretimi, Sosyodilbilim ve Dil Öğretimi, Söylem Çözümlemesi ve Dil Öğretimi, Tümleşik Dil Becerilerinin Öğretimi, Dil Becerilerinin Öğretimi I/II and Edebiyat ve Dil Öğretimi I/II. The fourteenth is 'Dünya İngilizceleri ve Kültür' (linguistics plus culture). All 158 are assigned by rules; no overrides are needed.",
+    "tests": "1 failed, 69 passed in 1.52s. The only failure is tests/test_cli.py::test_bundled_sample_transcript_runs_as_documented, at 'assert prov[\"domain\"].notna().sum() == 10', which gives 8. It fails only because two toy titles are not official YÖK titles (see sample_transcript_issues). The test's other assertions already hold, checked in memory: PE100 is unmatched, the matrix is (5, 5), and wide[1, 'language_skills'] == 85.0. tests/test_cli.py::test_paper_illustrative_example_reproduces_exactly passes (878 rows, 0 unmapped, 0 ambiguous, identical alpha values). tests/test_taxonomy.py::test_every_bundled_taxonomy_classifies_its_synthetic_courses passes: the synthetic names are okuma/yazma/dinleme, öğretim/öğretmen/öğrenme, dilbilim/edimbilim/dil edinim, edebiyat x3 and atatürk/inkılap/türk dili, numbered 1-3, and all map to their own domain with none ambiguous. test_validate_taxonomy_ok[bundled] passes.",
+    "design_notes": "File: src/curricumap/taxonomies/elt_yok_2018.yaml. I deleted the old file without reading it, for blinding, then rewrote it. It keeps id elt_yok_2018, label 'ELT Teacher Education Curriculum (YÖK 2018)', locale tr/locale-aware, ordered_rules, fuzzy disabled, unmatched: flag, and the five domains in the given order. No other file was modified.\n\nRULES (9), in evaluation order:\n1. literature: edebiyat, plus \\bedeb.\n2. linguistics: dilbilim, edimbilim, dil edinim, dil ve toplum, dünya ingilizce, plus a word-bounded \\bsöylem\\b, so that 'söyleme' (singing) is not caught.\n3. language_skills, four skills: okuma, yazma, dinleme, sesletim, sözlü iletişim, dil/anlatım beceri. A bare 'beceri' is avoided because life-, study- or thinking-skills courses would match.\n4. language_skills, system and use: dilbilgisi (never confused with dilbilim), sözcük, İngilizcenin yapı, çeviri, kitle iletişim.\n5. pedagogy, teaching and learning: öğretim, öğretmen, öğrenme, plus ÖĞR./ÖĞRT.\n6. pedagogy, education as a field. 'eğitim' is accepted only as a whole word or with -e/-de/-in/-inde, never the bare possessive 'X Eğitimi'. That keeps out Beden Eğitimi ve Spor, Müzik Eğitimi and the GK course İnsan Hakları ve Demokrasi Eğitimi. The MB 'X Eğitimi' titles are reached through learner group or setting: çocuk, yetişkin, müze, değer/karakter eğitimi. 'EĞT.' is accepted only at the start of a title.\n7. pedagogy, school/classroom, guidance, assessment, psychology, thinking, special needs, materials: okul, \\bsınıf\\b, rehber, ölçme, değerlendir, psikoloji, düşünme, hiperaktivite, kaynaştırma, materyal, ders kitabı/içeriği.\n8. general_ed, common compulsory courses: atatürk/inkılap, türk dili, bilişim/bilgisayar, topluma hizmet. 'Türkçe' and 'Yabancı Dil' use lookaheads so that the Çeviri courses and 'Yabancı Dil Öğretimi' are never candidates. An R4 regex covers second foreign languages printed by name (Almanca, Fransızca, ...).\n9. general_ed, GK electives: one stem per topic, plus ^bilim (anchored, because 'bilim' also occurs inside Dilbilimi and Eğitim Bilimine Giriş) and ^drama (only the stand-alone 2006 GK Drama is general_ed).\n\nORDER RATIONALE (also in the header): subject before method, so compound '<subject> ... Öğretimi' titles go to their subject. Disciplines (literature, linguistics) come before skill stems. General education comes last with distinctive stems only. Zero overrides were needed.\n\nTOLERANCE: every keyword containing a Turkish-specific letter has a regex twin with [iı] [öo] [üu] [şs] [çc] [gğ] [âa]. This matters because ASCII-uppercase 'I' casefolds to 'ı', so 'INGILIZ' becomes 'ıngılız'. A mechanical check found 0 keywords without a working twin.\n\nGENERALISATION, on variants I generated from the official titles (excluding the conflicting row):\n- 157/157 correct for Turkish uppercase, ASCII uppercase, ASCII mixed case, ASCII lowercase, Roman/Arabic numeral swap, punctuation changes, 'Dil Bilimi'/'Dil Bilgisi' spacing, apostrophes and 'İng.' abbreviations.\n- 50/50 on hand-written registrar truncations such as 'ATATÜRK İLK. VE İNK. TAR. I', 'İNG. DİL BEC. ÖĞR. II', 'YAB. DİL ÖĞR. MATERYAL İNC. VE GEL.' and 'TOPLUMA HİZ. UYG.'.\n- No variant was ever misclassified. The only residual misses are unmatched, and only when 'Eğitim' is abbreviated to 'EĞT.' after a qualifier: 7/157 with 'EĞT.' forced everywhere, e.g. 'Özel Eğt.' or 'Türk Eğt. Tarihi'. This is a deliberate trade-off, because a non-initial 'EĞT.' cannot be told apart from 'Beden Eğt.'.\n- Off-programme titles (Beden Eğitimi ve Spor, Müzik Eğitimi, Matematik, Fizik, Veri Yapıları, Şarkı Söyleme, Yaşam Becerileri, Sınıflandırma, Trafik Eğitimi, Hazırlık İngilizcesi and others) stay unmatched. Only Sanat Eğitimi, İş Sağlığı ve Güvenliği and Din Kültürü ve Ahlak Bilgisi map, to general_ed via the official GK stems sanat/sağlık/kültür.\n\nOUT OF SCOPE BY DESIGN: English-language titles, and courses absent from both YÖK lists (e.g. Anlambilim, Roman, Şiir). These are left unmatched and flagged rather than guessed.\n\nBLINDING: nothing under Academic_Papers, /tmp, /private/tmp or any *catalog*/*iuc*/*registrar*/*transcript*.xlsx file was opened, listed or grepped, and no git command was run. Directory listings were filtered against those patterns. Harness-injected context (a memory index and a git-status snapshot of the Academic_Papers working directory) appeared in my prompt unrequested; I opened no file it names. Outside the strictly enumerated allowed list, I accessed only examples/sample_transcript.csv and examples/sample_config.yaml, and only through code to answer item 7. I printed just the 3 unmatched toy rows. Neither file influenced any rule; the taxonomy was finalised for the source list before the test run and was not changed to fit the toy titles.",
+    "files_read": [
+      "~/PycharmProjects/curricumap (top-level listing, filtered to exclude catalog|iuc|registrar|transcript)",
+      "src (recursive listing via find, filtered)",
+      "tests (recursive listing via find, filtered)",
+      "docs (recursive listing via find, filtered)",
+      "src/curricumap/taxonomy.py",
+      "src/curricumap/classify.py",
+      "src/curricumap/synth.py",
+      "src/curricumap/cli.py",
+      "src/curricumap/audit.py",
+      "src/curricumap/prepare.py",
+      "src/curricumap/__init__.py",
+      "src/curricumap/schemas/taxonomy.schema.json",
+      "src/curricumap/taxonomies/math_ed_yok.yaml",
+      "src/curricumap/taxonomies/bologna.yaml",
+      "src/curricumap/taxonomies/engineering_mudek.yaml",
+      "src/curricumap/taxonomies/canmeds.yaml",
+      "src/curricumap/taxonomies/elt_yok_2018.yaml (old version deleted UNREAD; only my newly written version was read back)",
+      "tests/test_taxonomy.py",
+      "tests/test_cli.py",
+      "tests/test_classify.py",
+      "tests/conftest.py",
+      "tests/test_synth.py (grep only)",
+      "tests/test_audit.py (grep only)",
+      "tests/test_prepare.py (grep only)",
+      "README.md",
+      "docs/code-metadata.md",
+      "KNOWN_ISSUES.md",
+      "pyproject.toml (grep only, no matching lines)",
+      "validation/data/yok_programmes.csv",
+      "examples/sample_transcript.csv (via code only, for item 7; printed only the 3 unmatched rows LING202, LIT202, PE100)",
+      "examples/sample_config.yaml (via code only, to check the remaining test assertions; contents not printed)"
+    ]
+  },
+  "reviews": {
+    "convention": {
+      "issues": [
+        {
+          "severity": "medium",
+          "problem": "Rule 4 assigns 'Kitle İletişiminde İngilizce' to language_skills through the stem 'kitle iletişim' (mass communication). Under R3 the course is language_skills because its subject is English, not mass communication. As written, the stem pulls ordinary media and communication courses into language_skills without any flag. I ran three titles: 'Kitle İletişim Araçları' -> language_skills (ambiguous=False, pattern 'kitle iletişim'). 'Kitle İletişim Kuramları' -> language_skills (not flagged). 'Medya ve Kitle İletişimi' -> language_skills, which beats general_ed 'medya' (flagged ambiguous).",
+          "example_titles": [
+            "Kitle İletişim Araçları",
+            "Kitle İletişim Kuramları",
+            "Medya ve Kitle İletişimi",
+            "Kitle İletişiminde İngilizce"
+          ],
+          "fix": "Remove the bare keyword 'kitle iletişim' from rule 4 'any' (rule 4 is not a first rule, so goal 5 is unaffected). Replace the regex 'k[iı]tle [iı]let' with one that requires English, e.g. 'k[iı]tle [iı]let\\w*\\s+[iı]ng'. I tested this in memory: 'Kitle İletişiminde İngilizce', 'KİTLE İLETİŞİMİNDE İNG.' and 'KITLE ILETISIMINDE INGILIZCE' stay language_skills, and the 158-row check is unchanged (157 correct / 0 unmatched / 14 ambiguous). There are 0 changes on the uppercase/ASCII/numeral variants and synth still passes. The three probes become unmatched or general_ed. Update the SIZE line to 60 keywords."
+        },
+        {
+          "severity": "medium",
+          "problem": "In rule 6 the eğitim regex '\\be[gğ][iı]t[iı]m(e|de|[iı]n|[iı]nde)?\\b' does not do what its comment says. The comment says 'X Eğitimi' compounds (training in a subject, e.g. Beden Eğitimi, Müzik Eğitimi) are never accepted. But '-inde' is the possessive-locative of exactly that compound (eğitim-i-nde), so they come back in. Test results: 'Beden Eğitiminde Oyun' -> pedagogy (ambiguous=False). 'Müzik Eğitiminde Bilgisayar' -> pedagogy. The official titles use only these forms of eğitim: bare, -e, -de and possessive -i. So '-in' and '-inde' are undeclared generalisations. That contradicts the SOURCE claim that the rules 'add only generic registrar renderings'.",
+          "example_titles": [
+            "Beden Eğitiminde Oyun",
+            "Müzik Eğitiminde Bilgisayar",
+            "Yabancı Dil Eğitiminde Teknoloji Kullanımı"
+          ],
+          "fix": "Either (a) use '\\be[gğ][iı]t[iı]m(e|de|[iı]n)?\\b'. I tested this in memory: 157/0/14 unchanged, 0 variant changes, synth still passes. The trade-off is that 'Yabancı Dil Eğitiminde Teknoloji Kullanımı' becomes unmatched (flagged) instead of pedagogy-ambiguous. Or (b) keep '-inde' and rewrite the comment and the SOURCE line. They should say that the possessive-locative 'X Eğitiminde Y' is accepted on purpose as a teaching-method shape and that it lets in 'Beden/Müzik Eğitiminde ...'."
+        },
+        {
+          "severity": "medium",
+          "problem": "The RULE ORDER header is incomplete and gives the wrong reason for its own example. I permuted the five domain blocks over all 158 rows. Only four ordering constraints change any source result: literature before pedagogy (4 rows), linguistics before pedagogy (3), language_skills before pedagogy (6), and linguistics before general_ed (1 row: 'Dünya İngilizceleri ve Kültür' becomes general_ed via 'kültür'). The header never states the linguistics-before-general_ed constraint. Bullet 2 (literature/linguistics before skills) and bullet 3 (general_ed after pedagogy) change 0 of the 158 rows. In bullet 3, 'Çocuklara Yabancı Dil Öğretimi' stays in pedagogy because of the rule-8 lookahead '(?! [öo][gğ]r)', not because of the order. With general_ed placed before pedagogy it is still pedagogy, and the score stays 157/158.",
+          "example_titles": [
+            "Dünya İngilizceleri ve Kültür",
+            "Çocuklara Yabancı Dil Öğretimi 1",
+            "Dil ve Edebiyat Öğretimi 1",
+            "Edimbilimi ve Dil Öğretimi",
+            "Tümleşik Dil Becerilerinin Öğretimi"
+          ],
+          "fix": "Rewrite RULE ORDER around the evidence. (1) Subject before method: 13 compound titles need it. (2) Linguistics before general education: 'kültür' would otherwise take 'Dünya İngilizceleri ve Kültür'. (3) Literature/linguistics before skills and pedagogy before general_ed are precautions that change no official title. Credit the rule-8 lookahead, not the order, for 'Çocuklara Yabancı Dil Öğretimi'."
+        },
+        {
+          "severity": "low",
+          "problem": "Goal 1 (all 158 rows correct) cannot be met. The CSV gives 'Türk Eğitim Tarihi' two labels: MB/pedagogy in 2018 and GK/general_ed in 2006. Matching and overrides both look at the title only, so 157/158 is the most any taxonomy can reach. My check reproduces this: the one miss is the 2006 row, which gets pedagogy through the eğitim regex. The header describes this correctly. However, that row gets ambiguous=False, so someone analysing a 2006 cohort gets no signal in provenance.",
+          "example_titles": [
+            "Türk Eğitim Tarihi"
+          ],
+          "fix": "No rule change is possible or needed. The orchestrator should accept 157/158 as the ceiling. Add one header sentence with the remedy for 2006-programme cohorts: a local override { course: \"Türk Eğitim Tarihi\", domain: general_ed }."
+        },
+        {
+          "severity": "low",
+          "problem": "The rule-8 lookahead blocks only 'öğr', so foreign-language education courses spelled with 'Eğitimi' go to general_ed without a flag. Under R3 these are ELT methodology (pedagogy). This contradicts the comment that 'the foreign-language teaching courses (Yabancı Dil Öğretimi) are never candidates here'. Test result: 'Erken Yaşta Yabancı Dil Eğitimi' -> general_ed, ambiguous=False.",
+          "example_titles": [
+            "Erken Yaşta Yabancı Dil Eğitimi",
+            "Yabancı Dil Eğitimi"
+          ],
+          "fix": "Use '\\byab(anc[ıi]|\\.) ?d[iı]l(?! ([öo][gğ]r|e[gğ][iı]t))'. I tested this in memory: no change on the 158 rows, and the probe becomes unmatched (flagged for review) instead of silently general_ed."
+        },
+        {
+          "severity": "low",
+          "problem": "The header does not say how R4 competes with the skill rules. A second-foreign-language course printed with a skill or grammar word reaches rule 3 or 4 before rule 8, so it goes to language_skills, although R4 says general_ed. The flag is raised. Test results: 'Almanca Okuma ve Yazma', 'Fransızca Dinleme ve Konuşma', 'Almanca Dilbilgisi' and 'İkinci Yabancı Dil: Almanca Okuma' all -> language_skills (ambiguous with general_ed).",
+          "example_titles": [
+            "Almanca Okuma ve Yazma",
+            "Fransızca Dinleme ve Konuşma",
+            "Almanca Dilbilgisi",
+            "İkinci Yabancı Dil: Almanca Okuma"
+          ],
+          "fix": "Documenting this is the cheaper fix: in RULE ORDER, say that R4 titles carrying a skill stem resolve to language_skills and are flagged. The alternative is to move the R4 patterns into a general_ed rule placed before rule 3. That rule would become the first general_ed rule, so it would need plain keywords (goal 5) and would rename the synthetic general_ed courses of the paper example."
+        },
+        {
+          "severity": "low",
+          "problem": "The rule-5 regex '\\b[öo][gğ]re[tn]' is described as the ASCII form of the keywords ('OGRETIM', 'ogrenme'). It is broader than that: it also matches 'öğrenci' (student). Test result: 'Öğrenci Kulüpleri' -> pedagogy, matched by this regex.",
+          "example_titles": [
+            "Öğrenci Kulüpleri"
+          ],
+          "fix": "Make the regex mirror the keywords: '\\b[öo][gğ]re(t[iı]m|tme|nme)'. I tested this in memory: the 158-row check and all uppercase/ASCII variants are unchanged ('OGRETIM ILKE VE YONTEMLERI' is still pedagogy), and 'Öğrenci Kulüpleri' becomes unmatched."
+        },
+        {
+          "severity": "low",
+          "problem": "In compound 'subject + Öğretimi' titles, an abbreviated subject sends the course to pedagogy with no flag. The method abbreviation 'ÖĞR.' is recognised, but most subject abbreviations are not, so the 'subject before method' protection fails for abbreviated registrar titles. Test results: 'DİL VE EDB. ÖĞR. I' (literature), 'SOSYODİLBİL. VE DİL ÖĞR.' and 'EDİMBİL. VE DİL ÖĞR.' (linguistics), and 'İNG. SÖZ. BİLG. ÖĞR.' (language_skills) all -> pedagogy, ambiguous=False. 'İNGİLİZ EDB. I' and 'DİLBİL. I' -> unmatched.",
+          "example_titles": [
+            "DİL VE EDB. ÖĞR. I",
+            "SOSYODİLBİL. VE DİL ÖĞR.",
+            "EDİMBİL. VE DİL ÖĞR.",
+            "İNG. SÖZ. BİLG. ÖĞR.",
+            "İNGİLİZ EDB. I"
+          ],
+          "fix": "Add abbreviated subject stems. Rule 1: add '\\bedb\\.'. Rule 2: change 'd[iı]l ?b[iı]l[iı]m' to 'd[iı]l ?b[iı]l([iı]m|\\.)' and 'ed[iı]m ?b[iı]l[iı]m' to 'ed[iı]m ?b[iı]l([iı]m|\\.)'. Rule 4: add '\\bs[öo]z\\. ?b[iı]lg'. I tested these in memory: 157/0/14 unchanged, synth still passes, every probe reaches its subject domain (flagged ambiguous), and 'Bağlamsal Dilbilgisi I' stays language_skills. If you don't add them, document the limitation in the header."
+        },
+        {
+          "severity": "low",
+          "problem": "The header's list of non-official additions is incomplete. It names 'ÖĞR.', 'EĞT.', 'BEC.' and 'YAB.'. The regexes also accept: ÖĞRT., EĞİT., ÇOC., ÖLÇ., İNG., EDEB., DİL EDİN., SÖZLÜ İLET., TOPLUMA HİZ., DÜNYA İNG., the apostrophe form İngilizce'nin, the eğitim endings -in/-inde, and Değerler / Karakter Eğitimi. I checked the provenance: all 61 keywords are substrings of official titles. The only top-level regex alternatives that match no official title are ÖĞR./ÖĞRT., EĞT./EĞİT. and the R4 language names, all of which are declared. The taxonomy will be scored on held-out registrar data, so readers need the full list to confirm nothing came from the held-out set.",
+          "example_titles": [
+            "ÇOC. YAB. DİL ÖĞR. I",
+            "ÖLÇ. VE DEĞ.",
+            "İNG. YAPISI",
+            "İngilizce'nin Yapısı",
+            "TOPLUMA HİZ. UYG."
+          ],
+          "fix": "Replace the parenthetical in SOURCE with the complete list of abbreviated forms and inflections. Alternatively, drop the word 'only' and point to the per-rule comments."
+        },
+        {
+          "severity": "low",
+          "problem": "The header counts rows, not titles, and does not say the check is in-sample. '158 titles' and '158 source titles' are 158 programme entries but only 150 distinct titles: 8 appear in both programmes (Eğitim Psikolojisi, Öğretim İlke ve Yöntemleri, Türk Eğitim Tarihi, Dil Edinimi, Sınıf Yönetimi, Türk Eğitim Sistemi ve Okul Yönetimi, Topluma Hizmet Uygulamaları, Karşılaştırmalı Eğitim). '157 correct' is measured on the same titles the rules were written from, so it can be misread as accuracy. All header figures are otherwise correct: 9 rules / 61 keywords / 36 regexes / 0 overrides, 157 / 0 / 14, and the 13 + 1 ambiguity breakdown.",
+          "example_titles": [
+            "Eğitim Psikolojisi",
+            "Dil Edinimi"
+          ],
+          "fix": "Write '158 programme entries (150 distinct titles)' and label CHECK as in-sample, with held-out results in validation/. Keep the SIZE line in sync after any of the fixes above."
+        },
+        {
+          "severity": "low",
+          "problem": "A few comments are imprecise. (1) Rule 6 says adults are reached through 'Yetişkin Eğitimi'. The official title 'Yetişkin Eğitimi ve Hayat Boyu Öğrenme' is actually decided by rule 5 ('öğrenme'), and 'yetişkin' decides no official title. (2) 'Çocuk Psikolojisi' is listed among the 'X Eğitimi' shapes, which it is not. (3) MATCHING says regexes 'add three things' but leaves out the negative lookaheads of rule 8, which are the least obvious construct for a non-programmer.",
+          "example_titles": [
+            "Yetişkin Eğitimi ve Hayat Boyu Öğrenme",
+            "Çocuk Psikolojisi"
+          ],
+          "fix": "Reword rule 6: 'yetişkin' covers shortened renderings such as 'Yetişkin Eğitimi'; the official title is already caught by rule 5. Separate Çocuk Psikolojisi from the 'X Eğitimi' examples. Add the lookahead (\"(?! ...) = not followed by\") as a fourth item under MATCHING."
+        },
+        {
+          "severity": "low",
+          "problem": "The YAML is hard to read for a curriculum researcher who is not a programmer. Line 194 is 265 characters (19 keywords) and line 162 is 160 characters. Rules 6, 7 and 9 pack unrelated topics into one alternation, so for an ASCII title provenance reports a long pattern: 'TURK ISARET DILI' shows 'sa[gğ]l[ıi][kğg]|ba[gğ][ıi]ml[ıi]l[ıi]k|meslek[iı] [iı]ng|[iı][şs]aret d[iı]l|co[gğ]rafya|mus[iı]k'. 49 of the 61 keywords are repeated as a regex in the same rule, and nothing says why. The YAML '' escape inside rule 4's regex is obscure.",
+          "example_titles": [
+            "TURK ISARET DILI",
+            "Türk İşaret Dili"
+          ],
+          "fix": "Write keyword lists in block style, one stem per line, with the official title it comes from as a trailing comment. Use one regex per topic, placed next to its keyword. Add one header sentence: the keyword is the readable form that provenance shows and that synth uses; the paired regex only adds ASCII and abbreviated renderings. Write the apostrophe class in a double-quoted string, or drop it."
+        },
+        {
+          "severity": "low",
+          "problem": "Nothing in the YAML warns that the first-rule keywords are used elsewhere. synth names its synthetic courses after the keywords of each domain's first keyword rule, and those names drive the paper's illustrative example (edebiyat 1, dilbilim 1, edimbilim 2, dil edinim 3, okuma 1, öğretim 1, atatürk 1, türk dili 3). Both test_every_bundled_taxonomy_classifies_its_synthetic_courses and the pinned alphas in test_paper_illustrative_example_reproduces_exactly depend on them. A maintainer who reorders keywords, or makes a first rule regex-only, would silently rename or break these courses. The current file is fine: every first-rule keyword with 1/2/3/I/II/III, as written or uppercase, classifies into its own domain without ambiguity, and synth with 3, 5 or 7 courses per domain gives 0 wrong and 0 ambiguous.",
+          "example_titles": [
+            "edebiyat 1",
+            "türk dili 3",
+            "dil edinim 3"
+          ],
+          "fix": "Add one comment line: 'Keep plain, unambiguous keywords in the first rule of each domain: curricumap synth and the paper example name their synthetic courses after them.'"
+        }
+      ],
+      "verdict": "Accept with minor revisions. On convention fidelity the taxonomy is sound, and its header figures are accurate. I re-ran the check over all 158 rows. 157 are correct and 0 are unmatched. 14 are flagged ambiguous: the 13 'subject + Öğretimi' compounds plus 'Dünya İngilizceleri ve Kültür'. The only miss is the 2006 'Türk Eğitim Tarihi' (GK, but assigned pedagogy). No title-level rule can avoid it, because the CSV labels the same title MB/pedagogy in 2018. The SIZE line (9 rules, 61 keywords, 36 regexes, 0 overrides) is correct. The R-code noted on each rule matches the rows it actually decides. Rules 1-4 decide only R3 rows. Rule 5 decides R1 14 and R3 17; rule 6 decides R1 29 plus the documented R2 miss; rule 7 decides R1 8 and R3 1; rule 8 decides R2 15 and R4 3; rule 9 decides R2 21. Every one of the 61 keywords is a substring of an official title. The only regex alternatives that match no official title are the declared ÖĞR./EĞT. abbreviations and the R4 language names. I also tested Turkish uppercase, ASCII (title, upper and lower case) and Roman/Arabic numeral swaps of all 150 distinct titles: none changes its result. validate-taxonomy reports the file as valid. Goal 5 holds. Tests: my first run gave 69 passed, 1 failed. The failure was test_bundled_sample_transcript_runs_as_documented (8 courses mapped instead of 10). It failed only because two invented toy titles match no YÖK course: LING202 'Sesbilim ve Sesbilgisi' and LIT202 'Roman İncelemesi'. Swapping in official titles in memory restored 10 mapped, a 5x5 matrix and LS = 85.0. examples/sample_transcript.csv was then rewritten by someone else at 14:53:58 to 10 official 2018 titles plus PE100. After that the full suite gives 70 passed, and examples/README.md matches the new file. The taxonomy file did not change during my review (sha256 32f2df2e...ca82). The main fixes needed: three medium issues (the 'kitle iletişim' stem picks up media courses, the '-inde' ending contradicts its comment, and the RULE ORDER rationale is incomplete and credits order where the lookahead does the work), plus low-severity documentation and readability items. I tested every regex fix I propose in memory. Each keeps 157 / 0 / 14, causes 0 variant changes and keeps synth passing. I edited no files."
+    },
+    "hazards": {
+      "issues": [
+        {
+          "severity": "high",
+          "problem": "The rule 8 'Yabancı Dil' regex is under-constrained. It sends institution-specific ELT pedagogy electives to general_ed without any ambiguity flag. The regex is '\\byab(anc[ıi]|\\.) ?d[iı]l(?! [öo][gğ]r)', and its lookahead rejects only a following 'öğr'. Rule 6 deliberately rejects the possessive 'Eğitimi'. So any 'Yabancı Dil + <anything but öğr…>' title falls through to general_ed. Results: 'Yabancı Dil Eğitimi', 'YABANCI DIL EGITIMI', 'Erken Yaşta Yabancı Dil Eğitimi', 'Yabancı Dil Eğitimi Politikaları', 'Yabancı Dil Kaygısı', 'Yabancı Dil Sınıflarında Drama', 'Yabancı Dil Sınıflarında Teknoloji Kullanımı', 'Yabancı Dil Olarak İngilizce' and 'Yabancı Dil Sınavlarına Hazırlık' all go to general_ed (ambiguous=False, span 'yabancı dil'). One CALL course also gets two domains: 'Bilgisayar Destekli Dil Öğretimi' goes to pedagogy, but 'Bilgisayar Destekli Dil Eğitimi' and 'Bilgisayar Destekli Yabancı Dil Eğitimi' go to general_ed via 'bilgisayar' (ambiguous=False). The rule 8 comment says foreign-language teaching courses 'are never candidates here', which overstates the guard. In the ablation, only the five titles 'Yabancı Dil 1/2' and 'İkinci Yabancı Dil I/II/III' need this regex.",
+          "example_titles": [
+            "Yabancı Dil Eğitimi",
+            "YABANCI DIL EGITIMI",
+            "Erken Yaşta Yabancı Dil Eğitimi",
+            "Yabancı Dil Eğitimi Politikaları",
+            "Yabancı Dil Kaygısı",
+            "Yabancı Dil Sınıflarında Drama",
+            "Yabancı Dil Sınıflarında Teknoloji Kullanımı",
+            "Bilgisayar Destekli Dil Eğitimi",
+            "Bilgisayar Destekli Yabancı Dil Eğitimi",
+            "Yabancı Dil Olarak İngilizce"
+          ],
+          "fix": "Whitelist the official shape instead of blacklisting one continuation: '^(\\S+ )?yab(anc[ıi]|\\.) ?d[iı]l(\\s+([ıiv]+|\\d+)\\b|\\s*[(:]|$)'. This covers Yabancı Dil 1, İkinci Yabancı Dil III, Mesleki Yabancı Dil, 'Yabancı Dil (Almanca) I' and 'Seçmeli Yabancı Dil: Almanca'. Add '\\bd[iı]l e[gğ][iı]t[iı]m' to rule 6, because language education is pedagogy. In rule 7, allow inflected forms of sınıf with '\\bs[ıi]n[ıi]f(?!land)', which still excludes sınıflandırma. Tested in memory: Eğitimi/Politikaları/Sınıflarında and both Bilgisayar Destekli ... Eğitimi titles go to pedagogy; Kaygısı and Olarak İngilizce become unmatched. The official result is unchanged: 157/158 correct, 0 unmatched, 14 ambiguous."
+        },
+        {
+          "severity": "high",
+          "problem": "The rule 3 skill stems 'okuma', 'yazma' and 'dinleme' are bare substrings, and rule 3 runs before the pedagogy and general_ed rules. Common university-wide and other-field electives therefore go to language_skills. Ten of them get no ambiguity flag (ambiguous=False): 'Hızlı Okuma Teknikleri', 'HIZLI OKUMA VE ANLAMA', 'Nota Okuma ve Solfej', 'Harita Okuma', 'Proje Yazma', 'Rapor Yazma Teknikleri', 'Senaryo Yazma', 'Güzel Konuşma ve Yazma', 'Okuma Güçlüğü' and 'Okuma ve Yazma Güçlüğü'. Five more are wrong but flagged ambiguous: 'Eğitimde Proje Yazma', 'İlk Okuma ve Yazma Öğretimi', 'Okuma Kültürü', 'Müzik Dinleme Kültürü' and 'Bilimsel Makale Yazma'. This is inconsistent with the taxonomy's own siblings: 'Eğitimde Proje Yazma' goes to language_skills while MB 'Eğitimde Proje Hazırlama' goes to pedagogy, and 'Okuma Güçlüğü' goes to language_skills while MB 'Öğrenme Güçlüğü' goes to pedagogy. In both official lists these stems occur only at the start of a title (Okuma/Yazma Becerileri, Dinleme ve Sesletim) or after İleri/Eleştirel.",
+          "example_titles": [
+            "Hızlı Okuma Teknikleri",
+            "HIZLI OKUMA VE ANLAMA",
+            "Nota Okuma ve Solfej",
+            "Harita Okuma",
+            "Proje Yazma",
+            "Rapor Yazma Teknikleri",
+            "Senaryo Yazma",
+            "Güzel Konuşma ve Yazma",
+            "Okuma Güçlüğü",
+            "Eğitimde Proje Yazma",
+            "İlk Okuma ve Yazma Öğretimi",
+            "Okuma Kültürü",
+            "Müzik Dinleme Kültürü"
+          ],
+          "fix": "Replace the three bare keywords, and the 'd[iı]nleme' alternative, with an anchored regex: '^(([iı]ler[iı]|ele[şs]t[iı]rel|akadem[iı]k|yarat[ıi]c[ıi]|[iı]ng[iı]l[iı]zce|[iı]ng\\.) )?(okuma|yazma|d[iı]nleme)\\b(?!.*(g[üu][çc]l|k[üu]lt[üu]r))'. Keep 'seslet'. Keep 'sesletim', 'sözlü iletişim' and 'dil beceri' as the rule's plain keywords so the synthetic test still passes; the synthetic names become 'sesletim 1', 'sözlü iletişim 2' and 'dil beceri 3', which I verified are correct and unambiguous. Tested: all 15 titles become unmatched, pedagogy or general_ed. Akademik Yazma, Yaratıcı Yazma, İngilizce Okuma ve Konuşma, 'OKUMA BEC. I', 'ELESTIREL OKUMA VE YAZMA' and 'ILERI OKUMA VE YAZMA II' still match. Trade-off: 'Temel Okuma Becerileri' and 'İleri Düzey Okuma' become unmatched unless 'temel' and 'ileri düzey' are added to the qualifier list."
+        },
+        {
+          "severity": "high",
+          "problem": "The R2/R4 general_ed rules run last, so second-language and Turkish-language courses that contain a skill or literature word go to English-competency domains. The R4 language-name regex sits in rule 8, after rules 1-4. As a result, 'Almanca Dilbilgisi I', 'ALMANCA DILBILGISI I', 'Fransızca Okuma-Yazma', 'Almanca Yazma Becerileri', 'İspanyolca Sözlü İletişim', 'Fransızca Dinleme ve Sesletim', 'Almanca Sözcük Bilgisi' and 'Almanca-Türkçe Çeviri' all go to language_skills. They are flagged ambiguous, but the first match is the English skills domain. The regex knows only the '-ca' names. So 'Alman Edebiyatı', 'FRANSIZ EDEBIYATI', 'Rus Edebiyatı', 'Türk Edebiyatı', 'Divan Edebiyatı' and 'Halk Edebiyatı' go to literature with ambiguous=False, mixing non-English literature into the Literature score without a flag. 'Türk Dili ve Edebiyatı I' (also in uppercase and ASCII forms) goes to literature (flagged ambiguous). 'Türkçe Okuma ve Yazma' and 'Türkçe Dilbilgisi' go to language_skills (ambiguous), and 'Türk Dilbilgisi' goes to language_skills unflagged. The plain forms are handled correctly: 'Almanca I' and 'İkinci Yabancı Dil (Almanca) I' go to general_ed. 'Korece I', 'Farsça I' and 'Latince' are unmatched, which is acceptable because they are surfaced.",
+          "example_titles": [
+            "Almanca Dilbilgisi I",
+            "ALMANCA DILBILGISI I",
+            "Fransızca Okuma-Yazma",
+            "İspanyolca Sözlü İletişim",
+            "Almanca-Türkçe Çeviri",
+            "Alman Edebiyatı",
+            "FRANSIZ EDEBIYATI",
+            "Rus Edebiyatı",
+            "Türk Dili ve Edebiyatı I",
+            "Türk Edebiyatı",
+            "Divan Edebiyatı",
+            "Türkçe Okuma ve Yazma",
+            "Türkçe Dilbilgisi",
+            "Türk Dilbilgisi"
+          ],
+          "fix": "Add one general_ed rule placed FIRST, before literature, for R2/R4 languages. Give it the plain keywords any: ['atatürk', 'inkılap', 'almanca'] so the synthetic names 'atatürk 1', 'inkılap 2', 'almanca 3' still classify (verified). Give it these regexes: '^t[üu]rk d[iı]l[iı]\\b(?!.*[öo][gğ]r)'; '^(akadem[iı]k )?t[üu]rk[çc]e\\b(?!.*([çc]ev[iı]r|[öo][gğ]r))'; the whitelisted Yabancı Dil regex from the first issue; the language-name regex extended with korece, farsça, yunanca and latince; and '\\b(alman|frans[ıi]z|rus|[iı]spanyol|[iı]talyan|arap|japon|[çc][iı]n|t[üu]rk|d[iı]van|halk) edeb'. Remove the moved regexes from rule 8. Tested: the second-language, other-literature, 'Türk Dili ve Edebiyatı I', 'Türkçe Okuma ve Yazma' and 'Türkçe Dilbilgisi' titles go to general_ed. Literature or skills still surfaces through the ambiguity flag. 'Türkçe-İngilizce Çeviri' and 'İngilizce-Türkçe Çeviri' stay language_skills. The official result stays at 157/158. 'Türk Dilbilgisi' still needs an extra 't[üu]rk(çe)? d[iı]l ?b' alternative. If non-English literature should be reviewed rather than counted as general_ed, put a lookbehind on the literature regex instead so those titles fall to unmatched. Either way, update the header's RULE ORDER section, which currently says 'General education runs last'."
+        },
+        {
+          "severity": "medium",
+          "problem": "The rule 4 keyword 'kitle iletişim' and the regex 'k[iı]tle [iı]let' send media-studies courses to language_skills with ambiguous=False: 'Kitle İletişim Araçları', 'KİTLE İLETİŞİM ARAÇLARI' and 'Kitle İletişimi ve Toplum'. The only official title this needs to cover is 'Kitle İletişiminde İngilizce'. A general media course, which is GK-like (compare 'Medya Okuryazarlığı'), is counted as an English skill.",
+          "example_titles": [
+            "Kitle İletişim Araçları",
+            "KİTLE İLETİŞİM ARAÇLARI",
+            "Kitle İletişimi ve Toplum"
+          ],
+          "fix": "Drop the keyword and require English after the stem: 'k[iı]tle [iı]let\\S*\\s+[iı]ng'. Tested: the official title still matches; the three probes become unmatched."
+        },
+        {
+          "severity": "medium",
+          "problem": "The rule 5 keyword 'öğrenme' and the regex '\\b[öo][gğ]re[tn]' put AI/ML electives into pedagogy with ambiguous=False: 'Makine Öğrenmesi', 'MAKİNE ÖĞRENMESİ', 'MAKINE OGRENMESI', 'Derin Öğrenme' and 'Yapay Zeka ve Makine Öğrenmesi'. The word-initial 'öğren' regex also captures 'Öğrenci Koçluğu' and 'Öğrenci Kulüp Çalışmaları', which is debatable. In the ablation, no official title depends on the bare 'öğrenme' keyword, because the regex covers all of them.",
+          "example_titles": [
+            "Makine Öğrenmesi",
+            "MAKINE OGRENMESI",
+            "Derin Öğrenme",
+            "Yapay Zeka ve Makine Öğrenmesi",
+            "Öğrenci Koçluğu"
+          ],
+          "fix": "Remove 'öğrenme' from any and use '(?<!mak[iı]ne )(?<!der[iı]n )\\b[öo][gğ]re[tn]'. The [iı] matters: ASCII 'MAKINE' folds to 'makıne', so a plain '(?<!makine )' misses it (verified). The synthetic pedagogy names become 'öğretim 1', 'öğretmen 2', 'öğretim 3', which still classify correctly with no ambiguity (verified)."
+        },
+        {
+          "severity": "medium",
+          "problem": "Several rule 6/7 stems that no official title needs pull non-education courses into pedagogy. 'değerlendir' catches 'İş Güvenliği ve Risk Değerlendirmesi', 'RISK DEGERLENDIRMESI', 'Çevresel Etki Değerlendirmesi' and 'Proje Değerlendirme'. 'psikoloji' catches 'Genel Psikoloji', 'Psikolojiye Giriş', 'Sosyal Psikoloji', 'SOSYAL PSIKOLOJI', 'Spor Psikolojisi' and 'Dil Psikolojisi'; the last is psycholinguistics and should be linguistics. 'rehber' catches 'Turist Rehberliği', and 'müze' catches 'Müzecilik'. All of these get ambiguous=False. The ablation shows that no official title depends on 'değerlendir', because every official assessment title is already caught by 'ölçme' or rule 5. None depends on 'psikoloji' either, because Eğitim/Çocuk Psikolojisi are caught by rule 6. 'rehber' is needed only for the 2006 title 'Rehberlik', which starts with it, and 'müze' only for 'Müze Eğitimi'.",
+          "example_titles": [
+            "İş Güvenliği ve Risk Değerlendirmesi",
+            "Çevresel Etki Değerlendirmesi",
+            "Proje Değerlendirme",
+            "Genel Psikoloji",
+            "Psikolojiye Giriş",
+            "Sosyal Psikoloji",
+            "Spor Psikolojisi",
+            "Dil Psikolojisi",
+            "Turist Rehberliği",
+            "Müzecilik"
+          ],
+          "fix": "Drop 'değerlendir', both the keyword and the regex alternative. Constrain psychology to '(e[gğ][iı]t[iı]m|geli[şs]im|[öo][gğ]renme|[çc]ocuk|ergen)\\S* ps[iı]koloj'. Replace 'rehber' with '^rehber|rehberl[iı]k\\b'; 'Okullarda Rehberlik' is already caught by 'okul'. Replace 'müze' with '\\bm[üu]ze e[gğ]'. Tested: the official result is unchanged; the probes become unmatched, except 'Kültürel Miras ve Müzecilik', which goes to general_ed. 'Gelişim Psikolojisi' and 'Rehberlik ve Psikolojik Danışma' stay pedagogy."
+        },
+        {
+          "severity": "medium",
+          "problem": "The literature regex '\\bedeb' also matches the verb stem 'edebil-' ('can do'). Rule 1 runs before everything else, so personal-development courses become literature with ambiguous=False: 'Kendini İfade Edebilme', 'KENDINI IFADE EDEBILME' and 'İfade Edebilme Becerileri'.",
+          "example_titles": [
+            "Kendini İfade Edebilme",
+            "KENDINI IFADE EDEBILME",
+            "İfade Edebilme Becerileri"
+          ],
+          "fix": "Use '\\bedeb(?![iı]l)'. Tested: these titles become unmatched, and the official titles and their ASCII/uppercase variants still classify as literature."
+        },
+        {
+          "severity": "medium",
+          "problem": "'^drama\\b' anchors only the start of the title, while its comment says only the stand-alone 2006 GK 'Drama' is general education. So drama-analysis courses (literature) and drama-in-ELT courses (pedagogy) go to general_ed with ambiguous=False: 'Drama Çözümlemesi', 'DRAMA COZUMLEMESI', 'Drama ve Tiyatro' and the English-titled 'Drama in ELT'.",
+          "example_titles": [
+            "Drama Çözümlemesi",
+            "DRAMA COZUMLEMESI",
+            "Drama ve Tiyatro",
+            "Drama in ELT"
+          ],
+          "fix": "Use '^drama( [ıiv]+| \\d+)?$'. Tested: 'Drama' stays general_ed and the others become unmatched."
+        },
+        {
+          "severity": "medium",
+          "problem": "The rule 6 regex accepts 'eğitim' as a whole word, and registrars often print the subject compound without the possessive (as in 'Beden Eğitim ve Spor Yüksekokulu'). So the very course that the header and the rule 6 comment cite as excluded goes to pedagogy with ambiguous=False: 'Beden Eğitim ve Spor I', 'BEDEN EĞİTİM VE SPOR' and 'BEDEN EGITIM VE SPOR I'. The possessive forms are handled correctly: 'Beden Eğitimi ve Spor', 'BEDEN EGITIMI VE SPOR I', 'Müzik Eğitimi', 'MUZIK EGITIMI' and 'BED. EĞT. VE SPOR' are all unmatched. Separately, '\\bs[ıi]n[ıi]f\\b' sends the sociology course 'Sosyal Sınıf ve Tabakalaşma' to pedagogy.",
+          "example_titles": [
+            "Beden Eğitim ve Spor I",
+            "BEDEN EĞİTİM VE SPOR",
+            "BEDEN EGITIM VE SPOR I",
+            "Sosyal Sınıf ve Tabakalaşma"
+          ],
+          "fix": "Prefix the regex with lookbehinds: '(?<!beden )(?<!m[üu]z[iı]k )\\be[gğ][iı]t[iı]m(e|de|[iı]n|[iı]nde)?\\b'. Tested: this blocks the Beden and MUZIK EGITIM forms and keeps Eğitim Psikolojisi, Özel Eğitim, and Türk Eğitim Sistemi ve Okul Yönetimi. Optionally add '(?<!sosyal )' before the sınıf regex."
+        },
+        {
+          "severity": "low",
+          "problem": "Smaller substring hazards. '\\bt[üu]rk[çc]e\\b' is not anchored, so the contrastive-analysis course 'Türkçe ve İngilizce Dil Yapılarının Karşılaştırılması' goes to general_ed unflagged, although it is linguistics. 'd[iı]l ?b[iı]lg[iı]' also matches 'dil bilgisayar': 'Dil Bilgisayar Uygulamaları' goes to language_skills (ambiguous). '[çc]ev[iı]r[iı]' matches the frequent misspelling 'Çevirimiçi Öğrenme', which goes to language_skills (ambiguous) where pedagogy is expected. 'Sözcükbilim' (lexicology) goes to language_skills via 'sözcük'. 'çocuk' and 'düşünme' put 'Çocuk Hakları ve Korunması' and 'Felsefi Düşünme' into pedagogy, which is debatable.",
+          "example_titles": [
+            "Türkçe ve İngilizce Dil Yapılarının Karşılaştırılması",
+            "Dil Bilgisayar Uygulamaları",
+            "Çevirimiçi Öğrenme",
+            "Sözcükbilim",
+            "Çocuk Hakları ve Korunması",
+            "Felsefi Düşünme"
+          ],
+          "fix": "Anchor Türkçe as described in the third issue. If contrastive titles matter, also add '(?!.*([iı]ng[iı]l[iı]zce|kar[şs][ıi]la[şs]t[ıi]r))'. Change the grammar regex to 'd[iı]l ?b[iı]lg[iı](?!sayar)'. Accept or document the rest."
+        },
+        {
+          "severity": "low",
+          "problem": "The header's 'subject before method' rationale is argued only for '...Öğretimi' compounds. It also decides assessment-of-skill titles, against the official convention that assessment courses are pedagogy. 'Dil Becerilerinin Değerlendirilmesi' and 'Okuma Becerilerinin Değerlendirilmesi' go to language_skills (flagged ambiguous with pedagogy). Yet 'Ölçme ve Değerlendirme', 'Yabancı Dil Öğretiminde Ölçme ve Değerlendirme', 'İngilizce Öğretiminde Sınav Hazırlama ve Değerlendirme' and 'Sınıf İçi Öğrenmelerin Değerlendirilmesi' are all pedagogy. These titles are flagged, hence low severity.",
+          "example_titles": [
+            "Dil Becerilerinin Değerlendirilmesi",
+            "Okuma Becerilerinin Değerlendirilmesi"
+          ],
+          "fix": "Either document in the RULE ORDER header that assessment-of-a-skill titles resolve to the skill and are expected ambiguity flags, or add a narrow early pedagogy regex for 'ölçme|sınav|değerlendiril' compounds. The second option must be checked against 'İngilizce Dil Becerilerinin Öğretimi', which has to stay language_skills."
+        }
+      ],
+      "verdict": "The taxonomy is not safe against false positives yet, and should be revised before it is used on registrar data. The fixes are cheap and I verified them in memory.\n\n**What checks out.** The header's claims are accurate:\n- 157/158 official titles are correct. The only miss is 2006 'Türk Eğitim Tarihi'. It is an unavoidable label conflict: the 2018 programme has the identical title as MB.\n- 0 titles are unmatched and 14 are flagged ambiguous.\n- The counts are right: 9 rules, 61 keywords, 36 regexes, 0 overrides.\n- Registrar renderings of the official titles cause no new wrong assignments. I tried Turkish uppercase, ASCII upper and lower case, and Roman/Arabic numeral swaps. Mid-title abbreviations such as 'EĞT.' only produce unmatched titles.\n- The synthetic catalogue (seed 7; 446 rows for 30 students, 878 for 60) classifies correctly with no ambiguity.\n\n**What fails.** I ran about 280 plausible off-programme titles through assign_domain. More than 50 got a wrong domain with ambiguous=False, and more than 25 more were wrong but flagged.\n\nMost of the courses named in the brief behave well:\n- 'Beden Eğitimi ve Spor', 'Müzik' and 'Afet Bilinci' are unmatched.\n- 'Girişimcilik', 'Almanca I' and 'Bilgisayar Programlama' go to general_ed.\n\n'Türk Dili ve Edebiyatı' goes to literature; it is flagged, but the assignment is wrong.\n\nThere are three root causes:\n1. **Bare stems.** okuma, yazma, dinleme, kitle iletişim, öğrenme, değerlendir, psikoloji, rehber and müze are unconstrained substrings, and '\\bedeb' also matches 'edebilme'.\n2. **Rule order.** The R2/R4 general_ed rules run last, so these go to English domains:\n   - second-language courses with a skill word, e.g. 'Almanca Dilbilgisi I';\n   - Turkish-language courses with a skill word;\n   - non-English literature, e.g. 'Alman Edebiyatı', which goes to literature unflagged.\n   \n   Meanwhile the unanchored 'Yabancı Dil' regex pulls ELT pedagogy electives into general_ed: 'Yabancı Dil Eğitimi', 'Yabancı Dil Kaygısı' and 'Yabancı Dil Sınıflarında Drama'.\n3. **Anchors weaker than their comments claim.** '^drama\\b' is not limited to the stand-alone title, and whole-word 'eğitim' admits 'Beden Eğitim ve Spor'.\n\n**Candidate fix, tested in memory only (no file written).** The patch adds one new general_ed rule at the top for R2/R4 languages and constrains the stems as described in the issues. With it:\n- Every unflagged misassignment that the issues propose a fix for is gone.\n- The official titles are unchanged: 157/158 correct, 0 unmatched, 14 ambiguous.\n- The registrar-variant results are identical.\n- The synthetic catalogue still classifies correctly with no ambiguity.\n\nThe synthetic course names change to sesletim/sözlü iletişim/dil beceri, öğretim 3 and almanca 3. The paper's alpha values cannot change, because grades are aggregated by course_id and course_name only feeds classification and the unmapped list.\n\n**Protocol.** I read only src/, tests/ and validation/data/yok_programmes.csv, and edited no files. I did not run pytest, because it writes cache and temp files. Instead I reproduced test_every_bundled_taxonomy_classifies_its_synthetic_courses and the paper example's 878-row, zero-ambiguity checks in memory. I have not verified test_bundled_sample_transcript_runs_as_documented: its toy file is outside my allowed read scope."
+    },
+    "generality": {
+      "verdict": "The rules handle character-level variants well but are fragile at the word level. Two abbreviation gaps send official titles to the wrong domain without any flag, so issues 1 and 2 should be fixed before calling the file generalised.\n\nChecked with curricumap.classify.assign_domain on src/curricumap/taxonomies/elt_yok_2018.yaml.\n\n**What the author claims, and holds:**\n- 157/158 source titles correct, 0 unmatched, 14 ambiguous.\n- 9 rules, 61 keywords, 36 regexes, 0 overrides.\n- The one miss is the 2006 GK \"Türk Eğitim Tarihi\". It cannot be fixed: the identical title is pedagogy in 2018 and general_ed in 2006.\n- The goal-5 synthetic courses all classify correctly, with 0 ambiguous. I checked this in memory rather than with pytest, because pytest's temp folders sit under the /tmp area the blinding rules put off limits.\n\n**Rendering variants: 0 failures** across all 157 non-conflicting titles for:\n- Turkish uppercase, and uppercase from a non-Turkish locale (e.g. \"DILBILIMI\").\n- Full ASCII folding in upper, title and lower case.\n- Roman/Arabic numeral swaps, hyphenated numerals, and colons/hyphens removed.\n- Fixed-width truncation at 35 characters or more.\n- The [iı]/[öo]/[çc]/[gğ] handling is thorough, and the rules mostly capture course families through stems.\n\n**Where it breaks: abbreviations are supported unevenly.**\n- The teaching stem accepts \"ÖĞR.\"/\"ÖĞRT.\" anywhere in a title.\n- Several subject stems, which are supposed to win under the subject-before-method order, do not accept their common abbreviations: \"EDB.\", \"ÇEV.\", \"SOSYODİLB.\", \"EDİMB.\", \"SÖZC.\".\n- So compound \"subject + Öğretimi\" titles and the two 2006 translation courses land in pedagogy or general_ed with ambiguous=False.\n- In 43 targeted registrar probes, the current file leaves 30 unmatched and puts 13 in the wrong domain.\n- In a sweep that abbreviates one word at a time in every official title (1,321 variants, most of them unrealistic), there are 39 wrong-domain results. Every one comes from those two mechanisms, plus one unrealistic case (shortening \"Dünya\" in \"Dünya İngilizceleri ve Kültür\").\n- Title-start anchors (^bilim, ^drama, ^eğt.) and phrase patterns that need every word in full leave more official variants unmatched.\n\n**Proposed fix set (all regexes are in the issues below; tested in memory only, the YAML was not edited):**\n- Source titles stay at 157/158 with 0 unmatched.\n- 43/43 probes pass.\n- Rendering variants stay at 0 failures, and the 2 wrong results in the 20–40 character truncation sweep go to 0.\n- Wrong-domain results in the sweep drop from 39 to 13, with the optional frame guard in issue 1. The 13 left need unrealistic abbreviations such as \"BCR.\" or \"SZC.\".\n- Ambiguity flags drop from 14 to 7.\n- Precision is unchanged: \"Beden Eğitimi ve Spor\", \"BEDEN EĞT. VE SPOR\", \"Müzik Eğitimi\", \"ÇEVRE EĞT.\", \"Sözleşme Hukuku\", \"Sosyoloji\" and \"Pragmatizm\" stay unmatched.\n- The 25 key regexes parse unchanged from single-quoted YAML.\n\nNot checked: the full pytest suite, and examples/sample_transcript.csv, which is outside the files I was allowed to read.",
+      "issues": [
+        {
+          "severity": "high",
+          "problem": "Compound '<subject> ... Öğretimi' titles go to pedagogy with no flag when the subject word is abbreviated. Rule order puts subjects before teaching, but that only works if the subject stem matches. Rule 5 accepts 'ÖĞR.'/'ÖĞRT.' anywhere via '\\b[öo][gğ]r(t|et)?\\.'. The literature stems ('edebiyat', '\\bedeb') do not accept 'EDB.', TDK's standard abbreviation for edebiyat. The linguistics and vocabulary stems need near-full words ('dilbilim', 'ed[iı]m ?b[iı]l[iı]m', 's[öo]zc[üu]k'). Only one domain matches, so the ambiguity flag (the header's safety net for compound titles) does not fire. Results: 'DİL VE EDB. ÖĞR. I' -> pedagogy via '\\b[öo][gğ]r(t|et)?\\.' (amb=False); 'DİL VE EDB. ÖĞRETİMİ 2' -> pedagogy via 'öğretim' (amb=False); 'EDB. VE DİL ÖĞR. I' -> pedagogy; 'SOSYODİLB. VE DİL ÖĞR.' -> pedagogy; 'EDİMB. VE DİL ÖĞR.' -> pedagogy; 'EDİM BİL. VE DİL ÖĞR.' -> pedagogy; 'İNG. SÖZC. BİLGİSİ ÖĞR.' -> pedagogy, all with amb=False. 'İNG. EDB. I' and 'İNGİLİZ EDB. II' -> unmatched. In the one-word abbreviation sweep, 32 of the 39 wrong-domain results come from this mechanism and 6 from issue 2; the 39th abbreviates 'Dünya' in 'Dünya İngilizceleri ve Kültür' (unrealistic). 4 of the 7 literature titles are compound, so a registrar writing 'EDB.' and 'ÖĞR.' would move most literature courses into pedagogy.",
+          "example_titles": [
+            "DİL VE EDB. ÖĞR. I",
+            "DİL VE EDB. ÖĞRETİMİ 2",
+            "EDB. VE DİL ÖĞR. I",
+            "SOSYODİLB. VE DİL ÖĞR.",
+            "EDİMB. VE DİL ÖĞR.",
+            "EDİM BİL. VE DİL ÖĞR.",
+            "İNG. SÖZC. BİLGİSİ ÖĞR.",
+            "İNG. EDB. I"
+          ],
+          "fix": "Give the subject stems the same abbreviation tolerance as the teaching stem (tested in memory). Rule 1: add regex '\\bedb\\.'. Rule 2: add 'sosyod[iı]l' and 'ed[iı]mb\\.|ed[iı]m b[iı]l'. Rule 4: replace 's[öo]zc[üu]k' with '\\bs[öo]zc'. Optional structural guard (also tested): stop the generic teaching stems from matching the 'X ve Dil Öğretimi' / 'Dil ve X Öğretimi' frame. All 7 official titles in that frame are subject courses, so an unrecognised subject is then flagged unmatched instead of labelled pedagogy. Rule 5 becomes any: [\"öğretmen\", \"öğrenme\"], which still satisfies goal 5 (synthetic test passes), with regex: ['^(?!.*\\b(ve d[iı]l|d[iı]l ve \\S+) [öo][gğ]r).*\\b[öo][gğ]re[tn]', '^(?!.*\\b(ve d[iı]l|d[iı]l ve \\S+) [öo][gğ]r).*\\b[öo][gğ]r[^\\s.]{0,4}\\.']. Measured with the full fix set: source titles stay at 157/158 with 0 unmatched, ambiguity flags drop from 14 to 7, and sweep wrong-domain results drop from 39 to 13. The 13 left need unrealistic abbreviations ('BCR.', 'SZC.', 'DÜN.'). Update the header's ambiguity count and explanation to match."
+        },
+        {
+          "severity": "medium",
+          "problem": "The two 2006 translation courses go to general_ed with no flag whenever 'Çeviri' is not written out in full. Rule 4 only knows the full stem ('çeviri', '[çc]ev[iı]r[iı]'). Rule 8's Türkçe regex excludes translation with a lookahead keyed to that same stem: '\\bt[üu]rk[çc]e\\b(?!.*[çc]ev[iı]r)'. 'ÇEV.' is the standard Turkish abbreviation of çeviri/çeviren. Results: 'İNGİLİZCE-TÜRKÇE ÇEV.' -> general_ed via the Türkçe regex (amb=False); 'TÜRKÇE-İNGİLİZCE ÇEV.' -> general_ed. The 20-character truncations 'İNGİLİZCE-TÜRKÇE ÇEV' and 'TÜRKÇE-İNGİLİZCE ÇEV' -> general_ed; these are the only wrong-domain results in a 20–40 character truncation sweep. With the synonym 'Tercüme', 'İNGİLİZCE-TÜRKÇE TERCÜME' and 'TÜRKÇE-İNGİLİZCE TERCÜME' -> general_ed.",
+          "example_titles": [
+            "İNGİLİZCE-TÜRKÇE ÇEV.",
+            "TÜRKÇE-İNGİLİZCE ÇEV.",
+            "İNGİLİZCE-TÜRKÇE ÇEV",
+            "TÜRKÇE-İNGİLİZCE ÇEV",
+            "İNGİLİZCE-TÜRKÇE TERCÜME"
+          ],
+          "fix": "Recognise translation by the language pair, which every translation title shares, instead of by the word 'Çeviri'. Rule 4: add '[iı]ng(\\.|[iı]l[iı]zce)\\W*t[üu]rk[çc]e|t[üu]rk[çc]e\\W*[iı]ng(\\.|[iı]l[iı]zce)', optionally with '|terc[üu]me'. Rule 8: widen the lookahead to '\\bt[üu]rk[çc]e\\b(?!.*([çc]ev|terc[üu]m))', so an unrecognised translation title is at worst flagged. Tested: all five variants -> language_skills; 'Türkçe I: Yazılı Anlatım' and 'Türkçe II: Sözlü Anlatım' stay general_ed; the 2 wrong results in the truncation sweep go to 0."
+        },
+        {
+          "severity": "medium",
+          "problem": "'EĞT.' is accepted only at the start of a title ('^e[gğ][iı]?t\\.'), and the 'eğitim' regex needs the full word. So official MB titles whose deciding word is a trailing 'Eğitim' are lost when it is abbreviated. Results, all unmatched: 'TÜRK EĞT. TARİHİ' (2018 compulsory), 'KARŞILAŞTIRMALI EĞT.', 'KAPSAYICI EĞT.', 'ÖZEL EĞT.', 'SÜRDÜRÜLEBİLİR KALKINMA VE EĞT.', and 'KARAKTER VE DEĞER EĞT.' (both the 'değer eğitim' keyword and the '(karakter|de[gğ]er(ler)?) e[gğ][iı]t[iı]m' regex need the full word). The start anchor also fails behind any prefix: 'MB SEÇ.: EĞT. FELSEFESİ' and 'ZORUNLU - EĞT. SOSYOLOJİSİ' -> unmatched. Limiting 'EĞT.' to the start is a sound guard against the possessive in 'BEDEN EĞT.', but it drops abbreviated forms of six official titles.",
+          "example_titles": [
+            "TÜRK EĞT. TARİHİ",
+            "KARŞILAŞTIRMALI EĞT.",
+            "KAPSAYICI EĞT.",
+            "ÖZEL EĞT.",
+            "SÜRDÜRÜLEBİLİR KALKINMA VE EĞT.",
+            "KARAKTER VE DEĞER EĞT.",
+            "MB SEÇ.: EĞT. FELSEFESİ"
+          ],
+          "fix": "Accept 'EĞT.' mid-title only after the modifiers that occur in the official MB 'X Eğitim' titles. Add to rule 6: '\\b(özel|kapsay[ıi]c[ıi]|kar[şs][ıi]la[şs]t[ıi]rmal[ıi]|t[üu]rk|kalk[ıi]nma ve|de[gğ]er(ler)?) e[gğ][iı]?t\\.'. Tested: all six -> pedagogy, while 'BEDEN EĞT. VE SPOR', 'ÇEVRE EĞT.' and 'Müzik Eğitimi' stay unmatched. Comment that this lists official modifiers on purpose, because a bare mid-title 'eğt.' would also catch 'Beden Eğt.'."
+        },
+        {
+          "severity": "medium",
+          "problem": "Two general-education regexes encode the exact shape of the title with a start anchor: '^b[iı]l[iı]m' (Bilim Tarihi ve Felsefesi, Bilim ve Araştırma Etiği, Bilimsel Araştırma Yöntemleri) and '^drama\\b' (the 2006 GK course Drama). Any registrar prefix breaks them. Results, all unmatched: 'SEÇ. BİLİM TARİHİ VE FELSEFESİ', 'GK SEÇMELİ: BİLİM VE ARAŞTIRMA ETİĞİ', 'GKS-BİLİM VE ARAŞTIRMA ETİĞİ', 'SEÇMELİ - BİLİMSEL ARAŞTIRMA YÖNTEMLERİ', '(GK) DRAMA', 'SEÇMELİ: DRAMA', and also 'YARATICI DRAMA'. The anchor exists to keep out 'Dilbilimi', 'Eğitim Bilimine Giriş' and the two pedagogy drama titles. Word context can do that without depending on position in the title.",
+          "example_titles": [
+            "SEÇ. BİLİM TARİHİ VE FELSEFESİ",
+            "GK SEÇMELİ: BİLİM VE ARAŞTIRMA ETİĞİ",
+            "SEÇMELİ - BİLİMSEL ARAŞTIRMA YÖNTEMLERİ",
+            "(GK) DRAMA",
+            "SEÇMELİ: DRAMA",
+            "YARATICI DRAMA"
+          ],
+          "fix": "Replace '^b[iı]l[iı]m' with '\\bb[iı]l[iı]m(sel)? (tar[iı]h|ve ara[şs]t|ara[şs]t)'. It still does not match 'Dilbilimi', 'Dil Bilimi' or 'Eğitim Bilimine Giriş' (verified). Replace '^drama\\b' with '(?<!e[gğ][iı]t[iı]mde )(?<![öo][gğ]ret[iı]m[iı]nde )\\bdrama\\b'; each lookbehind is fixed-width, so Python accepts it. Tested after a YAML round-trip: all prefixed probes -> general_ed, and 'Eğitimde Drama' and 'İngilizce Öğretiminde Drama' (also in ASCII) stay pedagogy without an ambiguity flag. A bare '\\bdrama\\b' also works through rule order but adds 2 ambiguity flags."
+        },
+        {
+          "severity": "medium",
+          "problem": "Several patterns are close to full phrases and need every word spelled out, so abbreviated or slightly reworded registrar forms of the same course come out unmatched. They are flagged rather than misassigned, so the cost is coverage. All of these returned unmatched:\n- 'SÖZL. İLET. BEC. I', 'SÖZ. İLETİŞİM BEC. II', 'SÖZLÜ İLT. BEC. I': 's[öo]zl[üu] [iı]let' needs both words almost in full.\n- 'BAĞLAMSAL DİL BİLG. I': 'd[iı]l ?b[iı]lg[iı]' needs the vowel after 'bilg'.\n- 'DİKKAT EKS. VE HİPERAKT. BOZ.': 'h[iı]perakt[iı]v' needs 'hiperaktiv'. At 43 characters this is the longest MB title, so the likeliest to be shortened.\n- 'ELEŞTİREL VE ANALİTİK DÜŞ.'\n- 'İNG. DERS KİT. İNC.'\n- 'İNSAN İLİŞ. VE İLETİŞİM': '[iı]nsan (hak|[iı]l[iı][şs]k)' needs the 'k'.\n- 'TOPLUM HİZMETİ UYGULAMALARI': 'topluma h[iı]z' needs 'topluma'.\n- 'GELENEKSEL TÜRK EL SAN.'\n- 'DİNL. VE SESL. I'\n- 'ÖĞRTM. UYGULAMASI I': the abbreviation regex allows only ÖĞR./ÖĞRT./ÖĞRET.",
+          "example_titles": [
+            "SÖZL. İLET. BEC. I",
+            "SÖZLÜ İLT. BEC. I",
+            "BAĞLAMSAL DİL BİLG. I",
+            "DİKKAT EKS. VE HİPERAKT. BOZ.",
+            "ELEŞTİREL VE ANALİTİK DÜŞ.",
+            "İNSAN İLİŞ. VE İLETİŞİM",
+            "TOPLUM HİZMETİ UYGULAMALARI",
+            "GELENEKSEL TÜRK EL SAN.",
+            "İNG. DERS KİT. İNC.",
+            "ÖĞRTM. UYGULAMASI I"
+          ],
+          "fix": "Shorten each stem to its shortest prefix that is still unambiguous. All tested; the off-programme probes give the same results as before.\n- 's[öo]zl[üu] [iı]let' -> '\\bs[öo]z(l[üu]|l?\\.) ?[iı]l(et|t\\.)'. 'Türkçe II: Sözlü Anlatım' still goes to general_ed.\n- 'd[iı]l ?b[iı]lg[iı]' -> 'd[iı]l ?b[iı]lg'.\n- 'h[iı]perakt[iı]v' -> 'h[iı]perakt|d[iı]kkat eks'.\n- Add 'anal[iı]t[iı]k d[üu][şs]'. Do not use a bare 'düşün', which would catch 'Türk Düşünce Tarihi'.\n- '\\bders (k[iı]tab|[iı][çc]er[iı])' -> '\\bders (k[iı]t|[iı][çc]er[iı])'.\n- '[iı]nsan (hak|[iı]l[iı][şs]k)' -> '[iı]nsan (hak|[iı]l[iı][şs])'.\n- 'topluma h[iı]z' -> 'toplum(a)? h[iı]z'.\n- Add '\\bsan\\.' to rule 9.\n- 'd[iı]nleme|seslet' -> 'd[iı]nl(eme|\\.)|sesl(et|\\.)'.\n- '\\b[öo][gğ]r(t|et)?\\.' -> '\\b[öo][gğ]r[^\\s.]{0,4}\\.'."
+        },
+        {
+          "severity": "low",
+          "problem": "Some character classes are narrower than real registrar typography.\n- 'İngilizcenin Yapısı' accepts only ' and ’ as the apostrophe. 'İNGİLİZCE´NİN YAPISI' (U+00B4), 'İNGİLİZCE‘NİN YAPISI' (U+2018) and 'İNGİLİZCE NİN YAPISI' (apostrophe dropped to a space) -> unmatched.\n- The circumflex is only handled in 'inkılâp'. 'TÜRK MÛSİKÎSİ' -> unmatched.\n- The trailing '\\b' in the Türkçe regex rejects a numeral written straight after the word. 'TÜRKÇE1: YAZILI ANLATIM' -> unmatched.",
+          "example_titles": [
+            "İNGİLİZCE´NİN YAPISI",
+            "İNGİLİZCE‘NİN YAPISI",
+            "İNGİLİZCE NİN YAPISI",
+            "TÜRK MÛSİKÎSİ",
+            "TÜRKÇE1: YAZILI ANLATIM"
+          ],
+          "fix": "Yapı regex -> '[iı]ng([iı]l[iı]zce\\W?\\s?(n[iı]n)?|\\.) ?yap'; this also removes the doubled single quote that YAML needs today. 'mus[iı]k' -> 'm[uû]s[iıî]k'. Türkçe regex -> '\\bt[üu]rk[çc]e(?![a-zçğıöşü])(?!.*([çc]ev|terc[üu]m))', so a digit may follow the word. All checked after a YAML round-trip: 25/25 regex checks behaved as intended."
+        },
+        {
+          "severity": "low",
+          "problem": "Common Turkish synonyms used for the same official courses are not covered. Four of them produce a wrong domain rather than a flag, because the subject-first rule order turns an unknown subject into pedagogy.\n- Wrong domain: 'PRAGMATİK VE DİL ÖĞRETİMİ' (= Edimbilimi ve Dil Öğretimi) -> pedagogy; 'SOSYOLİNGUİSTİK VE DİL ÖĞRETİMİ' -> pedagogy; 'İNGİLİZCE KELİME BİLGİSİ ÖĞRETİMİ' (= Sözcük Bilgisi Öğretimi) -> pedagogy; 'İNGİLİZCE-TÜRKÇE TERCÜME' -> general_ed.\n- Unmatched: 'KELİME BİLGİSİ', 'KONUŞMA BECERİLERİ I', 'BAĞLAMSAL GRAMER I', 'İNGİLİZ DİLİNİN YAPISI', 'YARATICI DRAMA', 'TÜRK MÜZİĞİ'.\n\nThese renamings go beyond the rendering variants listed in goal 2. Only the ones that produce a wrong domain are clearly worth handling.",
+          "example_titles": [
+            "PRAGMATİK VE DİL ÖĞRETİMİ",
+            "SOSYOLİNGUİSTİK VE DİL ÖĞRETİMİ",
+            "İNGİLİZCE KELİME BİLGİSİ ÖĞRETİMİ",
+            "İNGİLİZCE-TÜRKÇE TERCÜME",
+            "KONUŞMA BECERİLERİ I",
+            "BAĞLAMSAL GRAMER I"
+          ],
+          "fix": "At minimum, add the synonyms that would otherwise produce a wrong domain. Rule 2: 'pragmat[iı]k' and 'sosyol[iı]ng'. Rule 4: 'kel[iı]me b[iı]l' and 'terc[üu]me'. Optionally add rule 3: 'konu[şs]ma bec'. Tested: no change in precision; 'Pragmatizm', 'Sosyoloji' and 'Sözleşme Hukuku' stay unmatched. If you prefer not to add synonyms, the frame guard from issue 1 turns the first two into flags."
+        },
+        {
+          "severity": "low",
+          "problem": "Overall answer to the lens question: the rules mostly capture course families through stems, with a few full-title phrases; most single-course patterns are unavoidable. The pattern inventory in numbers:\n- 58 of the 97 patterns match exactly one of the 116 distinct base courses (numerals stripped).\n- Six patterns are complete official titles rather than stems: 'dil ve toplum', 'türk dili', 'etkili iletişim', 'mesleki ingilizce', 'bilgisayar', '^drama\\b'. 'ingilizcenin yapı' and 'topluma hizmet' are nearly full titles.\n- Much of this is unavoidable, because each GK elective is its own topic.\n- The header's '61 keywords, 36 regexes' overstates the vocabulary. For 52 of the 61 keywords, a regex in the same rule matches every source title the keyword matches, usually the same stem rewritten with [iı]/[öo] classes.\n- So all the variant handling lives in the regexes. The plain keywords only make provenance readable and satisfy goal 5.\n- The three patterns that never fire on a source title ('\\b[öo][gğ]r(t|et)?\\.', '^e[gğ][iı]?t\\.', and the language-name list) all handle teaching or general wording, none a subject. That fits the uneven abbreviation support in issue 1.",
+          "example_titles": [
+            "Dil ve Toplum",
+            "Türk Dili 1",
+            "Etkili İletişim",
+            "Mesleki İngilizce",
+            "Bilgisayar I",
+            "Drama"
+          ],
+          "fix": "Nothing needs to change for classification to work. Either state in the header that the plain keywords are readable aliases and the regexes do the variant handling, or keep plain keywords only in each domain's first rule (goal 5) and where no regex exists. Either way, a future variant fix then has one place to go. Recount rules, keywords and regexes after applying fixes 1–7."
+        },
+        {
+          "severity": "low",
+          "problem": "Outside the stated variant scope, but relevant to held-out registrar data: there are no English stems. An export from an English-medium ELT department would be entirely unmatched (flagged, never assigned to a wrong domain). 'Linguistics I', 'English Literature I', 'Reading Skills I', 'Teaching English to Young Learners I', 'Educational Psychology', 'Classroom Management' and 'Turkish Language I' -> all unmatched.",
+          "example_titles": [
+            "Linguistics I",
+            "English Literature I",
+            "Reading Skills I",
+            "Teaching English to Young Learners I",
+            "Educational Psychology",
+            "Classroom Management"
+          ],
+          "fix": "Make an explicit decision. Either say in the header that titles must be in Turkish (as printed in the YÖK lists), or add one English stem rule per domain, following the same subject-before-teaching order. For example: literature 'literature'; linguistics 'linguistic|pragmatic|discourse|acquisition'; language skills 'reading|writing|listening|pronunciation|oral communication|grammar|vocabulary|translation'; pedagogy 'teaching|education|classroom|assessment'; general education 'atatürk|turkish language|information technolog'. Never use a bare 'english' as a stem."
+        },
+        {
+          "severity": "low",
+          "problem": "This cannot be fixed in the YAML; I'm noting it for the orchestrator. normalize() casefolds without first normalising Unicode to composed form (NFC), and does not remove the combining dot (U+0307). Text that is decomposed or was lowercased without Turkish rules never matches. All unmatched: decomposed (NFD) 'ÖĞRETİM İLKE VE YÖNTEMLERİ'; 'di̇lbi̇li̇mi̇ i' (i plus combining dot, from Python's default lower()); and cp1254 text misread as Latin-1, 'ÖÐRETÝM ÝLKE VE YÖNTEMLERÝ'.",
+          "example_titles": [
+            "ÖĞRETİM İLKE VE YÖNTEMLERİ (NFD-decomposed)",
+            "di̇lbi̇li̇mi̇ i",
+            "ÖÐRETÝM ÝLKE VE YÖNTEMLERÝ"
+          ],
+          "fix": "Outside this file, if the orchestrator chooses: in curricumap/taxonomy.py normalize(), apply unicodedata.normalize('NFC', s) before casefolding and strip U+0307 afterwards. Repair garbled encoding (cp1254 read as Latin-1) when the transcript is loaded, not with taxonomy rules. No YAML change."
+        }
+      ]
+    }
+  },
+  "revision": {
+    "n_rules": 9,
+    "n_keywords": 53,
+    "n_regex": 63,
+    "n_overrides": 0,
+    "source_accuracy": "157/158 correct, 0 unmatched, 14 ambiguous. These figures are the same as before the revision. The one miss is the 2006 GK entry \"Türk Eğitim Tarihi\". Its title is identical to the 2018 MB course, so no title-level rule can reach 158/158. The 14 ambiguity flags are the 13 subject + \"Öğretimi\" compound titles plus \"Dünya İngilizceleri ve Kültür\".",
+    "tests": "The full suite passed: 71 passed in 0.80s (pytest -q . run from the repo root with the .venv python; I added -p no:cacheprovider so no cache was written). This includes tests/test_cli.py::test_paper_illustrative_example_reproduces_exactly, tests/test_cli.py::test_bundled_sample_transcript_runs_as_documented and tests/test_taxonomy.py::test_every_bundled_taxonomy_classifies_its_synthetic_courses[elt_yok_2018]. Nothing failed. `curricumap validate-taxonomy` reports the file as valid. The baseline run had 70 tests. The extra test (combining-dot normalisation) was added to tests/test_taxonomy.py by another process during this session; I did not add it.",
+    "issue_decisions": [
+      {
+        "problem": "G1 (high): abbreviated subject stems in compound '<subject> ... Öğretimi' titles (EDB., SOSYODİLB., EDİMB., EDİM BİL., SÖZC.) went to pedagogy without a flag; İNG. EDB. was unmatched",
+        "decision": "fixed",
+        "reason": "Added these regexes: literature '\\bedb\\.'; linguistics 'd[iı]l ?b[iı]l([iı]m|\\.)', '\\bed[iı]m ?b', 'sosyo ?(d[iı]l|l[iıe]ng)' and '\\bs[öo]yl(em\\b|\\.)'; skills '\\bs[öo]z(c|\\. ?b[iı]lg)'. All 8 example titles now reach their subject domain. In the abbreviation sweeps, wrong-domain results fell from 10 to 0 (one-word) and from 10 to 0 (all words)."
+      },
+      {
+        "problem": "G1 optional: a structural guard so generic teaching stems do not match the 'X ve Dil Öğretimi' / 'Dil ve X Öğretimi' frame",
+        "decision": "declined",
+        "reason": "The guard would turn correct pedagogy titles such as 'Teknoloji ve Dil Öğretimi' or 'Oyun ve Dil Öğretimi' into unmatched. The subject abbreviations are now recognised directly, so the guard's remaining benefit is small, and it would add the hardest-to-read regex in the file."
+      },
+      {
+        "problem": "G2: translation courses written 'ÇEV.', truncated, or using 'Tercüme' went to general_ed through the Türkçe regex",
+        "decision": "fixed",
+        "reason": "Rule 5 now recognises translation by its language pair ('ingilizce-türkçe' in either order, including 'İNG.'), and 'tercüme' is a synonym. The Türkçe regex, now in rule 1, skips titles that also mention İngilizce, çev-, tercüm- or öğret-. All 5 example titles go to language_skills, wrong results in the truncation sweep fell from 2 to 0, and Türkçe I/II stay general_ed."
+      },
+      {
+        "problem": "G3: 'EĞT.' was accepted only at the start of a title, so 'TÜRK EĞT. TARİHİ', 'MB SEÇ.: EĞT. FELSEFESİ', 'KARAKTER VE DEĞER EĞT.' and similar were unmatched",
+        "decision": "fixed",
+        "reason": "I used one structural rule instead of the suggested list of modifiers: 'EĞT.' counts anywhere unless it ends the title or comes before 've' or a numeral, which are the shapes of the possessive ('BEDEN EĞT. VE SPOR', 'ÇEVRE EĞT.'). The values regex now accepts 'EĞT.'. TÜRK EĞT. TARİHİ, the prefixed FELSEFESİ/SOSYOLOJİSİ titles and KARAKTER VE DEĞER EĞT. now go to pedagogy. ÖZEL/KAPSAYICI/KARŞILAŞTIRMALI EĞT. remain unmatched (flagged, never wrong); registrars rarely shorten such short titles."
+      },
+      {
+        "problem": "G4: the start anchors '^b[iı]l[iı]m' and '^drama\\b' failed whenever a registrar prefix came first",
+        "decision": "fixed",
+        "reason": "'Bilim' is now read with the word after it: '\\bb[iı]l[iı]m(sel)? (ve )?(tar|ara?[şs]|felsef|et[iı])'. This needs no anchor and still excludes Dilbilimi and Eğitim Bilimine Giriş. 'Drama' must stand alone (an optional numeral, then a bracket or the end of the title). It may follow the title start, a course code, or '. : ) -'. So all prefixed probes go to general_ed, and the drama-analysis titles from H8 stay out. 'Yaratıcı Drama' is left unmatched on purpose, because its domain is unclear."
+      },
+      {
+        "problem": "G5: patterns close to full phrases missed abbreviated forms (SÖZL. İLET., DİL BİLG., HİPERAKT., ANALİTİK DÜŞ., DERS KİT., İNSAN İLİŞ., TOPLUM HİZMETİ, EL SAN., DİNL. VE SESL., ÖĞRTM.)",
+        "decision": "fixed",
+        "reason": "Applied every suggested shortening. Extensions: 'anal(itik|\\.)' for the thinking-skills stem, 'sesl(et|\\.)', and the teaching abbreviation '\\b[öo][gğ]r[^\\s.]{0,4}\\.'. All 10 examples classify correctly, 'Türk Düşünce Tarihi' stays unmatched, and no off-programme probe changed."
+      },
+      {
+        "problem": "G6: character classes narrower than real typography (apostrophes, circumflex, a digit straight after 'Türkçe')",
+        "decision": "fixed",
+        "reason": "The İngilizcenin Yapısı regex uses \\S*, so it accepts any apostrophe or a dropped one; this also removes the YAML '' escape. Musiki accepts û and î. The Türkçe regex no longer has a trailing \\b, so 'TÜRKÇE1' works. All 5 examples pass."
+      },
+      {
+        "problem": "G7: common synonyms not covered; four of them gave a wrong domain (Pragmatik, Sosyolinguistik, Kelime Bilgisi Öğretimi, Tercüme)",
+        "decision": "fixed",
+        "reason": "Added the synonyms pragmatik and sosyolinguistik (linguistics); kelime bilgisi, tercüme, gramer, konuşma and İngiliz Dilinin Yapısı (skills); and müzik (GK). Each is marked 'synonym' and listed in the header. All wrong-domain examples are now correct, and Pragmatizm, Sosyoloji and Sözleşme Hukuku stay unmatched."
+      },
+      {
+        "problem": "G8: most keywords duplicate a regex in the same rule, and the header overstates the vocabulary",
+        "decision": "fixed",
+        "reason": "The header now states the convention: keywords are official stems and the readable form that provenance reports; regexes carry renderings and documented synonyms. I removed the keywords that are unsafe as bare substrings (okuma, yazma, dinleme, öğrenme, çeviri, kitle iletişim, değerlendir, psikoloji, rehber, müze, düşünme) and recounted: 9 rules, 53 keywords, 63 regexes, 0 overrides."
+      },
+      {
+        "problem": "G9: no English stems, so an English-titled export would be entirely unmatched",
+        "decision": "declined",
+        "reason": "The scope is the Turkish YÖK titles. English stems would bring their own hazards ('Physical Education', 'Machine Learning') and need a separate order analysis. The header now says titles are expected in Turkish and that an English-titled export needs its own rules. The 7 English examples are flagged as unmatched, never assigned a wrong domain."
+      },
+      {
+        "problem": "G10: no NFC normalisation and no removal of the combining dot (U+0307)",
+        "decision": "declined",
+        "reason": "This cannot be fixed in the YAML. During this session src/curricumap/taxonomy.py was changed outside this task to apply NFC and strip U+0307. With that code, I verified that all 158 titles in NFD and naive str.lower() form classify correctly. Garbled cp1254 text should still be repaired when the file is loaded."
+      },
+      {
+        "problem": "H1 (high): the 'Yabancı Dil' regex sent ELT pedagogy electives (Yabancı Dil Eğitimi, ... Sınıflarında ..., Bilgisayar Destekli Dil Eğitimi) to general_ed without a flag",
+        "decision": "fixed",
+        "reason": "The official shape is now whitelisted in rule 1: at most one word before 'Yabancı Dil', then only a numeral, a language name (-ca/-ce), a bracket, a colon, a dash or the end. Added '\\bd[iı]l e[gğ][iı]t' (language education) to pedagogy, and inflected 'sınıf' with '(?!land)'. All 10 examples behave as the review intends. 'YABANCI DİL İNGİLİZCE I' and 'YABANCI DİL-I' still go to general_ed."
+      },
+      {
+        "problem": "H2 (high): the bare skill stems okuma/yazma/dinleme sent Hızlı Okuma, Proje Yazma, Nota Okuma, Okuma Güçlüğü and similar to language_skills",
+        "decision": "fixed",
+        "reason": "One anchored regex replaces them. It matches okuma/yazma/dinleme/konuşma at the title start (after a course code, if any) or at a segment start, alone or after a qualifier: the official ileri and eleştirel, plus akademik, yaratıcı, temel, ileri düzey and İngilizce/İNG. It excludes güçlük, kültür and bozukluk. All 15 hazard titles are no longer language_skills. Akademik/Yaratıcı Yazma, Temel Okuma Becerileri, İleri Düzey Okuma, OKUMA BEC. I and the ASCII forms remain correct. The first-rule keywords are now sesletim, sözlü iletişim, dil beceri and anlatım beceri."
+      },
+      {
+        "problem": "H3 (high): the R2/R4 rules ran last, so second-language courses with a skill word went to language_skills, and non-English literature went to literature without a flag",
+        "decision": "fixed",
+        "reason": "A new rule 1 (general_ed) holds the common compulsory courses, Türkçe, the whitelisted Yabancı Dil, second-language names (now including korece, farsça, yunanca, latince), other-language literatures ('X (Dili ve) Edebiyatı') and 't[üu]rk ?d[iı]l' (Türk Dilbilgisi). It keeps the keywords atatürk/inkılap/türk dili, so the general_ed synthetic names do not change. All examples go to general_ed, flagged where a field rule also matches. Rule 1 decides no official title, and the RULE ORDER header is updated."
+      },
+      {
+        "problem": "H4: the 'kitle iletişim' stem sent media courses to language_skills without a flag",
+        "decision": "fixed",
+        "reason": "Dropped the keyword. The regex is now 'k[iı]tle [iı]let\\S*\\s+[iı]ng', so English must follow. The official title and its uppercase, ASCII and İNG. forms still match; Kitle İletişim Araçları/Kuramları and Kitle İletişimi ve Toplum are unmatched, and Medya ve Kitle İletişimi goes to general_ed."
+      },
+      {
+        "problem": "H5: 'öğrenme' put Makine Öğrenmesi, Derin Öğrenme and the 'Öğrenci ...' titles into pedagogy",
+        "decision": "fixed",
+        "reason": "Removed the keyword 'öğrenme'. The regex is now '(?<!mak[iı]ne )(?<!der[iı]n )\\b[öo][gğ]re(t[iı]m|tme|nme|n[iı]m)'. This excludes öğrenci but keeps öğrenim; without that stem, 'Bilgisayar Destekli Dil Öğrenimi' would have gone to general_ed. All examples are now unmatched. The pedagogy synthetic courses are now öğretim 1, öğretmen 2, öğretim 3."
+      },
+      {
+        "problem": "H6: the 'değerlendir', 'psikoloji', 'rehber' and 'müze' stems pulled non-education courses into pedagogy",
+        "decision": "fixed",
+        "reason": "Dropped the noun stem 'değerlendir'. I kept only the passive 'değerlendiril', which no hazard uses and which keeps the flag on skill-assessment titles. Dropped 'psikoloji' entirely: no official title needs it, and the suggested 'Gelişim/Ergen Psikolojisi' variant names non-official courses. 'rehber' became the keyword 'rehberlik' plus 'rehberl[iı]k\\b'. 'müze' became 'müze eğitim' plus '\\bm[üu]ze e[gğ]'. All hazard examples are now unmatched or general_ed, and 'Rehberlik ve Psikolojik Danışma' stays pedagogy."
+      },
+      {
+        "problem": "H7: '\\bedeb' matched the verb 'edebil-' (Kendini İfade Edebilme)",
+        "decision": "fixed",
+        "reason": "Changed to '\\bedeb(?![iı]l)'. The 3 examples are now unmatched, and the official titles plus their uppercase and ASCII forms remain literature."
+      },
+      {
+        "problem": "H8: '^drama\\b' sent Drama Çözümlemesi, Drama ve Tiyatro and Drama in ELT to general_ed",
+        "decision": "fixed",
+        "reason": "'Drama' must now stand alone (combined with the G4 prefix tolerance). The examples are unmatched, while 'Drama', 'DRAMA I', '(GK) DRAMA' and 'SEÇMELİ - DRAMA' go to general_ed."
+      },
+      {
+        "problem": "H9: 'Beden Eğitim ve Spor' (no possessive) went to pedagogy; 'Sosyal Sınıf ve Tabakalaşma' also went to pedagogy",
+        "decision": "fixed",
+        "reason": "Added the lookbehinds (?<!beden ) and (?<!m[üu]z[iı]k ) to the eğitim regex, and (?<!sosyal ) to the sınıf regex. All forms are now unmatched, while Eğitim Psikolojisi, Özel Eğitim and Türk Eğitim Sistemi ve Okul Yönetimi stay pedagogy."
+      },
+      {
+        "problem": "H10, part 1: unanchored Türkçe (contrastive course), 'dil bilgisayar', the 'Çevirimiçi' misspelling, and 'düşünme' (Felsefi Düşünme)",
+        "decision": "fixed",
+        "reason": "The Türkçe regex skips titles that mention İngilizce, so the contrastive course is unmatched. Grammar is now 'd[iı]l ?b[iı]lg(?![iı]sa)'. 'Çeviri' is regex-only, '[çc]ev[iı]r[iı](?!m)', so 'Çevirimiçi Öğrenme' goes to pedagogy. 'Düşünme' is limited to analitik/eleştirel, so 'Felsefi Düşünme' is unmatched."
+      },
+      {
+        "problem": "H10, part 2: 'Sözcükbilim' (lexicology) goes to language_skills, and 'çocuk' catches 'Çocuk Hakları ve Korunması'",
+        "decision": "declined",
+        "reason": "Lexicology is a different course, absent from the YÖK lists; fixing it would mean adding non-official linguistics terms, and the course is very unlikely in an ELT export. Child-related courses are pedagogy in teacher education, so assigning 'Çocuk Hakları' to pedagogy is defensible, as the reviewer also says."
+      },
+      {
+        "problem": "H11: assessment-of-a-skill titles resolve to the skill, against the convention that assessment courses are pedagogy",
+        "decision": "declined",
+        "reason": "I documented this instead of adding an early pedagogy rule. It follows the official convention that 'Dil Becerilerinin Öğretimi' is language_skills (subject before method). The kept passive stem 'değerlendiril' means these titles are always flagged ambiguous. RULE ORDER now states this explicitly."
+      },
+      {
+        "problem": "C1: 'kitle iletişim' sent media and communication courses to language_skills",
+        "decision": "fixed",
+        "reason": "Same fix as H4."
+      },
+      {
+        "problem": "C2: the eğitim endings -in/-inde let 'Beden/Müzik Eğitiminde ...' into pedagogy, contrary to the comment",
+        "decision": "fixed",
+        "reason": "Took option (a): dropped -inde. The new 'dil eğitim' regex keeps 'Yabancı Dil Eğitiminde Teknoloji Kullanımı' in pedagogy. 'Beden Eğitiminde Oyun' is now unmatched, and the rule comment matches the regex."
+      },
+      {
+        "problem": "C3: the RULE ORDER header was incomplete and credited order instead of the lookahead",
+        "decision": "fixed",
+        "reason": "Rewrote it from measurements: rule-pair dependencies and all 720 permutations of the six rule blocks. Exactly four precedences decide official titles: literature, linguistics and skills before pedagogy (4 + 3 + 6 entries), and linguistics before rule 9 (Dünya İngilizceleri ve Kültür). Rule 1 decides none. The header credits lookaheads, not order, for the translation and foreign-language teaching courses."
+      },
+      {
+        "problem": "C4: 157/158 is the ceiling, and 2006 cohorts get no signal",
+        "decision": "fixed",
+        "reason": "The header explains the ceiling and gives the remedy for 2006 cohorts: { course: \"Türk Eğitim Tarihi\", domain: general_ed }."
+      },
+      {
+        "problem": "C5: the Yabancı Dil lookahead blocked only 'öğr', so 'Erken Yaşta Yabancı Dil Eğitimi' went to general_ed",
+        "decision": "fixed",
+        "reason": "Same fix as H1 (whitelisted shape plus 'dil eğitim' in pedagogy). Both examples now go to pedagogy."
+      },
+      {
+        "problem": "C6: R4 titles with a skill word went to language_skills",
+        "decision": "fixed",
+        "reason": "Fixed structurally by rule 1 running first (see H3). All 4 examples now go to general_ed, flagged."
+      },
+      {
+        "problem": "C7: '\\b[öo][gğ]re[tn]' also matched 'öğrenci'",
+        "decision": "fixed",
+        "reason": "Changed to '(t[iı]m|tme|nme|n[iı]m)'. I added n[iı]m to the suggested pattern so that 'öğrenim' still counts. 'Öğrenci Kulüpleri' is now unmatched, and all uppercase and ASCII official variants are unchanged."
+      },
+      {
+        "problem": "C8: abbreviated subjects in compounds went to pedagogy",
+        "decision": "fixed",
+        "reason": "Same fix as G1. 'DİLBİL. I', 'SOSYODİLBİL.', 'EDİMBİL.', 'İNG. SÖZ. BİLG. ÖĞR.' and 'SÖYL. ÇÖZ.' all reach their subject domain."
+      },
+      {
+        "problem": "C9: the header's list of non-official additions was incomplete",
+        "decision": "fixed",
+        "reason": "The SOURCE section now gives the complete list: the abbreviations accepted, ten synonyms (each marked in a rule comment), the extra skill qualifiers, and the R4 language and literature names. It states that every `any` keyword is an official stem."
+      },
+      {
+        "problem": "C10: the header counted rows rather than titles and did not say the check was in-sample",
+        "decision": "fixed",
+        "reason": "It now reads '158 programme entries with 150 distinct titles'. CHECK is labelled in-sample and points to validation/ for held-out results, and SIZE is recomputed (9/53/63/0)."
+      },
+      {
+        "problem": "C11: imprecise comments (Yetişkin, Çocuk Psikolojisi, MATCHING without lookaheads)",
+        "decision": "fixed",
+        "reason": "The rule 7 comment now says rule 6 takes the full Yetişkin title through 'Öğrenme', and that 'yetişkin' covers shortened forms. Çocuk Psikolojisi is no longer listed among the 'X Eğitimi' examples. MATCHING now explains (?!x) and (?<!x) in plain words."
+      },
+      {
+        "problem": "C12: YAML hard to read (265-character keyword line, unrelated topics in one regex, the '' escape)",
+        "decision": "fixed",
+        "reason": "Keyword lists are in block style, one stem per line, each with its source title. Each regex now covers one topic (the old combined alternations are split), and the '' escape is gone. One long regex remains, the four-skills anchor; its rule comment explains it in plain words."
+      },
+      {
+        "problem": "C13: nothing warned that the first-rule keywords drive synth and the paper example",
+        "decision": "fixed",
+        "reason": "Added a header line: keep plain, unambiguous keywords in the first rule of each domain, because 'curricumap synth' and the paper's illustrative example name their courses after them. Verified: all 15 synthetic names classify into their own domain without ambiguity."
+      }
+    ],
+    "files_read": [
+      "src/curricumap (directory listing)",
+      "src/curricumap/taxonomies (directory listing)",
+      "tests (directory listing)",
+      "src/curricumap/taxonomy.py",
+      "src/curricumap/classify.py",
+      "src/curricumap/synth.py",
+      "src/curricumap/audit.py",
+      "src/curricumap/prepare.py",
+      "src/curricumap/cli.py",
+      "src/curricumap/__init__.py",
+      "src/curricumap/schemas (directory listing)",
+      "src/curricumap/schemas/taxonomy.schema.json",
+      "src/curricumap/taxonomies/elt_yok_2018.yaml",
+      "src/curricumap/taxonomies/bologna.yaml",
+      "src/curricumap/taxonomies/canmeds.yaml",
+      "src/curricumap/taxonomies/engineering_mudek.yaml",
+      "src/curricumap/taxonomies/math_ed_yok.yaml",
+      "validation/data/yok_programmes.csv",
+      "tests/test_taxonomy.py",
+      "tests/test_cli.py",
+      "tests/conftest.py",
+      "tests/test_classify.py",
+      "tests/test_synth.py",
+      "tests/test_audit.py (grep only)",
+      "tests/test_prepare.py (grep only)",
+      "pyproject.toml (grep for pytest options only)",
+      "README.md",
+      "docs (directory listing)",
+      "docs/architecture.md",
+      "docs/code-metadata.md",
+      "~/PycharmProjects/curricumap (existence check of README* and docs only via ls -d, no full listing)"
+    ]
+  }
+}

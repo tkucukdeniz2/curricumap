@@ -1,13 +1,23 @@
 # CurricuMap — SoftwareX manuscript
 
-Two LaTeX sources, same content, sharing `references.bib` and `figures/`:
+- **`main_softwarex.tex`**: the manuscript in the official Elsevier `elsarticle` SoftwareX
+  template, revision 1 (CurricuMap v0.2.0). Compile with
+  `pdflatex → bibtex → pdflatex → pdflatex`.
+- **`generated/`**: LaTeX macros and tables. `validation/paper_numbers.py` writes the
+  validation numbers and copies the effort and validation tables and the benchmark table and
+  numbers (written by `benchmarks/benchmark.py`);
+  `paper/software_numbers.py` writes `software_numbers.tex` (test count, coverage, and the
+  counts, alphas and share of missing grades of the illustrative example) and the test count
+  and coverage in row C5 of `docs/code-metadata.md`. Every table, and
+  every number in the text that the software, the validation scripts or the benchmark
+  produce, comes from these files; the remaining numbers describe the data, the study design
+  or the hardware. Regenerate with
+  `cd validation && python evaluate.py && python effort.py && python paper_numbers.py`, then,
+  from the repository root, `python paper/software_numbers.py`.
+- **`figures/`**: Figure 2 is a capture of the `audit.html` from the illustrative run.
+  The data-flow diagram (Figure 1) is TikZ inside the manuscript.
+- The source of the original submission is preserved in the git history (commit 72abb23, the
+  last commit before revision 1).
 
-- **`main_softwarex.tex`** — official Elsevier **elsarticle** SoftwareX template
-  (submission format). Compile: `pdflatex → bibtex → pdflatex → pdflatex`.
-  Single-column preprint (~11 pp); typesets to ~5 pp in the journal's final
-  two-column format, within SoftwareX's 6-page limit.
-- **`main.tex`** — portable `article`-class preview (compiles anywhere with one
-  `pdflatex` run; inline bibliography). 6 pages.
-
-Before submission: set the real GitHub URL (C2), attach Figure 1, and update the
-two under-review citations (`can2025a`, `can2025b`) with final venues.
+Submission material (cover letter, response to reviewers, highlights) lives in
+`submission/`, which is git-ignored.

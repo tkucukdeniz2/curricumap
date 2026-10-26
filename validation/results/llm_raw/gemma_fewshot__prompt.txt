@@ -1,0 +1,321 @@
+[system]
+You are an expert annotator of teacher-education curricula. Follow the output format exactly.
+
+[user]
+You classify course titles from the transcripts of a Turkish undergraduate English Language Teaching (ELT) teacher-education programme into exactly one of five competency domains. Titles are in Turkish, often in UPPERCASE, and may use Roman or Arabic numerals or abbreviations.
+
+language_skills — Language Skills: field courses that develop the student teacher's own command of English: reading, writing, listening and pronunciation, oral communication, grammar and the structure of English, vocabulary, critical reading and writing, expression skills, translation between Turkish and English, English for media or academic purposes. A field course on teaching one of these skills (for example teaching language skills or teaching vocabulary) also belongs here.
+
+linguistics — Linguistics: field courses that study language scientifically: linguistics, phonetics and phonology, morphology, syntax, semantics, pragmatics, sociolinguistics, discourse analysis, language acquisition, language and society, varieties of English. A field course that applies one of these areas to language teaching also belongs here.
+
+literature — Literature: field courses on literature written in English, including courses on using literature in language teaching.
+
+pedagogy — Pedagogy: teaching-profession courses (Meslek Bilgisi) such as introduction to education, educational psychology, sociology, philosophy and history of education, instructional principles and methods, instructional technologies, classroom management, research methods in education, measurement and evaluation, ethics in education, the Turkish education system and school management, guidance, special education and inclusion, school experience and teaching practice, and their electives (for example open and distance learning, museum education, inclusive education, character and values education, adult education, learning disabilities, child psychology, critical and analytical thinking, drama in education); and ELT methodology courses not tied to one content domain (approaches and methods in English language teaching, teaching English to young learners, ELT curricula, materials design and evaluation, textbook evaluation, testing and assessment in ELT, course content development, drama or technology in ELT).
+
+general_ed — General Education: general-culture courses (Genel Kültür) such as Atatürk's principles and the history of the Turkish revolution, Turkish language, foreign languages other than English (for example German as a second foreign language), information technologies or computer literacy, community service practice, and general-culture electives (for example arts and aesthetics, health and nutrition, economics and entrepreneurship, media literacy, human rights, human relations and communication, career planning, history and philosophy of science, research ethics, culture and language, Turkish music, crafts, folk dance or sign language, professional English offered as a general-culture elective), and university-wide common electives.
+
+Official course titles of the national ELT programmes (2018 and 2006) with their domains, for reference:
+- Eğitime Giriş -> pedagogy
+- Eğitim Sosyolojisi -> pedagogy
+- Atatürk İlkeleri ve İnkılap Tarihi 1 -> general_ed
+- Yabancı Dil 1 -> general_ed
+- Türk Dili 1 -> general_ed
+- Bilişim Teknolojileri -> general_ed
+- Okuma Becerileri 1 -> language_skills
+- Yazma Becerileri 1 -> language_skills
+- Dinleme ve Sesletim 1 -> language_skills
+- Sözlü İletişim Becerileri 1 -> language_skills
+- Eğitim Psikolojisi -> pedagogy
+- Eğitim Felsefesi -> pedagogy
+- Atatürk İlkeleri ve İnkılap Tarihi 2 -> general_ed
+- Yabancı Dil 2 -> general_ed
+- Türk Dili 2 -> general_ed
+- Okuma Becerileri 2 -> language_skills
+- Yazma Becerileri 2 -> language_skills
+- Dinleme ve Sesletim 2 -> language_skills
+- Sözlü İletişim Becerileri 2 -> language_skills
+- İngilizcenin Yapısı -> language_skills
+- Öğretim Teknolojileri -> pedagogy
+- Öğretim İlke ve Yöntemleri -> pedagogy
+- İngilizce Öğrenme ve Öğretim Yaklaşımları -> pedagogy
+- İngiliz Edebiyatı 1 -> literature
+- Dilbilimi 1 -> linguistics
+- Eleştirel Okuma ve Yazma -> language_skills
+- Türk Eğitim Tarihi -> pedagogy
+- Eğitimde Araştırma Yöntemleri -> pedagogy
+- İngilizce Öğretim Programları -> pedagogy
+- İngiliz Edebiyatı 2 -> literature
+- Dilbilimi 2 -> linguistics
+- Dil Edinimi -> linguistics
+- Sınıf Yönetimi -> pedagogy
+- Eğitimde Ahlâk ve Etik -> pedagogy
+- Çocuklara Yabancı Dil Öğretimi 1 -> pedagogy
+- İngilizce Dil Becerilerinin Öğretimi 1 -> language_skills
+- Dil ve Edebiyat Öğretimi 1 -> literature
+- Eğitimde Ölçme ve Değerlendirme -> pedagogy
+- Türk Eğitim Sistemi ve Okul Yönetimi -> pedagogy
+- Çocuklara Yabancı Dil Öğretimi 2 -> pedagogy
+- İngilizce Dil Becerilerinin Öğretimi 2 -> language_skills
+- Dil ve Edebiyat Öğretimi 2 -> literature
+- Öğretmenlik Uygulaması 1 -> pedagogy
+- Özel Eğitim ve Kaynaştırma -> pedagogy
+- Topluma Hizmet Uygulamaları -> general_ed
+- İngilizce Öğretiminde Ders İçeriği Geliştirme -> pedagogy
+- Çeviri -> language_skills
+- Öğretmenlik Uygulaması 2 -> pedagogy
+- Okullarda Rehberlik -> pedagogy
+- İngilizce Öğretiminde Sınav Hazırlama ve Değerlendirme -> pedagogy
+- Açık ve Uzaktan Öğrenme -> pedagogy
+- Çocuk Psikolojisi -> pedagogy
+- Dikkat Eksikliği ve Hiperaktivite Bozukluğu -> pedagogy
+- Eğitim Hukuku -> pedagogy
+- Eğitim Antropolojisi -> pedagogy
+- Eğitim Tarihi -> pedagogy
+- Eğitimde Drama -> pedagogy
+- Eğitimde Program Dışı Etkinlikler -> pedagogy
+- Eğitimde Program Geliştirme -> pedagogy
+- Eğitimde Proje Hazırlama -> pedagogy
+- Eleştirel ve Analitik Düşünme -> pedagogy
+- Hastanede Yatan Çocukların Eğitimi -> pedagogy
+- Kapsayıcı Eğitim -> pedagogy
+- Karakter ve Değer Eğitimi -> pedagogy
+- Karşılaştırmalı Eğitim -> pedagogy
+- Mikro Öğretim -> pedagogy
+- Müze Eğitimi -> pedagogy
+- Okul Dışı Öğrenme Ortamları -> pedagogy
+- Öğrenme Güçlüğü -> pedagogy
+- Öğretimi Bireyselleştirme ve Uyarlama -> pedagogy
+- Sürdürülebilir Kalkınma ve Eğitim -> pedagogy
+- Yetişkin Eğitimi ve Hayat Boyu Öğrenme -> pedagogy
+- Bağımlılık ve Bağımlılıkla Mücadele -> general_ed
+- Beslenme ve Sağlık -> general_ed
+- Bilim Tarihi ve Felsefesi -> general_ed
+- Bilim ve Araştırma Etiği -> general_ed
+- Ekonomi ve Girişimcilik -> general_ed
+- Geleneksel Türk El Sanatları -> general_ed
+- İnsan Hakları ve Demokrasi Eğitimi -> general_ed
+- İnsan İlişkileri ve İletişim -> general_ed
+- Kariyer Planlama ve Geliştirme -> general_ed
+- Kültür ve Dil -> general_ed
+- Medya Okuryazarlığı -> general_ed
+- Mesleki İngilizce -> general_ed
+- Sanat ve Estetik -> general_ed
+- Türk Halk Oyunları -> general_ed
+- Türk İşaret Dili -> general_ed
+- Türk Kültür Coğrafyası -> general_ed
+- Türk Musikisi -> general_ed
+- Türk Sanatı Tarihi -> general_ed
+- Dil ve Toplum -> linguistics
+- Dünya İngilizceleri ve Kültür -> linguistics
+- Edimbilimi ve Dil Öğretimi -> linguistics
+- İngilizce Ders Kitabı İncelemesi -> pedagogy
+- İngilizce Öğretiminde Drama -> pedagogy
+- İngilizce Öğretiminde Materyal Tasarımı -> pedagogy
+- İngilizce Öğretiminde Yeni Yaklaşımlar -> pedagogy
+- İngilizce Sözcük Bilgisi Öğretimi -> language_skills
+- Kitle İletişiminde İngilizce -> language_skills
+- Sınıf İçi Öğrenmelerin Değerlendirilmesi -> pedagogy
+- Sosyodilbilim ve Dil Öğretimi -> linguistics
+- Söylem Çözümlemesi ve Dil Öğretimi -> linguistics
+- Tümleşik Dil Becerilerinin Öğretimi -> language_skills
+- Bağlamsal Dilbilgisi I -> language_skills
+- İleri Okuma ve Yazma I -> language_skills
+- Dinleme ve Sesletim I -> language_skills
+- Sözlü İletişim Becerileri I -> language_skills
+- Türkçe I: Yazılı Anlatım -> general_ed
+- Bilgisayar I -> general_ed
+- Etkili İletişim -> general_ed
+- Eğitim Bilimine Giriş -> pedagogy
+- Bağlamsal Dilbilgisi II -> language_skills
+- İleri Okuma ve Yazma II -> language_skills
+- Dinleme ve Sesletim II -> language_skills
+- Sözlü İletişim Becerileri II -> language_skills
+- Sözcük Bilgisi -> language_skills
+- Türkçe II: Sözlü Anlatım -> general_ed
+- Bilgisayar II -> general_ed
+- Eğitim Psikolojisi -> pedagogy
+- İngiliz Edebiyatı I -> literature
+- Dilbilim I -> linguistics
+- İngilizce Öğretiminde Yaklaşımlar I -> pedagogy
+- İngilizce-Türkçe Çeviri -> language_skills
+- Anlatım Becerileri -> language_skills
+- Türk Eğitim Tarihi -> general_ed
+- Öğretim İlke ve Yöntemleri -> pedagogy
+- İngiliz Edebiyatı II -> literature
+- Dilbilim II -> linguistics
+- İngilizce Öğretiminde Yaklaşımlar II -> pedagogy
+- Dil Edinimi -> linguistics
+- Bilimsel Araştırma Yöntemleri -> general_ed
+- Özel Öğretim Yöntemleri I -> pedagogy
+- Öğretim Teknolojileri ve Materyal Tasarımı -> pedagogy
+- Çocuklara Yabancı Dil Öğretimi I -> pedagogy
+- Özel Öğretim Yöntemleri II -> pedagogy
+- Dil Becerilerinin Öğretimi I -> language_skills
+- Edebiyat ve Dil Öğretimi I -> literature
+- İkinci Yabancı Dil I -> general_ed
+- Drama -> general_ed
+- Sınıf Yönetimi -> pedagogy
+- Çocuklara Yabancı Dil Öğretimi II -> pedagogy
+- Türkçe-İngilizce Çeviri -> language_skills
+- Dil Becerilerinin Öğretimi II -> language_skills
+- Edebiyat ve Dil Öğretimi II -> literature
+- İkinci Yabancı Dil II -> general_ed
+- Topluma Hizmet Uygulamaları -> general_ed
+- Ölçme ve Değerlendirme -> pedagogy
+- Yabancı Dil Öğretiminde Materyal İnceleme ve Geliştirme -> pedagogy
+- İkinci Yabancı Dil III -> general_ed
+- Atatürk İlkeleri ve İnkılap Tarihi I -> general_ed
+- Okul Deneyimi -> pedagogy
+- Rehberlik -> pedagogy
+- Özel Eğitim -> pedagogy
+- Yabancı Dil Öğretiminde Ölçme ve Değerlendirme -> pedagogy
+- Atatürk İlkeleri ve İnkılap Tarihi II -> general_ed
+- Karşılaştırmalı Eğitim -> pedagogy
+- Türk Eğitim Sistemi ve Okul Yönetimi -> pedagogy
+- Öğretmenlik Uygulaması -> pedagogy
+
+Classify each numbered course title below. Answer with a single JSON object that maps every number (as a string) to exactly one of: language_skills, pedagogy, linguistics, literature, general_ed. Output only the JSON object.
+
+1. AFET KÜLTÜRÜ
+2. ANLATIM BECERİLERİ
+3. ATATÜRK İLKELERİ VE İNKILAP TARİHİ 1
+4. ATATÜRK İLKELERİ VE İNKILAP TARİHİ 2
+5. ATATÜRK İLKELERİ VE İNKILAP TARİHİ I
+6. AÇIK VE UZAKTAN ÖĞRENME
+7. BAĞIMLILIK VE BAĞIMLILIKLA MÜCADELE
+8. BAĞLAMSAL DİLBİLGİSİ I
+9. BAĞLAMSAL DİLBİLGİSİ II
+10. BESLENME VE SAĞLIK
+11. BİLGİSAYAR I
+12. BİLGİSAYAR II
+13. BİLİM TARİHİ VE FELSEFESİ
+14. BİLİM VE ARAŞTIRMA ETİĞİ
+15. BİLİMSEL ARAŞTIRMA YÖNTEMLERİ
+16. BİLİŞİM TEKNOLOJİLERİ
+17. DRAMA
+18. DİKKAT EKSİKLİĞİ VE HİPERAKTİVİTE BOZUKLUĞU
+19. DİL BECERİLERİNİN ÖĞR. I
+20. DİL EDİNİMİ
+21. DİL VE EDEBİYAT ÖĞRETİMİ 1
+22. DİL VE EDEBİYAT ÖĞRETİMİ 2
+23. DİL VE TOPLUM
+24. DİLBİLİM I
+25. DİLBİLİM II
+26. DİLBİLİMİ 1
+27. DİLBİLİMİ 2
+28. DİNLEME VE SESLETİM 1
+29. DİNLEME VE SESLETİM 2
+30. DİNLEME VE SESLETİM I
+31. DİNLEME VE SESLETİM II
+32. EDEBİYAT VE DİL ÖĞR I
+33. EDİMBİLİMİ VE DİL ÖĞRETİMİ
+34. EKONOMİ VE GİRİŞİMCİLİK
+35. ELEŞTİREL OKUMA VE YAZMA
+36. ELEŞTİREL VE ANALİTİK DÜŞÜNME
+37. ETKİLİ İLETİŞİM
+38. EĞİTİM ANTROPOLOJİSİ
+39. EĞİTİM BİLİMİNE GİRİŞ
+40. EĞİTİM FELSEFESİ
+41. EĞİTİM HUKUKU
+42. EĞİTİM PSİKOLOJİSİ
+43. EĞİTİM SOSYOLOJİSİ
+44. EĞİTİM TARİHİ
+45. EĞİTİMDE AHLAK VE ETİK
+46. EĞİTİMDE ARAŞTIRMA YÖNTEMLERİ
+47. EĞİTİMDE DRAMA
+48. EĞİTİMDE PROGRAM DIŞI ETKİNLİKLER
+49. EĞİTİMDE PROGRAM GELİŞTİRME
+50. EĞİTİMDE PROJE HAZIRLAMA
+51. EĞİTİMDE ÖLÇME VE DEĞERLENDİRME
+52. EĞİTİME GİRİŞ
+53. GELENEKSEL TÜRK EL SANATLARI
+54. KAPSAYICI EĞİTİM
+55. KARAKTER VE DEĞER EĞİTİMİ
+56. KARİYER PLANLAMA VE GELİŞTİRME
+57. KARŞILAŞTIRMALI EĞİTİM
+58. KÜLTÜR VE DİL
+59. KİTLE İLETİŞİMİNDE İNGİLİZCE
+60. MEDYA OKUR YAZARLIĞI
+61. MESLEKİ İNGİLİZCE
+62. MÜZE EĞİTİMİ
+63. MİKRO ÖĞRETİM
+64. OKUL DENEYİMİ
+65. OKUL DIŞI ÖĞRENME ORTAMLARI
+66. OKULLARDA REHBERLİK
+67. OKUMA BECERİLERİ 1
+68. OKUMA BECERİLERİ 2
+69. REHBERLİK
+70. SANAT VE ESTETİK
+71. SINIF YÖNETİMİ
+72. SOSYODİLBİLİM VE DİL ÖĞRETİMİ
+73. SÖYLEM ÇÖZÜMLEMESİ VE DİL ÖĞRETİMİ
+74. SÖZCÜK BİLGİSİ
+75. SÖZLÜ İLETİŞİM BECERİLERİ 1
+76. SÖZLÜ İLETİŞİM BECERİLERİ 2
+77. SÖZLÜ İLETİŞİM BECERİLERİ I
+78. SÖZLÜ İLETİŞİM BECERİLERİ II
+79. SÜRDÜRÜLEBİLİR KALKINMA VE EĞİTİM
+80. TOPLUMA HİZMET UYGULAMALARI
+81. TÜMLEŞİK DİL BECERİLERİNİN ÖĞRETİMİ
+82. TÜRK DİLİ 1
+83. TÜRK DİLİ 2
+84. TÜRK EĞİTİM SİSTEMİ VE OKUL YÖNETİMİ
+85. TÜRK EĞİTİM TARİHİ
+86. TÜRK KÜLTÜR COĞRAFYASI
+87. TÜRK MUSİKİSİ
+88. TÜRK SANATI TARİHİ
+89. TÜRK İŞARET DİLİ
+90. TÜRKÇE 2SÖZLÜ ANLATIM
+91. TÜRKÇE I YAZILI ANLATIM
+92. TÜRKÇE-İNGİLİZCE ÇEVİRİ
+93. YABANCI DİL 1
+94. YABANCI DİL 1 (ALMANCA)
+95. YABANCI DİL 2
+96. YABANCI DİL 2 (ALMANCA)
+97. YABANCI DİL OLARAK İNGİLİZCE ÖĞRETİMİNDE TEKNOLOJİ KULLANIMI
+98. YABANCI DİL ÖĞRETİMİNDE ELEŞTİREL DÜŞÜNCE BECERİLERİ
+99. YABANCI DİL ÖĞRETİMİNDE MATERYAL İNCELEME VE GELİŞTİRME
+100. YABANCI ÖĞRENCİLER İÇİN ATATÜRK İLKELERİ VE İNKILAP TARİHİ 1
+101. YABANCI ÖĞRENCİLER İÇİN ATATÜRK İLKELERİ VE İNKILAP TARİHİ 2
+102. YAZMA BECERİLERİ 1
+103. YAZMA BECERİLERİ 2
+104. YETİŞKİN EĞİTİMİ VE HAYAT BOYU ÖĞRENME
+105. ÇEVİRİ
+106. ÇOCUK PSİKOLOJİSİ
+107. ÇOCUKLARA YABANCI DİL ÖĞRETİMİ 1
+108. ÇOCUKLARA YABANCI DİL ÖĞRETİMİ 2
+109. ÇOCUKLARA YABANCI DİL ÖĞRETİMİ I
+110. ÖZEL EĞİTİM
+111. ÖZEL EĞİTİM VE KAYNAŞTIRMA
+112. ÖZEL ÖĞRETİM YÖNTEMLERİ I
+113. ÖZEL ÖĞRETİM YÖNTEMLERİ II
+114. ÖĞRENME GÜÇLÜĞÜ
+115. ÖĞRETMENLİK UYGULAMASI 1
+116. ÖĞRETMENLİK UYGULAMASI 2
+117. ÖĞRETİM TEKNOLOJİLERİ
+118. ÖĞRETİM TEKNOLOJİLERİ VE MATERYAL TASARIMI
+119. ÖĞRETİM İLKE VE YÖNTEMLERİ
+120. İKİNCİ YABANCI DİL I
+121. İLERİ OKUMA VE YAZMA I
+122. İLERİ OKUMA VE YAZMA II
+123. İNGİLİZ EDEBİYATI 1
+124. İNGİLİZ EDEBİYATI 2
+125. İNGİLİZ EDEBİYATI I
+126. İNGİLİZ EDEBİYATI II
+127. İNGİLİZCE DERS KİTABI İNCELEMESİ
+128. İNGİLİZCE DİL BECERİLERİNİN ÖĞRETİMİ 1
+129. İNGİLİZCE DİL BECERİLERİNİN ÖĞRETİMİ 2
+130. İNGİLİZCE SÖZCÜK BİLGİSİ ÖĞRETİMİ
+131. İNGİLİZCE TÜRKÇE ÇEVİRİ
+132. İNGİLİZCE ÖĞRENME VE ÖĞRETİM YAKLAŞIMLARI
+133. İNGİLİZCE ÖĞRETİM PROGRAMLARI
+134. İNGİLİZCE ÖĞRETİMİNDE DERS İÇERİĞİ GELİŞTİRME
+135. İNGİLİZCE ÖĞRETİMİNDE DRAMA
+136. İNGİLİZCE ÖĞRETİMİNDE MATERYAL TASARIMI
+137. İNGİLİZCE ÖĞRETİMİNDE SINAV HAZIRLAMA
+138. İNGİLİZCE ÖĞRETİMİNDE YAKLAŞIMLAR I
+139. İNGİLİZCE ÖĞRETİMİNDE YAKLAŞIMLAR II
+140. İNGİLİZCE ÖĞRETİMİNDE YENİ YAKLAŞIMLAR
+141. İNGİLİZCENİN YAPISI
+142. İNSAN HAKLARI VE DEMOKRASİ EĞİTİMİ
+143. İNSAN İLİŞKİLERİ VE İLETİŞİM

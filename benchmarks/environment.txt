@@ -1,0 +1,6 @@
+python: 3.13.5
+pandas: 3.0.3
+numpy: 2.5.1
+machine: arm64
+os: Darwin 25.6.0
+processor: arm

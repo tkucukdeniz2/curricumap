@@ -1,0 +1,7 @@
+taxonomy,label,domains,rules,keywords,regexes,overrides,yaml_lines
+bologna,Bologna Process / EQF Learning Outcome Descriptors,3,3,14,0,0,19
+canmeds,CanMEDS Physician Competency Framework,7,7,27,0,0,31
+elt_yok_2018,ELT Teacher Education Curriculum (YÖK 2018),5,9,53,63,0,159
+engineering_mudek,Engineering Curriculum (MÜDEK/ABET Knowledge Areas),5,5,40,0,0,25
+math_ed_yok,Mathematics Education Curriculum (YÖK),4,4,23,0,0,22
+elt_yok_2018_v0.1.0,ELT Teacher Education Curriculum (YÖK 2018),5,5,34,0,0,25

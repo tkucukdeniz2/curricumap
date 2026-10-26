@@ -1,144 +1,196 @@
 # CurricuMap
 
-Turn registrar transcripts into auditable competency-domain matrices.
+Turn registrar transcripts into auditable student-by-domain competency matrices.
 
-CurricuMap ingests a course transcript (CSV/XLSX), classifies each course
-into competency domains defined by a YAML taxonomy (via keyword/regex rules,
-overrides, and optional fuzzy matching), aggregates student grades into a
-domain-level matrix, and produces an audit (coverage, Cronbach's alpha,
-descriptives) so every mapping decision is traceable back to the course that
-produced it.
+CurricuMap ingests a transcript export (CSV/XLSX) and assigns each course to a competency
+domain defined in a declarative YAML taxonomy, using ordered keyword and regular-expression
+rules, explicit overrides and an optional fuzzy fallback. It applies registrar cleaning
+(retakes, sentinel grades, coverage) and aggregates grades into a student-by-domain matrix.
+It then writes an audit (coverage, descriptives, Cronbach's alpha). Every course
+assignment is traceable to the rule that produced it, and a course that matches nothing is
+flagged rather than given a default domain.
 
-## Install
+## Installation
+
+CurricuMap needs Python ≥ 3.10. Dependencies (pandas, numpy, pyyaml, jsonschema,
+rapidfuzz, openpyxl, jinja2) are declared in `pyproject.toml` and installed automatically.
+Install into a virtual environment, as below (on Windows: `py -m venv .venv`, then
+`.venv\Scripts\activate`); many system Pythons refuse a bare `pip install`. From a clone of
+the repository, which also registers the `curricumap` command:
 
 ```bash
-pip install -e .
+git clone https://github.com/tkucukdeniz2/curricumap.git
+cd curricumap
+python3 -m venv .venv && source .venv/bin/activate
+pip install .
 ```
 
-Requires Python >= 3.10. Dependencies: pandas, numpy, pyyaml, jsonschema,
-rapidfuzz, openpyxl, jinja2.
+Or install a tagged release directly from GitHub into an active virtual environment:
 
-## Input data and data flow
-
-CurricuMap takes three inputs and turns them into an audited matrix:
-
-```
-  transcript export (CSV/XLSX)  ─┐
-  taxonomy spec (YAML)           ├─►  io ─► classify ─► prepare ─► audit ─► report
-  run-config (YAML, optional)   ─┘                                            │
-                                                                              ▼
-              matrix_wide.csv · matrix_long.csv · provenance.csv · audit.json · audit.html
+```bash
+pip install "curricumap @ git+https://github.com/tkucukdeniz2/curricumap@v0.2.0"
 ```
 
-**1. Transcript export** — one row per student-per-course, in a tidy schema:
+For development, an editable install with pytest and coverage, from the clone:
+
+```bash
+pip install -e ".[dev]"
+pytest --cov=curricumap
+```
+
+`requirements.txt` pins the direct-dependency versions used for the paper's illustrative
+example and benchmarks (Python 3.13.5); these pins need Python ≥ 3.12:
+`pip install -r requirements.txt && pip install --no-deps .` The validation baselines are
+pinned separately in `validation/requirements.txt`.
+
+## Quickstart
+
+Generate a synthetic transcript for a bundled taxonomy, then run the pipeline on it. These
+are the commands of the paper's illustrative example:
+
+```bash
+curricumap synth --taxonomy elt_yok_2018 --out data --n-students 60 --seed 7
+curricumap run --input data/transcript.csv --taxonomy elt_yok_2018 --out out
+```
+
+`run` writes five files to `out/`:
+
+| File | Contents |
+|---|---|
+| `matrix_wide.csv` | One row per student, one column per domain (mean grade per domain). |
+| `matrix_long.csv` | The same data in tidy long form: `student_id, domain, grade`. |
+| `provenance.csv` | One row per course: assigned domain, method (`override`, `rule`, `fuzzy` or `unmatched`), the pattern and the text it matched, score, an ambiguity flag, and `n_titles`, the number of distinct titles printed under the course code. |
+| `audit.json` | `taxonomy` (its id); `coverage`: `n_unmapped`, `unmapped_courses`, `n_ambiguous`, `n_title_conflicts`, `title_conflicts` (course codes printed with several titles) and `domain_sizes` (courses per domain); `prepare`, what cleaning dropped: `sentinel` grades, `no_grade` (records whose grade is blank or not a number, e.g. an absence code; also reported on stderr), `retakes` (records merged into another of the same student and course) and `low_coverage` (students left out of the matrix: below `coverage.min_domains`, or with no usable grade in any domain); `cronbach_missing`, how alpha treats missing grades; and `domains`, per domain: `alpha`, `k` (the courses with grades, alpha's items), `n_courses`, `n_students` (students with the domain), `n_alpha` (students alpha rests on; for `pairwise`, the fewest that share two courses), `mean`, `sd`, `skew`, `missing_pct` (matrix students without the domain), `item_missing_pct` (missing grades among all matrix students × all the domain's courses) and `n_complete` (students with every course grade of the domain). Values that cannot be computed are `null`. |
+| `audit.html` | A self-contained, human-readable rendering of `audit.json`. |
+
+A bundled taxonomy can be named instead of given as a path, so after `pip install .` these
+commands work from any directory: `elt_yok_2018`, `math_ed_yok`, `engineering_mudek`,
+`canmeds`, `bologna`. `curricumap --help` lists them.
+
+## Input data
+
+**Transcript export.** One row per student per course:
 
 | column | required | meaning |
 |---|:--:|---|
 | `student_id` | ✅ | student key |
-| `course_name` | ✅ | free-text course title (any language) |
+| `course_name` | ✅ | course title as printed by the registrar (any language); a row without one is an error |
 | `grade` | ✅ | numeric grade |
-| `course_id` | — | defaults to `course_name` |
-| `term`, `date`, `credits` | — | `date` enables study-year reconstruction |
+| `course_id` | — | must identify one course; defaults to `course_name` |
+| `date` | — | orders retakes when `dedup.keep: last`; ISO 8601 (`2020-06-23`) unless `io.date_format` gives the format |
 
-Registrar systems use arbitrary column names; map them onto this schema with
-`io.columns` in the run-config (e.g. `{ student_id: FKOgrenciID, grade: YuzlukNot }`).
+Registrar systems name columns arbitrarily; map them in the run-config with `io.columns`
+(e.g. `{ student_id: FKOgrenciID, grade: YuzlukNot }`); a mapped column that the export does
+not have is an error; quote column names that YAML would read as numbers or booleans (`"2021"`,
+`"No"`). CSV (UTF-8, with or without a byte order mark; comma-separated, or semicolon-separated
+with decimal commas as Excel saves it in a Turkish locale) and `.xlsx` are read; save legacy `.xls` files as `.xlsx` first. Dates written as text are
+read as ISO 8601 unless `io.date_format` gives their format, quoted, e.g. `io: { date_format: "%d.%m.%Y" }`
+for `23.06.2020`; with `dedup.keep: last`, a date that does not match, or a retake without a date, is an
+error rather than a guess (without a `date` column, `last` follows file order).
 
-**2. Taxonomy spec (YAML)** — the competency domains and the keyword / override /
-fuzzy rules that assign courses to them (see `src/curricumap/examples/`).
-Adopting the tool for a new curriculum means writing this file, not code.
+If your registrar reuses a code for different courses, map `course_id` to the title column
+(`io.columns: { course_id: <title column> }`) or, if the export has no column named
+`course_id`, leave it unmapped so that the title is used. Courses are then told apart by the
+title as printed, so titles that differ only in case or spacing count as different courses.
+`run` warns about a code printed with several titles, classifies it by its first title and
+lists it under `coverage.title_conflicts` in `audit.json`. Rows without a `student_id` or
+`course_id` are rejected with an error rather than dropped.
 
-**3. Run-config (YAML, optional)** — the cleaning and aggregation policy: retake
-deduplication, sentinel-grade handling, coverage filtering, aggregation method,
-and the column mapping above.
+**Taxonomy (YAML).** The domains and the rules that assign courses to them. Rules are
+evaluated in order and the first match wins; `any` lists substring keywords and `regex`
+lists regular expressions, both matched against the title after case folding, which follows
+Turkish rules (İ→i, I→ı) when `locale.language` is Turkish (`tr`, `tr-TR` or `tur`):
 
-### Try it on the bundled sample
-
-A small, realistic sample transcript ships in `examples/`, so you can see the
-whole flow without generating synthetic data:
-
-```bash
-curricumap run \
-  --input examples/sample_transcript.csv \
-  --taxonomy src/curricumap/examples/elt_yok_2018.yaml \
-  --config examples/sample_config.yaml \
-  --out out/
+```yaml
+taxonomy:
+  id: my_programme
+  label: "My programme"
+  locale: { language: tr }
+  domains:
+    - { id: literature, label: "Literature" }
+    - { id: pedagogy, label: "Pedagogy" }
+  rules:
+    - domain: literature            # subject before method: "Dil ve Edebiyat Öğretimi"
+      any: ["edebiyat"]
+    - domain: pedagogy
+      any: ["öğretim", "öğretmenlik"]
+      regex: ['\bs[ıi]n[ıi]f\b']     # Sınıf Yönetimi, never "sınıflandırma"
+  overrides:
+    - { course: "Özel Ders", domain: pedagogy }
 ```
 
-`examples/sample_transcript.csv` deliberately contains the mess real exports
-carry: a **retaken** course (two rows for one student/course), a
-**non-attendance** grade encoded as a sentinel `0`, and an **off-curriculum**
-course (`Beden Eğitimi ve Spor`) that maps to no competency domain. The run
-keeps the higher retake grade, drops the sentinel, flags the off-curriculum
-course as unmapped in `provenance.csv`, and writes the 5×5 competency matrix.
-See [`examples/README.md`](examples/README.md) for a full walkthrough.
+`curricumap validate-taxonomy <file-or-name>` checks the file against the JSON Schema
+and verifies that every rule refers to a defined domain and every regex compiles.
+Unknown keys are rejected, so a misspelled key fails validation instead of being ignored;
+the v0.1 keys `casefold`, `strategy` and `unmatched` are still accepted with the values
+`locale-aware`, `ordered_rules` and `flag`, and have no effect.
+Adopting CurricuMap for a new curriculum means writing such a file, not code. The bundled
+`elt_yok_2018` taxonomy was written from the official national programme course lists of
+the Turkish Council of Higher Education; since 2020 universities may adapt those
+programmes, so add your local courses as rules or overrides. The other four bundled
+taxonomies are compact illustrations and have not been validated on real data.
 
-## Quickstart
+**Run-config (YAML, optional).** The cleaning and audit policy, as in `examples/sample_config.yaml`:
 
-CurricuMap ships with example taxonomies (ELT/YÖK 2018, Bologna, CanMEDS,
-MÜDEK engineering, math education) under `src/curricumap/examples/`. The
-fastest way to see the whole pipeline run is to generate a synthetic
-transcript against one of them and then run the classification/audit
-pipeline on it.
-
-### 1. Generate a synthetic transcript
-
-```bash
-curricumap synth \
-  --taxonomy src/curricumap/examples/elt_yok_2018.yaml \
-  --out /tmp/cm_demo \
-  --n-students 40 \
-  --seed 1
+```yaml
+prepare:
+  dedup: { "on": [student_id, course_id], keep: max } # retakes: max | last (by date) | mean
+  sentinel_grades: { values: [0], action: drop }      # e.g. 0 = did not attend
+  coverage: { min_domains: 3 }                        # keep students covering >= 3 domains
+  aggregate: { method: mean }                         # mean | median
+audit:
+  cronbach: { missing: column_mean }                  # missing grades: column_mean | listwise | pairwise
 ```
 
-This writes `/tmp/cm_demo/transcript.csv` (student_id, course_id,
-course_name, grade) and `/tmp/cm_demo/catalog.csv` (the synthetic course
-catalog), built so that every course name matches one of the taxonomy's
-keyword rules.
+`student_id` and `course_id` always identify a record; `"on"` can add `course_name` or `date`
+(`[student_id, course_id, date]` keeps attempts on different dates apart). Quote `"on"`:
+YAML reads a bare `on` as `true`. Unknown keys and values of the wrong type are rejected.
 
-### 2. Run the pipeline
+A course of a domain that a student did not take is a missing grade for Cronbach's alpha.
+`column_mean` (the default) replaces it by the course mean, which lowers alpha as the share
+of missing grades grows; `listwise` uses only the students with every course grade of the
+domain, and `pairwise` estimates each covariance from the students who have both grades (no
+alpha when two courses share fewer than two students). `audit.json` reports each domain's
+share of missing grades, its number of complete cases and the number of students alpha
+rests on; `audit.html` shows alpha in grey, without a grade, when that number is below 30.
 
-```bash
-curricumap run \
-  --input /tmp/cm_demo/transcript.csv \
-  --taxonomy src/curricumap/examples/elt_yok_2018.yaml \
-  --out /tmp/cm_out
-```
-
-This classifies every course into a domain, aggregates grades per student
-per domain, audits coverage and internal consistency, and writes five files
-to `/tmp/cm_out/`:
-
-| File | Contents |
-|---|---|
-| `matrix_wide.csv` | One row per student, one column per domain, average grade per domain. |
-| `matrix_long.csv` | The same data in tidy long form: `student_id, domain, grade`. |
-| `provenance.csv` | One row per course: which domain it was assigned to, by which method (`rule` or `fuzzy`), which pattern/keyword matched, the match score, and whether the assignment was ambiguous. |
-| `audit.json` | Coverage stats (unmapped/ambiguous course counts, domain sizes) and per-domain reliability/descriptives (Cronbach's alpha, k items, n, mean, sd, skew, missing %). |
-| `audit.html` | A human-readable HTML rendering of `audit.json`, ready to attach to a manuscript or share with a curriculum committee. |
-
-## Other commands
-
-Validate a taxonomy YAML file against the spec (checks required keys,
-domain/rule structure, and reports unresolved schema errors):
-
-```bash
-curricumap validate-taxonomy src/curricumap/examples/elt_yok_2018.yaml
-```
-
-`curricumap run` also accepts an optional `--config path/to/config.yaml` for
-overriding input column names and cleaning/aggregation policy (dedup rule,
-sentinel-grade handling, minimum coverage, aggregation method).
+A small, deliberately messy sample transcript is in `examples/`; see
+[`examples/README.md`](examples/README.md).
 
 ## Python API
 
-The same building blocks are importable directly:
-
 ```python
-from curricumap import load_taxonomy, load_transcript, classify_courses, prepare, generate
+from curricumap import load_taxonomy, load_transcript, classify_courses, prepare, audit, write_reports
 
-tax = load_taxonomy("src/curricumap/examples/elt_yok_2018.yaml")
-transcript = load_transcript("transcript.csv")
+tax = load_taxonomy("elt_yok_2018")              # bundled name or path to a YAML file
+transcript = load_transcript("export.xlsx", columns={"student_id": "FKOgrenciID"})
+provenance = classify_courses(transcript[["course_id", "course_name"]], tax)
+result = prepare(transcript, provenance, config={})
+report = audit(transcript, provenance, result.wide, tax, config={}, dropped=result.dropped)
+write_reports(report, "out")                     # audit.json and audit.html
 ```
 
-See `docs/code-metadata.md` for the SoftwareX code-metadata table and
-`examples/quickstart.md` for a standalone copy of the walkthrough above.
+## Validation and benchmarks
+
+- [`validation/`](validation/README.md) tests the bundled ELT taxonomy on 143 real
+  registrar course titles that the agents writing the taxonomy never opened (two of them did
+  appear in their instructions or probes; see `validation/authoring/README.md`). It compares the taxonomy
+  with string-similarity, supervised, embedding and LLM classifiers, and releases all
+  data, prompts and predictions.
+- [`benchmarks/`](benchmarks/benchmark.py) measures run time and peak memory from 60 to
+  100,000 students.
+
+## Maintainers
+
+[`docs/architecture.md`](docs/architecture.md) is a one-page map of the six modules, the
+data flow and where to change what. `CHANGELOG.md` lists changes per release.
+
+## Citing
+
+Please cite the software via [`CITATION.cff`](CITATION.cff) (Zenodo concept DOI
+[10.5281/zenodo.22140689](https://doi.org/10.5281/zenodo.22140689), which always resolves to
+the latest version).
+
+## License
+
+MIT

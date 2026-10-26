@@ -1,0 +1,144 @@
+title,predicted,detail
+AFET KÜLTÜRÜ,general_ed,rule:kültür
+ANLATIM BECERİLERİ,language_skills,rule:anlatım beceri
+ATATÜRK İLKELERİ VE İNKILAP TARİHİ 1,general_ed,rule:atatürk
+ATATÜRK İLKELERİ VE İNKILAP TARİHİ 2,general_ed,rule:atatürk
+ATATÜRK İLKELERİ VE İNKILAP TARİHİ I,general_ed,rule:atatürk
+AÇIK VE UZAKTAN ÖĞRENME,pedagogy,rule:(?<!mak[iı]ne )(?<!der[iı]n )\b[öo][gğ]re(t[iı]m|tme|nme|n[iı]m)
+BAĞIMLILIK VE BAĞIMLILIKLA MÜCADELE,general_ed,rule:bağımlılık
+BAĞLAMSAL DİLBİLGİSİ I,language_skills,rule:dilbilgisi
+BAĞLAMSAL DİLBİLGİSİ II,language_skills,rule:dilbilgisi
+BESLENME VE SAĞLIK,general_ed,rule:beslenme
+BİLGİSAYAR I,general_ed,rule:bilgisayar
+BİLGİSAYAR II,general_ed,rule:bilgisayar
+BİLİM TARİHİ VE FELSEFESİ,general_ed,rule:\bb[iı]l[iı]m(sel)? (ve )?(tar|ara?[şs]|felsef|et[iı])
+BİLİM VE ARAŞTIRMA ETİĞİ,general_ed,rule:\bb[iı]l[iı]m(sel)? (ve )?(tar|ara?[şs]|felsef|et[iı])
+BİLİMSEL ARAŞTIRMA YÖNTEMLERİ,general_ed,rule:\bb[iı]l[iı]m(sel)? (ve )?(tar|ara?[şs]|felsef|et[iı])
+BİLİŞİM TEKNOLOJİLERİ,general_ed,rule:bilişim
+DRAMA,general_ed,rule:(^(\S*\d\S* )?|[.:)\-–] )drama( [ıiv]+| \d+)?( ?\(|$)
+DİKKAT EKSİKLİĞİ VE HİPERAKTİVİTE BOZUKLUĞU,pedagogy,rule:hiperaktivite
+DİL BECERİLERİNİN ÖĞR. I,language_skills,rule:dil beceri:ambiguous
+DİL EDİNİMİ,linguistics,rule:dil edinim
+DİL VE EDEBİYAT ÖĞRETİMİ 1,literature,rule:edebiyat:ambiguous
+DİL VE EDEBİYAT ÖĞRETİMİ 2,literature,rule:edebiyat:ambiguous
+DİL VE TOPLUM,linguistics,rule:dil ve toplum
+DİLBİLİM I,linguistics,rule:dilbilim
+DİLBİLİM II,linguistics,rule:dilbilim
+DİLBİLİMİ 1,linguistics,rule:dilbilim
+DİLBİLİMİ 2,linguistics,rule:dilbilim
+DİNLEME VE SESLETİM 1,language_skills,rule:sesletim
+DİNLEME VE SESLETİM 2,language_skills,rule:sesletim
+DİNLEME VE SESLETİM I,language_skills,rule:sesletim
+DİNLEME VE SESLETİM II,language_skills,rule:sesletim
+EDEBİYAT VE DİL ÖĞR I,literature,rule:edebiyat
+EDİMBİLİMİ VE DİL ÖĞRETİMİ,linguistics,rule:edimbilim:ambiguous
+EKONOMİ VE GİRİŞİMCİLİK,general_ed,rule:ekonom
+ELEŞTİREL OKUMA VE YAZMA,language_skills,rule:(^(\S*\d\S* )?|[.:)\-–] )(([iı]ler[iı]( d[üu]zey)?|ele[şs]t[iı]rel|akadem[iı]k|yarat[ıi]c[ıi]|temel|[iı]ng[iı]l[iı]zce) |[iı]ng\. ?)?(okuma|yazma|d[iı]nleme|konu[şs]ma)\b(?!.*(g[üu][çc]l|k[üu]lt[üu]r|bozuk))
+ELEŞTİREL VE ANALİTİK DÜŞÜNME,pedagogy,rule:(anal([iı]t[iı]k|\.)|ele[şs]t[iı]rel) d[üu][şs]
+ETKİLİ İLETİŞİM,general_ed,rule:etkili iletişim
+EĞİTİM ANTROPOLOJİSİ,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+EĞİTİM BİLİMİNE GİRİŞ,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+EĞİTİM FELSEFESİ,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+EĞİTİM HUKUKU,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+EĞİTİM PSİKOLOJİSİ,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+EĞİTİM SOSYOLOJİSİ,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+EĞİTİM TARİHİ,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+EĞİTİMDE AHLAK VE ETİK,pedagogy,rule:eğitimde
+EĞİTİMDE ARAŞTIRMA YÖNTEMLERİ,pedagogy,rule:eğitimde
+EĞİTİMDE DRAMA,pedagogy,rule:eğitimde
+EĞİTİMDE PROGRAM DIŞI ETKİNLİKLER,pedagogy,rule:eğitimde
+EĞİTİMDE PROGRAM GELİŞTİRME,pedagogy,rule:eğitimde
+EĞİTİMDE PROJE HAZIRLAMA,pedagogy,rule:eğitimde
+EĞİTİMDE ÖLÇME VE DEĞERLENDİRME,pedagogy,rule:eğitimde
+EĞİTİME GİRİŞ,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+GELENEKSEL TÜRK EL SANATLARI,general_ed,rule:sanat
+KAPSAYICI EĞİTİM,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+KARAKTER VE DEĞER EĞİTİMİ,pedagogy,rule:değer eğitim
+KARİYER PLANLAMA VE GELİŞTİRME,general_ed,rule:kariyer
+KARŞILAŞTIRMALI EĞİTİM,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+KÜLTÜR VE DİL,general_ed,rule:kültür
+KİTLE İLETİŞİMİNDE İNGİLİZCE,language_skills,rule:k[iı]tle [iı]let\S*\s+[iı]ng
+MEDYA OKUR YAZARLIĞI,general_ed,rule:medya
+MESLEKİ İNGİLİZCE,general_ed,rule:mesleki ingilizce
+MÜZE EĞİTİMİ,pedagogy,rule:müze eğitim
+MİKRO ÖĞRETİM,pedagogy,rule:öğretim
+OKUL DENEYİMİ,pedagogy,rule:okul
+OKUL DIŞI ÖĞRENME ORTAMLARI,pedagogy,rule:(?<!mak[iı]ne )(?<!der[iı]n )\b[öo][gğ]re(t[iı]m|tme|nme|n[iı]m)
+OKULLARDA REHBERLİK,pedagogy,rule:okul
+OKUMA BECERİLERİ 1,language_skills,rule:(^(\S*\d\S* )?|[.:)\-–] )(([iı]ler[iı]( d[üu]zey)?|ele[şs]t[iı]rel|akadem[iı]k|yarat[ıi]c[ıi]|temel|[iı]ng[iı]l[iı]zce) |[iı]ng\. ?)?(okuma|yazma|d[iı]nleme|konu[şs]ma)\b(?!.*(g[üu][çc]l|k[üu]lt[üu]r|bozuk))
+OKUMA BECERİLERİ 2,language_skills,rule:(^(\S*\d\S* )?|[.:)\-–] )(([iı]ler[iı]( d[üu]zey)?|ele[şs]t[iı]rel|akadem[iı]k|yarat[ıi]c[ıi]|temel|[iı]ng[iı]l[iı]zce) |[iı]ng\. ?)?(okuma|yazma|d[iı]nleme|konu[şs]ma)\b(?!.*(g[üu][çc]l|k[üu]lt[üu]r|bozuk))
+REHBERLİK,pedagogy,rule:rehberlik
+SANAT VE ESTETİK,general_ed,rule:sanat
+SINIF YÖNETİMİ,pedagogy,rule:(?<!sosyal )\bs[ıi]n[ıi]f(?!land)
+SOSYODİLBİLİM VE DİL ÖĞRETİMİ,linguistics,rule:dilbilim:ambiguous
+SÖYLEM ÇÖZÜMLEMESİ VE DİL ÖĞRETİMİ,linguistics,rule:\bs[öo]yl(em\b|\.):ambiguous
+SÖZCÜK BİLGİSİ,language_skills,rule:sözcük
+SÖZLÜ İLETİŞİM BECERİLERİ 1,language_skills,rule:sözlü iletişim
+SÖZLÜ İLETİŞİM BECERİLERİ 2,language_skills,rule:sözlü iletişim
+SÖZLÜ İLETİŞİM BECERİLERİ I,language_skills,rule:sözlü iletişim
+SÖZLÜ İLETİŞİM BECERİLERİ II,language_skills,rule:sözlü iletişim
+SÜRDÜRÜLEBİLİR KALKINMA VE EĞİTİM,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+TOPLUMA HİZMET UYGULAMALARI,general_ed,rule:topluma hizmet
+TÜMLEŞİK DİL BECERİLERİNİN ÖĞRETİMİ,language_skills,rule:dil beceri:ambiguous
+TÜRK DİLİ 1,general_ed,rule:türk dili
+TÜRK DİLİ 2,general_ed,rule:türk dili
+TÜRK EĞİTİM SİSTEMİ VE OKUL YÖNETİMİ,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+TÜRK EĞİTİM TARİHİ,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+TÜRK KÜLTÜR COĞRAFYASI,general_ed,rule:kültür
+TÜRK MUSİKİSİ,general_ed,rule:musiki
+TÜRK SANATI TARİHİ,general_ed,rule:sanat
+TÜRK İŞARET DİLİ,general_ed,rule:işaret dili
+TÜRKÇE 2SÖZLÜ ANLATIM,general_ed,rule:^(?!.*(\b[iı]ng|[çc]ev|terc[üu]m|[öo][gğ]ret)).*\bt[üu]rk[çc]e
+TÜRKÇE I YAZILI ANLATIM,general_ed,rule:^(?!.*(\b[iı]ng|[çc]ev|terc[üu]m|[öo][gğ]ret)).*\bt[üu]rk[çc]e
+TÜRKÇE-İNGİLİZCE ÇEVİRİ,language_skills,rule:[çc]ev[iı]r[iı](?!m)
+YABANCI DİL 1,general_ed,rule:^(\S+ )?yab(anc[ıi]|\.) ?d[iı]l(\s*[-–:(]|\s+([ıiv]+|\d+)\b|\s+\S+[cç][ae]\b|\s*\d|$)
+YABANCI DİL 1 (ALMANCA),general_ed,rule:^(\S+ )?yab(anc[ıi]|\.) ?d[iı]l(\s*[-–:(]|\s+([ıiv]+|\d+)\b|\s+\S+[cç][ae]\b|\s*\d|$)
+YABANCI DİL 2,general_ed,rule:^(\S+ )?yab(anc[ıi]|\.) ?d[iı]l(\s*[-–:(]|\s+([ıiv]+|\d+)\b|\s+\S+[cç][ae]\b|\s*\d|$)
+YABANCI DİL 2 (ALMANCA),general_ed,rule:^(\S+ )?yab(anc[ıi]|\.) ?d[iı]l(\s*[-–:(]|\s+([ıiv]+|\d+)\b|\s+\S+[cç][ae]\b|\s*\d|$)
+YABANCI DİL OLARAK İNGİLİZCE ÖĞRETİMİNDE TEKNOLOJİ KULLANIMI,pedagogy,rule:öğretim
+YABANCI DİL ÖĞRETİMİNDE ELEŞTİREL DÜŞÜNCE BECERİLERİ,pedagogy,rule:öğretim
+YABANCI DİL ÖĞRETİMİNDE MATERYAL İNCELEME VE GELİŞTİRME,pedagogy,rule:öğretim
+YABANCI ÖĞRENCİLER İÇİN ATATÜRK İLKELERİ VE İNKILAP TARİHİ 1,general_ed,rule:atatürk
+YABANCI ÖĞRENCİLER İÇİN ATATÜRK İLKELERİ VE İNKILAP TARİHİ 2,general_ed,rule:atatürk
+YAZMA BECERİLERİ 1,language_skills,rule:(^(\S*\d\S* )?|[.:)\-–] )(([iı]ler[iı]( d[üu]zey)?|ele[şs]t[iı]rel|akadem[iı]k|yarat[ıi]c[ıi]|temel|[iı]ng[iı]l[iı]zce) |[iı]ng\. ?)?(okuma|yazma|d[iı]nleme|konu[şs]ma)\b(?!.*(g[üu][çc]l|k[üu]lt[üu]r|bozuk))
+YAZMA BECERİLERİ 2,language_skills,rule:(^(\S*\d\S* )?|[.:)\-–] )(([iı]ler[iı]( d[üu]zey)?|ele[şs]t[iı]rel|akadem[iı]k|yarat[ıi]c[ıi]|temel|[iı]ng[iı]l[iı]zce) |[iı]ng\. ?)?(okuma|yazma|d[iı]nleme|konu[şs]ma)\b(?!.*(g[üu][çc]l|k[üu]lt[üu]r|bozuk))
+YETİŞKİN EĞİTİMİ VE HAYAT BOYU ÖĞRENME,pedagogy,rule:(?<!mak[iı]ne )(?<!der[iı]n )\b[öo][gğ]re(t[iı]m|tme|nme|n[iı]m)
+ÇEVİRİ,language_skills,rule:[çc]ev[iı]r[iı](?!m)
+ÇOCUK PSİKOLOJİSİ,pedagogy,rule:çocuk
+ÇOCUKLARA YABANCI DİL ÖĞRETİMİ 1,pedagogy,rule:öğretim
+ÇOCUKLARA YABANCI DİL ÖĞRETİMİ 2,pedagogy,rule:öğretim
+ÇOCUKLARA YABANCI DİL ÖĞRETİMİ I,pedagogy,rule:öğretim
+ÖZEL EĞİTİM,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+ÖZEL EĞİTİM VE KAYNAŞTIRMA,pedagogy,rule:(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b
+ÖZEL ÖĞRETİM YÖNTEMLERİ I,pedagogy,rule:öğretim
+ÖZEL ÖĞRETİM YÖNTEMLERİ II,pedagogy,rule:öğretim
+ÖĞRENME GÜÇLÜĞÜ,pedagogy,rule:(?<!mak[iı]ne )(?<!der[iı]n )\b[öo][gğ]re(t[iı]m|tme|nme|n[iı]m)
+ÖĞRETMENLİK UYGULAMASI 1,pedagogy,rule:öğretmen
+ÖĞRETMENLİK UYGULAMASI 2,pedagogy,rule:öğretmen
+ÖĞRETİM TEKNOLOJİLERİ,pedagogy,rule:öğretim
+ÖĞRETİM TEKNOLOJİLERİ VE MATERYAL TASARIMI,pedagogy,rule:öğretim
+ÖĞRETİM İLKE VE YÖNTEMLERİ,pedagogy,rule:öğretim
+İKİNCİ YABANCI DİL I,general_ed,rule:^(\S+ )?yab(anc[ıi]|\.) ?d[iı]l(\s*[-–:(]|\s+([ıiv]+|\d+)\b|\s+\S+[cç][ae]\b|\s*\d|$)
+İLERİ OKUMA VE YAZMA I,language_skills,rule:(^(\S*\d\S* )?|[.:)\-–] )(([iı]ler[iı]( d[üu]zey)?|ele[şs]t[iı]rel|akadem[iı]k|yarat[ıi]c[ıi]|temel|[iı]ng[iı]l[iı]zce) |[iı]ng\. ?)?(okuma|yazma|d[iı]nleme|konu[şs]ma)\b(?!.*(g[üu][çc]l|k[üu]lt[üu]r|bozuk))
+İLERİ OKUMA VE YAZMA II,language_skills,rule:(^(\S*\d\S* )?|[.:)\-–] )(([iı]ler[iı]( d[üu]zey)?|ele[şs]t[iı]rel|akadem[iı]k|yarat[ıi]c[ıi]|temel|[iı]ng[iı]l[iı]zce) |[iı]ng\. ?)?(okuma|yazma|d[iı]nleme|konu[şs]ma)\b(?!.*(g[üu][çc]l|k[üu]lt[üu]r|bozuk))
+İNGİLİZ EDEBİYATI 1,literature,rule:edebiyat
+İNGİLİZ EDEBİYATI 2,literature,rule:edebiyat
+İNGİLİZ EDEBİYATI I,literature,rule:edebiyat
+İNGİLİZ EDEBİYATI II,literature,rule:edebiyat
+İNGİLİZCE DERS KİTABI İNCELEMESİ,pedagogy,rule:ders kitab
+İNGİLİZCE DİL BECERİLERİNİN ÖĞRETİMİ 1,language_skills,rule:dil beceri:ambiguous
+İNGİLİZCE DİL BECERİLERİNİN ÖĞRETİMİ 2,language_skills,rule:dil beceri:ambiguous
+İNGİLİZCE SÖZCÜK BİLGİSİ ÖĞRETİMİ,language_skills,rule:sözcük:ambiguous
+İNGİLİZCE TÜRKÇE ÇEVİRİ,language_skills,rule:[çc]ev[iı]r[iı](?!m)
+İNGİLİZCE ÖĞRENME VE ÖĞRETİM YAKLAŞIMLARI,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİM PROGRAMLARI,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE DERS İÇERİĞİ GELİŞTİRME,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE DRAMA,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE MATERYAL TASARIMI,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE SINAV HAZIRLAMA,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE YAKLAŞIMLAR I,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE YAKLAŞIMLAR II,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE YENİ YAKLAŞIMLAR,pedagogy,rule:öğretim
+İNGİLİZCENİN YAPISI,language_skills,rule:ingilizcenin yapı
+İNSAN HAKLARI VE DEMOKRASİ EĞİTİMİ,general_ed,rule:insan hak
+İNSAN İLİŞKİLERİ VE İLETİŞİM,general_ed,rule:insan ilişki

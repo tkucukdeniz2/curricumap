@@ -1,0 +1,323 @@
+# =============================================================================
+# CurricuMap taxonomy: English Language Teaching (ELT) teacher education, YÖK
+# =============================================================================
+#
+# SOURCE
+#   Authored from the official YÖK (Turkish Council of Higher Education) ELT
+#   undergraduate course lists ONLY: the 2018 programme (compulsory courses
+#   and the MB, GK and AE elective pools) and the 2006 programme (compulsory
+#   courses), 158 programme entries with 150 distinct titles
+#   (validation/data/yok_programmes.csv). No institutional catalogue,
+#   transcript or registrar export was used. Titles are expected in Turkish,
+#   as in the YÖK lists; an English-titled export needs its own rules.
+#   Every "any" keyword is a stem of an official title and is the readable
+#   form that provenance reports. The regexes of the same rule add:
+#     - renderings: upper case, no Turkish letters, Roman or Arabic numerals,
+#       apostrophes and dashes, and abbreviations ending in a full stop
+#       (ÖĞR., ÖĞRT., ÖĞRTM., EĞT., EĞİT., EDB., EDEB., DİLBİL., EDİMB.,
+#       SOSYODİLB., SÖYL., DİL EDİN., DÜNYA İNG., BEC., SESL., SÖZL. İLET.,
+#       SÖZC., SÖZ. BİLG., DİL BİLG., İNG., YAB., ÇOC., ÖLÇ., DERS KİT.,
+#       DİKKAT EKS., HİPERAKT., ANAL. DÜŞ., İNSAN İLİŞ., MESLEKİ İNG.,
+#       TOPLUMA HİZ., EL SAN.);
+#     - ten common synonyms, marked "synonym": gramer, kelime bilgisi,
+#       tercüme, pragmatik, sosyolinguistik, konuşma, dil eğitimi, İngiliz
+#       dilinin yapısı, müzik, bilgi teknolojileri;
+#     - the skill qualifiers akademik, yaratıcı, temel and ileri düzey, next
+#       to the official ileri and eleştirel;
+#     - for R4, a second foreign language printed under its own name, and
+#       literatures in languages other than English.
+#   Keep plain, unambiguous keywords in the FIRST rule of each domain:
+#   "curricumap synth" and the paper's illustrative example name their
+#   synthetic courses after them.
+#
+# DOMAIN CONVENTION (how each official title received its label)
+#   R1  MB    teaching-profession knowledge (meslek bilgisi) -> pedagogy
+#   R2  GK    general culture (genel kültür)                 -> general_ed
+#   R3  AE/A  field courses, by subject matter -> language_skills,
+#             linguistics, literature, or pedagogy (ELT methodology)
+#   R4  second foreign language (İkinci Yabancı Dil)          -> general_ed
+#
+# SIZE   9 rules, 53 keywords, 63 regexes, 0 overrides.
+# CHECK  In-sample (the rules were written from these entries): 157 of 158
+#        correct, 0 unmatched, 14 flagged ambiguous (13 subject + Öğretimi
+#        titles and "Dünya İngilizceleri ve Kültür", see RULE ORDER).
+#        Held-out results are reported in validation/. The one miss is
+#        unavoidable: the identical title "Türk Eğitim Tarihi" is MB
+#        (pedagogy) in 2018 but GK (general_ed) in 2006. A title-level rule
+#        cannot honour both, so this file follows 2018; for a 2006 cohort add
+#        the override { course: "Türk Eğitim Tarihi", domain: general_ed }.
+#
+# MATCHING
+#   Titles are casefolded with Turkish rules (İ->i, I->ı) and whitespace is
+#   collapsed. "any" keywords are substrings of that normalized title, so a
+#   stem covers a course family: "dilbilim" matches "Dilbilim I", "Dilbilimi
+#   1" and "SOSYODİLBİLİM". "regex" entries are Python regular expressions
+#   searched in the normalized title, written in lower case:
+#     [iı] [öo] [üu] [şs] [çc] [gğ]  a Turkish letter or its ASCII stand-in
+#                                    ("INGILIZ" folds to "ıngılız")
+#     \b  a word boundary           ^  the start of the title
+#     (?!x)  not followed by x      (?<!x)  not preceded by x
+#   There is no catch-all: a title that matches nothing ("Beden Eğitimi ve
+#   Spor", "Hızlı Okuma Teknikleri", "Makine Öğrenmesi") is flagged
+#   unmatched for review.
+#
+# RULE ORDER (first matching rule wins; a title matched by rules of more than
+# one domain is flagged ambiguous)
+#   1 general ed. (languages) > 2 literature > 3 linguistics >
+#   4-5 language skills > 6-8 pedagogy > 9 general ed. (other GK)
+#   Two precedences decide official titles:
+#   - Subject before method (rules 2-5 before rule 6): 13 entries join a
+#     subject to "Öğretimi" (teaching of): Dil ve Edebiyat / Edebiyat ve Dil
+#     Öğretimi (literature, 4 entries), Edimbilimi / Sosyodilbilim / Söylem
+#     Çözümlemesi ve Dil Öğretimi (linguistics, 3), (İngilizce / Tümleşik)
+#     Dil Becerilerinin Öğretimi and İngilizce Sözcük Bilgisi Öğretimi
+#     (language skills, 6). They are the expected ambiguity flags. Assessing
+#     a skill follows the same convention: "Dil Becerilerinin
+#     Değerlendirilmesi" is language skills, flagged.
+#   - Linguistics before rule 9: "kültür" would otherwise take "Dünya
+#     İngilizceleri ve Kültür".
+#   Rule 1 decides no official title. It runs first so that a course in
+#   Turkish or in a second foreign language stays general education whatever
+#   its subject ("Almanca Dilbilgisi", "Türk Dili ve Edebiyatı", "Rus
+#   Edebiyatı", all flagged). Lookaheads, not order, keep the translation
+#   courses and the foreign-language teaching courses out of rule 1. The
+#   remaining orders (literature > linguistics > skills, pedagogy > rule 9)
+#   change no official title; they settle unofficial compounds such as
+#   "Edebiyat ve Çeviri" or "Bilgisayar Destekli Dil Öğretimi".
+# =============================================================================
+taxonomy:
+  id: elt_yok_2018
+  label: "ELT Teacher Education Curriculum (YÖK 2018)"
+  locale: { language: tr, casefold: locale-aware }
+  domains:
+    - { id: language_skills, label: "Language Skills" }
+    - { id: pedagogy, label: "Pedagogy" }
+    - { id: linguistics, label: "Linguistics" }
+    - { id: literature, label: "Literature" }
+    - { id: general_ed, label: "General Education" }
+  match:
+    strategy: ordered_rules
+    fuzzy: { enabled: false, threshold: 0.9, scorer: token_set_ratio }
+  rules:
+    # 1 GENERAL EDUCATION (R2, R4): the common compulsory courses (Atatürk
+    # İlkeleri, Türk Dili, Yabancı Dil, Türkçe) and courses in Turkish or in
+    # a second foreign language.
+    - domain: general_ed
+      any:
+        - atatürk                  # Atatürk İlkeleri ve İnkılap Tarihi 1, 2 / I, II
+        - inkılap
+        - türk dili                # Türk Dili 1, 2
+      regex:
+        - 'atat[üu]rk|[iı]nk[iı]l[âa]p'
+        - '\bt[üu]rk ?d[iı]l'      # TURK DILI, TÜRKDİLİ; also Türk Dilbilgisi, Türk Dili ve Edebiyatı
+        # Türkçe I: Yazılı Anlatım, Türkçe II: Sözlü Anlatım. Not when the
+        # title also names English, translation (çev-, tercüm-) or teaching:
+        # İngilizce-Türkçe Çeviri belongs to rule 5.
+        - '^(?!.*(\b[iı]ng|[çc]ev|terc[üu]m|[öo][gğ]ret)).*\bt[üu]rk[çc]e'
+        # Yabancı Dil 1, İkinci Yabancı Dil I, "YAB. DİL II", "Yabancı Dil
+        # (Almanca) I", "YABANCI DİL İNGİLİZCE I": at most one word before
+        # it, and after it only a numeral, a language name (-ca/-ce), a
+        # bracket, a colon, a dash or nothing. So "Çocuklara Yabancı Dil
+        # Öğretimi" and "Yabancı Dil Eğitimi" never match here.
+        - '^(\S+ )?yab(anc[ıi]|\.) ?d[iı]l(\s*[-–:(]|\s+([ıiv]+|\d+)\b|\s+\S+[cç][ae]\b|\s*\d|$)'
+        # R4: the second foreign language printed under its own name.
+        - '\b(almanca|frans[ıi]zca|[iı]spanyolca|[iı]talyanca|rus[çc]a|arap[çc]a|japonca|[çc][iı]nce|korece|fars[çc]a|yunanca|lat[iı]nce)\b'
+        # Literature in another language (Türk / Alman Dili ve Edebiyatı).
+        - '\b(alman|frans[ıi]z|rus|[iı]spanyol|[iı]talyan|arap|fars|japon|[çc][iı]n|t[üu]rk|d[iı]van|halk) (d[iı]l[iı] ve )?edeb'
+
+    # 2 LITERATURE (R3): İngiliz Edebiyatı, Dil ve Edebiyat Öğretimi, Edebiyat
+    # ve Dil Öğretimi.
+    - domain: literature
+      any:
+        - edebiyat
+      regex:
+        - '\bedeb(?![iı]l)'        # EDEBIYAT, edebi, EDEB.; not the verb "edebil-" (İfade Edebilme)
+        - '\bedb\.'                # EDB.
+
+    # 3 LINGUISTICS (R3): the discipline and the AE linguistics electives.
+    - domain: linguistics
+      any:
+        - dilbilim                 # Dilbilimi 1, Dilbilim I, Sosyodilbilim ve Dil Öğretimi
+        - edimbilim                # Edimbilimi ve Dil Öğretimi
+        - dil edinim               # Dil Edinimi
+        - dil ve toplum            # Dil ve Toplum
+        - dünya ingilizce          # Dünya İngilizceleri ve Kültür
+      regex:
+        - 'd[iı]l ?b[iı]l([iı]m|\.)'      # DILBILIMI, Dil Bilimi, DİLBİL.; never dilbilgisi (grammar)
+        - '\bed[iı]m ?b'                  # EDİMB., EDİM BİL.
+        - 'sosyo ?(d[iı]l|l[iıe]ng)'      # SOSYODİLB.; synonym: Sosyolinguistik
+        - 'pragmat[iı]k'                  # synonym of edimbilim
+        - '\bs[öo]yl(em\b|\.)'            # Söylem Çözümlemesi, SÖYL.; whole word, so not "söyleme"
+        - 'd[iı]l ed[iı]n'                # DIL EDINIMI, DİL EDİN.
+        - 'd[iı]l ve toplum'
+        - 'd[üu]nya [iı]ng'               # DÜNYA İNG.
+
+    # 4 LANGUAGE SKILLS (R3): the four skills. Okuma, yazma, dinleme and
+    # konuşma (synonym for the official sözlü iletişim) count only at the
+    # start of the title (after a course code, if any) or of a segment after
+    # ". : ) -", alone or after İleri, Eleştirel, Akademik, Yaratıcı, Temel
+    # or İngilizce, as in every official title. So "Hızlı Okuma", "Proje
+    # Yazma", "Nota Okuma", "Okuma Güçlüğü", "Konuşma Bozuklukları" and
+    # "Müzik Dinleme Kültürü" are not skills courses.
+    - domain: language_skills
+      any:
+        - sesletim                 # Dinleme ve Sesletim 1, 2 / I, II
+        - sözlü iletişim           # Sözlü İletişim Becerileri 1, 2 / I, II
+        - dil beceri               # (İngilizce / Tümleşik) Dil Becerilerinin Öğretimi
+        - anlatım beceri           # Anlatım Becerileri
+      regex:
+        - '(^(\S*\d\S* )?|[.:)\-–] )(([iı]ler[iı]( d[üu]zey)?|ele[şs]t[iı]rel|akadem[iı]k|yarat[ıi]c[ıi]|temel|[iı]ng[iı]l[iı]zce) |[iı]ng\. ?)?(okuma|yazma|d[iı]nleme|konu[şs]ma)\b(?!.*(g[üu][çc]l|k[üu]lt[üu]r|bozuk))'
+        - 'sesl(et|\.)'                   # SESLETIM, SESL.
+        - '\bs[öo]z(l[üu]|l?\.) ?[iı]l(et|t\.)'   # SOZLU ILETISIM, SÖZL. İLET., SÖZLÜ İLT.
+        - '\b(d[iı]l|anlat[ıi]m) bec'     # DİL BEC., ANLATIM BEC.
+
+    # 5 LANGUAGE SKILLS (R3): grammar, vocabulary, translation and English in
+    # use. "dilbilgisi" is grammar, never linguistics. "Çeviri" is
+    # regex-only so that the common misspelling "Çevirimiçi" (online) is not
+    # read as translation.
+    - domain: language_skills
+      any:
+        - dilbilgisi               # Bağlamsal Dilbilgisi I, II
+        - sözcük                   # Sözcük Bilgisi, İngilizce Sözcük Bilgisi Öğretimi
+        - ingilizcenin yapı        # İngilizcenin Yapısı
+      regex:
+        - 'd[iı]l ?b[iı]lg(?![iı]sa)'     # DIL BILGISI, DİL BİLG.; not "Dil Bilgisayar"
+        - 'gramer'                        # synonym of dilbilgisi
+        - '\bs[öo]z(c|\. ?b[iı]lg)'       # SÖZC., SÖZ. BİLG.
+        - 'kel[iı]me b[iı]l'              # synonym: Kelime Bilgisi
+        - '[çc]ev[iı]r[iı](?!m)'          # Çeviri, İngilizce-Türkçe / Türkçe-İngilizce Çeviri
+        - 'terc[üu]me'                    # synonym of çeviri
+        # Translation by its language pair, so an abbreviated "ÇEV." or a
+        # truncated title still lands here.
+        - '[iı]ng(\.|[iı]l[iı]zce)\W*t[üu]rk[çc]e|t[üu]rk[çc]e\W*[iı]ng(\.|[iı]l[iı]zce)'
+        # İngilizce'nin Yapısı (any apostrophe), İNG. YAPISI; synonym:
+        # İngiliz Dilinin Yapısı.
+        - '[iı]ng(\.|[iı]l[iı]z)\S*( n[iı]n| d[iı]l[iı]n[iı]n)? ?yap'
+        # Kitle İletişiminde İngilizce: English in the media, so English must
+        # follow; "Kitle İletişim Araçları" is not an ELT course.
+        - 'k[iı]tle [iı]let\S*\s+[iı]ng'
+
+    # 6 PEDAGOGY (R1, R3): teaching and learning, once rules 1-5 have claimed
+    # the titles with a subject. Öğretim İlke ve Yöntemleri, Mikro Öğretim,
+    # Öğretmenlik Uygulaması, İngilizce Öğretiminde ..., Çocuklara Yabancı
+    # Dil Öğretimi, Açık ve Uzaktan Öğrenme, Öğrenme Güçlüğü, and so on.
+    # "öğrenme" is regex-only so that "Makine Öğrenmesi" and "Derin Öğrenme"
+    # stay out; "öğrenci" (student) is not a stem.
+    - domain: pedagogy
+      any:
+        - öğretim
+        - öğretmen
+      regex:
+        - '(?<!mak[iı]ne )(?<!der[iı]n )\b[öo][gğ]re(t[iı]m|tme|nme|n[iı]m)'   # OGRETIM, ogrenme, Öğrenimi
+        - '\b[öo][gğ]r[^\s.]{0,4}\.'      # ÖĞR., ÖĞRT., ÖĞRET., ÖĞRTM.
+
+    # 7 PEDAGOGY (R1): education as a field of study, and learner groups.
+    # A bare "eğitim" is too broad: "Beden Eğitimi ve Spor", "Müzik Eğitimi"
+    # and the GK "İnsan Hakları ve Demokrasi Eğitimi" are training in a
+    # subject, written with the possessive "X Eğitimi". So "eğitim" counts
+    # only bare or as -e, -de, -in (Eğitim Psikolojisi, Eğitime Giriş,
+    # Eğitimde Drama, Türk Eğitim Tarihi, Özel / Kapsayıcı / Karşılaştırmalı
+    # Eğitim, Kalkınma ve Eğitim), and not after "beden" or "müzik", which
+    # registrars also print without the possessive. "EĞT." cannot show the
+    # possessive, so it counts unless it ends the title or precedes "ve" or
+    # a numeral ("TÜRK EĞT. TARİHİ" yes; "BEDEN EĞT. VE SPOR", "ÇEVRE EĞT."
+    # no). Language education ("Yabancı Dil Eğitimi") is pedagogy. The MB
+    # titles of the "X Eğitimi" shape are reached through the learner group
+    # or topic: Hastanede Yatan Çocukların Eğitimi, Müze Eğitimi, Karakter ve
+    # Değer Eğitimi. "çocuk" also covers Çocuk Psikolojisi; "yetişkin"
+    # covers shortened forms such as "Yetişkin Eğitimi" (rule 6 already
+    # takes the full title through "Öğrenme").
+    - domain: pedagogy
+      any:
+        - eğitimde                 # Eğitimde Araştırma Yöntemleri, Eğitimde Drama, ...
+        - çocuk
+        - yetişkin
+        - müze eğitim
+        - değer eğitim
+      regex:
+        - '(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b'
+        - '\be[gğ][iı]?t\.(?! ?(ve\b|[ıiv]+\b|\d|$))'
+        - '\bd[iı]l e[gğ][iı]t'           # synonym of dil öğretimi: (Yabancı) Dil Eğitimi
+        - '\b[çc]oc(uk|\.)'               # COCUK, ÇOC.
+        - 'yet[iı][şs]k[iı]n'
+        - '\bm[üu]ze e[gğ]'               # MUZE EGITIMI, MÜZE EĞT.; not Müzecilik
+        - '(karakter|de[gğ]er(ler)?) e[gğ][iı]?t'   # also Değerler Eğitimi, DEĞER EĞT.
+
+    # 8 PEDAGOGY (R1, R3): school and classroom, guidance, assessment,
+    # special needs, thinking skills, materials and textbooks. No general
+    # "psikoloji" or "değerlendirme" stem: the official titles are reached
+    # through eğitim, çocuk and ölçme, and the bare stems would take "Sosyal
+    # Psikoloji" or "Risk Değerlendirmesi".
+    - domain: pedagogy
+      any:
+        - okul                     # Okul Deneyimi, Okullarda Rehberlik, Okul Dışı ..., Okul Yönetimi
+        - rehberlik                # Rehberlik; not "Turist Rehberliği"
+        - ölçme                    # (Eğitimde) Ölçme ve Değerlendirme
+        - materyal                 # Materyal Tasarımı, Materyal İnceleme ve Geliştirme
+        - kaynaştırma              # Özel Eğitim ve Kaynaştırma
+        - hiperaktivite            # Dikkat Eksikliği ve Hiperaktivite Bozukluğu
+        - ders kitab               # İngilizce Ders Kitabı İncelemesi
+        - ders içeriğ              # İngilizce Öğretiminde Ders İçeriği Geliştirme
+      regex:
+        - '(?<!sosyal )\bs[ıi]n[ıi]f(?!land)'   # Sınıf Yönetimi, Sınıf İçi, Sınıflarında; not sınıflandırma
+        - '\b[öo]l[çc](me|m?\.)'          # OLCME, ÖLÇ.
+        - '\bde[gğ]erlendiril'            # Sınıf İçi Öğrenmelerin Değerlendirilmesi (passive only)
+        - 'rehberl[iı]k\b'                # REHBERLIK
+        - '\bders (k[iı]t|[iı][çc]er[iı])'      # DERS KİT., DERS ICERIGI
+        - 'h[iı]perakt|d[iı]kkat eks'     # HİPERAKT., DİKKAT EKS.
+        - 'kayna[şs]t[ıi]r'
+        - '(anal([iı]t[iı]k|\.)|ele[şs]t[iı]rel) d[üu][şs]'   # Eleştirel ve Analitik Düşünme, ANAL. DÜŞ.
+
+    # 9 GENERAL EDUCATION (R2): computing, community service and the GK
+    # electives, one stem per topic. "Bilim" is read with its next word
+    # (Bilim Tarihi ve Felsefesi, Bilim ve Araştırma Etiği, Bilimsel
+    # Araştırma Yöntemleri) because it also occurs in "Dilbilimi" and
+    # "Eğitim Bilimine Giriş". Only a stand-alone "Drama" (the 2006 GK
+    # course) is general education; "Eğitimde Drama" and "İngilizce
+    # Öğretiminde Drama" are pedagogy, "Drama Çözümlemesi" stays unmatched.
+    - domain: general_ed
+      any:
+        - bilişim                  # Bilişim Teknolojileri
+        - bilgisayar               # Bilgisayar I, II
+        - topluma hizmet           # Topluma Hizmet Uygulamaları
+        - sanat                    # Sanat ve Estetik, Türk Sanatı Tarihi, Geleneksel Türk El Sanatları
+        - kültür                   # Kültür ve Dil, Türk Kültür Coğrafyası
+        - insan hak                # İnsan Hakları ve Demokrasi Eğitimi
+        - demokras
+        - insan ilişki             # İnsan İlişkileri ve İletişim
+        - etkili iletişim          # Etkili İletişim
+        - kariyer                  # Kariyer Planlama ve Geliştirme
+        - ekonom                   # Ekonomi ve Girişimcilik
+        - girişimci
+        - beslenme                 # Beslenme ve Sağlık
+        - sağlık
+        - bağımlılık               # Bağımlılık ve Bağımlılıkla Mücadele
+        - medya                    # Medya Okuryazarlığı
+        - okuryazar
+        - mesleki ingilizce        # Mesleki İngilizce
+        - halk oyun                # Türk Halk Oyunları
+        - musiki                   # Türk Musikisi
+        - işaret dili              # Türk İşaret Dili
+        - coğrafya
+      regex:
+        - 'b[iı]l[iı][şs][iı]m|b[iı]lg[iı]sayar'
+        - '\bb[iı]lg[iı] (ve [iı]let[iı][şs][iı]m )?tek'   # synonym: Bilgi (ve İletişim) Teknolojileri
+        - 'toplum(a)? h[iı]z'             # TOPLUMA HİZ., Toplum Hizmeti
+        - '\bb[iı]l[iı]m(sel)? (ve )?(tar|ara?[şs]|felsef|et[iı])'
+        - '(^(\S*\d\S* )?|[.:)\-–] )drama( [ıiv]+| \d+)?( ?\(|$)'   # Drama, DRAMA I, "(GK) DRAMA"
+        - 'k[üu]lt[üu]r'
+        - '[iı]nsan (hak|[iı]l[iı][şs])'  # INSAN HAKLARI, İNSAN İLİŞ.
+        - 'etk[iı]l[iı] [iı]let'
+        - 'kar[iı]yer'
+        - 'g[iı]r[iı][şs][iı]mc'
+        - 'sa[gğ]l[ıi][kğg]'
+        - 'ba[gğ][ıi]ml[ıi]l[ıi]k'
+        - 'meslek[iı] [iı]ng'             # MESLEKİ İNG.
+        - '[iı][şs]aret d[iı]l'
+        - 'co[gğ]rafya'
+        - 'm[uû]s[iıî]k|m[üu]z[iı][kğ]'   # Mûsikî; synonym: müzik
+        - '\bsan\.'                       # EL SAN.
+
+  # No overrides: every official title is reached by a general rule above.
+  overrides: []
+  defaults: { unmatched: flag }

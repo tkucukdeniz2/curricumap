@@ -1,0 +1,8 @@
+fact,value
+n_titles,143
+n_clusters,114
+cluster_wilson_lo_all_correct,0.9674
+n_exact,128
+n_variant,10
+n_unseen,5
+n_variant_loose_lookup,4

@@ -1,22 +1,28 @@
-# src/curricumap/synth.py
+"""Seeded, deliberately messy synthetic transcripts for any taxonomy (no real data involved)."""
 from __future__ import annotations
-import numpy as np, pandas as pd
+
+import numpy as np
+import pandas as pd
+
 from .taxonomy import Taxonomy
 
-def generate(tax: Taxonomy, n_students: int = 60, seed: int = 0) -> tuple[pd.DataFrame, pd.DataFrame]:
+
+def generate(tax: Taxonomy, n_students: int = 60, seed: int = 0,
+             courses_per_domain: int = 3) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Generate a reproducible, messy synthetic transcript + catalog for a taxonomy.
 
-    Each domain gets a few courses named after one of its rule patterns so the
-    classifier maps them; injects retakes and sentinel zeros for realism.
+    Each domain gets `courses_per_domain` courses named after the keywords of its
+    first keyword rule, so the classifier maps them. Grades follow a one-factor
+    model (student ability plus course noise); 10% of enrolments are missing, 5% are
+    retaken with a second grade, and 3% carry an extra sentinel zero (non-attendance).
     """
     rng = np.random.default_rng(seed)
     catalog = []
     for d in tax.domains:
-        pats = next((r.patterns for r in tax.rules if r.domain == d.id), [d.label])
-        for j in range(3):
-            base = pats[j % len(pats)]
+        pats = next((r.patterns for r in tax.rules if r.domain == d.id and r.patterns), [d.label])
+        for j in range(courses_per_domain):
             catalog.append({"course_id": f"{d.id}_{j}",
-                            "course_name": f"{base} {j + 1}", "domain": d.id})
+                            "course_name": f"{pats[j % len(pats)]} {j + 1}", "domain": d.id})
     catalog_df = pd.DataFrame(catalog)
 
     rows = []

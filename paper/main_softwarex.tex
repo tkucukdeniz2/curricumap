@@ -1,16 +1,35 @@
 %% ============================================================
-%% CurricuMap — SoftwareX Original Software Publication
-%% Official Elsevier elsarticle template (submission format).
+%% CurricuMap — SoftwareX Original Software Publication (revision 1)
+%% Elsevier elsarticle, following the SoftwareX OSP template (2026).
 %% Compile: pdflatex -> bibtex -> pdflatex -> pdflatex
 %% ============================================================
-\documentclass[preprint,12pt]{elsarticle}
+\documentclass[preprint,12pt,a4paper]{elsarticle}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{graphicx}
-\usepackage{url}
+\usepackage{xurl}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{float}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\usepackage{xcolor}
+\usepackage{upquote}
+\usepackage{listings}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage[hidelinks]{hyperref}
 \emergencystretch=2em
+\newcommand{\tbd}[1]{\textbf{\textcolor{red}{#1}}}
+\input{generated/validation_numbers.tex}
+\input{generated/benchmark_numbers.tex}
+\input{generated/software_numbers.tex}
+\lstset{basicstyle=\ttfamily\footnotesize,columns=fullflexible,keepspaces=true,breaklines=true,upquote=true,
+  frame=single,framesep=3pt,xleftmargin=4pt,xrightmargin=4pt,aboveskip=6pt,belowskip=6pt,
+  literate={İ}{{\.I}}1 {ı}{{\i}}1 {ş}{{\c{s}}}1 {Ş}{{\c{S}}}1 {ğ}{{\u{g}}}1 {Ğ}{{\u{G}}}1
+           {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {ö}{{\"o}}1 {Ö}{{\"O}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1 {â}{{\^a}}1}
+\renewcommand{\lstlistingname}{Listing}
 
 \journal{SoftwareX}
 
@@ -30,196 +49,268 @@
             city={\.Istanbul}, country={T\"urkiye}}
 
 \begin{abstract}
-Competency-level learning-analytics studies require a clean
-student-by-domain matrix, yet institutional records arrive as messy
-registrar transcript exports. Bridging the two is a manual, unauditable
-spreadsheet step, and no installable package performs it. CurricuMap is
-an open-source Python library and command-line tool that converts a
-transcript export into an analysis-ready student-by-competency-domain
-matrix through a five-stage pipeline: ingest, classify, prepare, audit,
-and report. Users adopt the tool by writing a declarative YAML taxonomy
-that is validated against a JSON Schema; courses are assigned to
-competency domains by ordered rules with explicit overrides and an
-optional fuzzy fallback, and every assignment carries full provenance.
-The prepare stage applies registrar-specific cleaning (retake
-deduplication, sentinel-grade removal, coverage filtering); the audit
-stage reports coverage, descriptives, and per-domain Cronbach's alpha
-computed on the cleaned data. A seeded generator produces messy
-synthetic transcripts, so the pipeline runs and is peer-reviewed
-without any personal data. CurricuMap ships with five example taxonomies
-spanning teacher education, engineering, mathematics education, medicine,
-and the Bologna/EQF framework, and it produced the analysis-ready data
-for two empirical studies of English-language-teacher education.
+Competency-level learning analytics needs a student-by-competency-domain matrix, but institutions hold registrar transcript exports, and the conversion is usually an undocumented spreadsheet step. CurricuMap is an open-source Python library and command-line tool that performs it. The course-to-domain mapping is a declarative, schema-validated YAML specification of ordered keyword and regular-expression rules and explicit overrides; every assignment records its provenance, unmatched courses are flagged, and an audit reports coverage and reliability. On the \nTitles{} course titles of a Turkish teacher-education programme, a taxonomy written by language-model agents from the labelled course list of the national curriculum, unedited and frozen before testing, assigned every title as its labelling convention prescribes, as did the best baselines given the same list.
 \end{abstract}
 
 \begin{keyword}
-Learning analytics \sep Curriculum mapping \sep Competency assessment \sep Data provenance \sep Reproducible research
+Learning analytics \sep Curriculum mapping \sep Competency assessment \sep Data provenance
 \end{keyword}
 
 \end{frontmatter}
 
-%% Highlights are submitted separately in SoftwareX; included here for completeness.
-\noindent\textbf{Highlights}
-\begin{itemize}
-\item Converts messy registrar transcript exports into analysis-ready competency matrices.
-\item Course-to-domain mapping via a declarative, JSON-Schema-validated YAML spec.
-\item Provenance-tracked mapping; audit reports coverage and per-domain Cronbach's alpha.
-\item A seeded generator makes messy synthetic transcripts, so no real data is needed.
-\item Ships five cross-discipline example taxonomies with golden end-to-end tests.
-\end{itemize}
+%% ============================================================
+\section*{Required Metadata}
+\label{metadata}
 
-%% ---- Required Metadata: code metadata table (mandatory) ----
-\begin{table}[!ht]
+\section*{Current code version}
+
+\begin{table}[H]
 \footnotesize
-\renewcommand{\arraystretch}{1.1}
-\begin{tabular}{|l|p{3.8cm}|p{7.2cm}|}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|l|L{4.6cm}|L{7.2cm}|}
 \hline
-\textbf{Nr.} & \textbf{Code metadata description} & \textbf{Metadata} \\ \hline
-C1 & Current code version & v0.1.0 \\ \hline
-C2 & Permanent link to code/repository used for this code version & \texttt{https://doi.org/10.5281/zenodo.22140690} \newline (GitHub: \texttt{tkucukdeniz2/curricumap}, tag \texttt{v0.1.0}) \\ \hline
-C3 & Permanent link to Reproducible Capsule & n/a \\ \hline
-C4 & Legal Code License & MIT \\ \hline
-C5 & Code versioning system used & git \\ \hline
-C6 & Software code languages, tools, and services used & Python ($\geq$3.10) \\ \hline
-C7 & Compilation requirements, operating environments \& dependencies & pandas, numpy, pyyaml, jsonschema, rapidfuzz, openpyxl, jinja2 \\ \hline
-C8 & Link to developer documentation/manual & \texttt{README.md} \\ \hline
-C9 & Support email for questions & \texttt{tkdeniz@iuc.edu.tr} \\ \hline
+\textbf{Nr.} & \textbf{Code metadata description} & \textbf{Please fill in this column} \\ \hline
+C1 & Current code version & v0.2.0 \\ \hline
+C2 & Permanent GitHub link to code/repository used for this code version & \url{https://github.com/tkucukdeniz2/curricumap/tree/v0.2.0}; archived on Zenodo, \url{https://doi.org/10.5281/zenodo.22140689} (all versions) \\ \hline
+C3 & Legal Code License & MIT \\ \hline
+C4 & Code versioning system used & git \\ \hline
+C5 & Software code languages, tools, and services used & Python ($\geq$3.10); continuous integration on GitHub Actions on Linux (Python 3.10, 3.12, 3.13) and macOS (Python 3.13), including a test of the installed wheel; \nTests{} tests, \covPct\% statement coverage \\ \hline
+C6 & Compilation requirements, operating environments \& dependencies & Python $\geq$3.10, tested on Linux and macOS. Dependencies declared in \texttt{pyproject.toml}: pandas $\geq$2.0, numpy $\geq$1.24, pyyaml $\geq$6.0, jsonschema $\geq$4.0, rapidfuzz $\geq$3.0, openpyxl $\geq$3.1, jinja2 $\geq$3.1. \texttt{requirements.txt} pins the versions used for the illustrative example and benchmarks (Python $\geq$3.12), \texttt{validation/requirements.txt} those of the validation \\ \hline
+C7 & If available Link to developer documentation/manual & \url{https://github.com/tkucukdeniz2/curricumap\#readme}; \url{https://github.com/tkucukdeniz2/curricumap/blob/v0.2.0/docs/architecture.md} \\ \hline
+C8 & Support email for questions & \texttt{tkdeniz@iuc.edu.tr} \\ \hline
 \end{tabular}
-\caption{Code metadata.}
+\caption{Code metadata (mandatory)}
 \label{tab:codemeta}
 \end{table}
 
+%% ============================================================
 \section{Motivation and significance}
 
-Learning-analytics studies increasingly ask questions at the level of competency domains rather than individual courses: whether curricular knowledge areas are separable, how coursework in one domain predicts performance in another, or how student profiles differ within a program. Answering such questions requires a student $\times$ competency-domain matrix, in which each cell summarizes a student's attainment in a domain. Institutions do not store data in this form. Registrars export transcripts as flat grade records, one row per student per course, with inconsistent column names, mixed-language course titles, retaken courses, administrative sentinel grades, and courses that belong to no competency domain. Converting such an export into an analysis-ready matrix is a routine prerequisite for secondary analysis of existing records, and it is almost always done by hand.
+Learning-analytics studies increasingly ask questions at the level of competency domains rather than individual courses: whether curricular knowledge areas are separable, or how coursework in one domain predicts performance in another. Answering them requires a student-by-competency-domain matrix (hereafter, student-by-domain matrix), in which each cell summarises a student's attainment in one domain. Registrars do not store data in this form. They export transcripts as flat grade records, one row per student per course, with inconsistent column names, mixed-language course titles, retaken courses, administrative sentinel grades, and courses outside any competency domain. Converting such an export into an analysis-ready matrix is a routine prerequisite for secondary analysis of existing records, and it is usually done by hand in a spreadsheet.
 
-The manual route is laborious and fragile. An analyst must decide which course maps to which domain, how to resolve retakes, which grades are real, and which students have enough coverage to include. These decisions change the matrix and therefore the study's results, yet they are typically buried in spreadsheet formulas or one-off scripts, undocumented and unreproducible. The step that most directly shapes the data is usually the least transparent one.
+These preprocessing decisions matter. Which course belongs to which domain, how retakes are resolved, which grades are real, and which students have enough coverage all change the matrix and therefore the results, just as analytic choices change other learning-analytics findings \cite{kovanovic2015}. Yet such choices are rarely reported in enough detail to be rerun, and reproducibility reviews of learning-analytics and educational-data-mining papers find that few analyses can be reproduced \cite{haim2023lak,haim2023edm}.
 
-No open-source, installable package fills this gap. Curriculum mapping as a practice, aligning course content with program outcomes to expose gaps and overlaps \cite{smith2024}, is served by commercial and institutional platforms such as HelioCampus, eLumen, and accreditation-management tools.\footnote{For example, \texttt{heliocampus.com} and \texttt{elumen.com}.} These address a different, design-time problem: they align an intended curriculum with program outcomes before students enroll. They do not ingest actual student grade records, and they are closed, so their mapping logic cannot be inspected or cited in a methods section. The R package \texttt{ouladFormat} \cite{howard2025} prepares one specific public dataset and does not generalize to arbitrary exports. Researchers are left to rebuild the same pipeline for every study, with no shared, auditable tooling.
+CurricuMap makes this step explicit. It does not propose a new classification algorithm; its classifier is conventional by design, because which course belongs to which domain is a substantive decision that domain experts must make and a methods section must report. CurricuMap's contribution is to turn that decision into a declarative, versioned, schema-validated specification that colleagues can read, cite, test, and reuse, and to execute it deterministically, with per-course provenance, documented registrar cleaning, and an audit of the resulting matrix. The specification may be written by hand or drafted with a large language model (LLM); either way the decision is recorded in a reviewable file rather than in spreadsheet formulas or model weights. Section~\ref{sec:validation} tests the bundled taxonomy on a real registrar catalogue against natural language processing (NLP) and LLM classifiers.
 
-CurricuMap is built around the properties this task demands. The course-to-domain mapping is declarative: users describe their taxonomy in a YAML specification validated against a schema, rather than editing code, so adopting the tool means writing a spec. Every classification is provenance-tracked, recording for each course whether it was matched by rule, override, or fuzzy fallback, which pattern matched, and whether the assignment was ambiguous. The pipeline is deterministic and golden-file tested, so identical inputs always yield an identical matrix. A dedicated audit stage treats data quality as a first-class output, reporting unmapped and ambiguous courses, domain sizes, descriptive statistics, and per-domain internal consistency through Cronbach's alpha \cite{cronbach1951}. The cleaning step becomes something a reviewer can read and a colleague can rerun.
+\begin{table}[!tbp]
+\centering\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\linewidth}{@{}L{2.2cm}YYYYYY@{}}
+\toprule
+Tool & Form & Student data used & Course-to-domain mapping & Mapping provenance & Matrix audit & Synthetic data \\
+\midrule
+Assessment platforms: HelioCampus \cite{heliocampus}, eLumen \cite{elumen}, Watermark \cite{watermark} & proprietary platforms & outcome-tagged rubric scores and student work from the LMS; some integrate with student-information systems & curriculum maps built in the platform & not documented & outcome dashboards; no reliability audit documented & not documented \\[2pt]
+Moodle competencies \cite{moodlecompetencies} & open-source LMS feature & teacher ratings or activity completion inside the LMS & teachers link competencies to courses and activities & not documented & not documented & not documented \\[2pt]
+ouladFormat \cite{howard2025} & open-source R package & one public dataset (the Open University Learning Analytics Dataset) & none & none & none & none \\[2pt]
+Curricular Analytics \cite{heileman2018,curricularanalyticsjl} & open-source Julia package & none (curricula and degree plans) & none (prerequisite graphs) & none & none & student-flow simulation \\[2pt]
+\textbf{CurricuMap} & \textbf{open-source Python package and command-line tool} & \textbf{CSV or XLSX registrar exports, one row per grade record} & \textbf{declarative YAML rules and overrides} & \textbf{per course} & \textbf{coverage, descriptives, Cronbach's alpha} & \textbf{seeded generator} \\
+\bottomrule
+\end{tabularx}
+\caption{CurricuMap and the closest tools, from the cited documentation (accessed 1 October 2026) and, for ouladFormat and Curricular Analytics, their source code. Mapping provenance: which rule or decision assigned each course; matrix audit: coverage and reliability statistics of the student-by-domain matrix; ``not documented'': the public documentation does not describe the feature.}
+\label{tab:compare}
+\end{table}
 
-A second constraint shapes the design. Real transcripts are personal data protected under Turkey's KVKK (Law 6698) \cite{kvkk} and the GDPR, so the software cannot be distributed with the records it was built to process. CurricuMap therefore includes a seeded generator that produces synthetic transcripts, with the same irregularities as institutional exports, for any taxonomy. Reviewers and new users run the entire pipeline end to end without touching real data, which keeps the tool distributable and peer-reviewable while the underlying study data stay protected.
+Table~\ref{tab:compare} compares CurricuMap with the closest tools. Commercial assessment-management platforms support curriculum mapping, the alignment of courses with programme outcomes \cite{smith2024}, and collect outcome-tagged rubric scores and student work from the learning-management system (LMS) \cite{heliocampus,elumen,watermark}; some also integrate with student-information systems or issue comprehensive learner records of assessed skills \cite{heliocampus,elumen}. Their public documentation describes curriculum maps built inside the platform, not rules applied to a registrar's transcript export, and documents neither per-course mapping provenance nor a reliability audit of a student-by-domain matrix. Moodle's open-source competency frameworks rate students on competencies linked to courses inside the LMS \cite{moodlecompetencies}. Among research software, ouladFormat prepares one public dataset \cite{howard2025}, and Curricular Analytics measures the prerequisite structure of curricula \cite{heileman2018}. NLP and LLM studies map course descriptions or learning outcomes to skills \cite{zamecnik2024,xu2026} or classify transcript titles into a national course taxonomy \cite{paulson2024}, but they provide no reusable pipeline from a registrar export to an audited student-by-domain matrix. A search of PyPI, CRAN, GitHub, and the literature on 1 October 2026 found no open-source, general-purpose package for this conversion.
 
-The design also targets a concrete user base. The 2018 curriculum for English Language Teaching is standardized across all Turkish ELT programs \cite{yok2018}, and comparable standardization applies to other teacher-education fields, so their transcript exports share a structure and one taxonomy specification can serve many institutions. To show that the approach is not specific to one institution, CurricuMap ships five example taxonomies spanning Turkish and English programs in education, engineering, and medicine. This paper describes CurricuMap v0.1.0: its five-stage architecture, its functionalities, an illustrative end-to-end run on synthetic data, and its use in preparing analysis-ready data for empirical curriculum research.
+Transcripts are personal data under T\"urkiye's Personal Data Protection Law No.~6698 (KVKK) \cite{kvkk} and the EU General Data Protection Regulation (GDPR) \cite{gdpr}, and learning analytics carries ethical obligations beyond legal compliance, including transparency about how student data are processed \cite{slade2013}. CurricuMap responds with design choices: it runs locally and transmits nothing, it writes every course assignment to a provenance table, and it flags rather than guesses a course that matches no rule. For testing and peer review without real records, it includes a seeded generator of synthetic transcripts. The generator is parameterised only by a taxonomy, a random seed, and size settings, and never reads real records, so its output does not relate to any identified or identifiable person: it is anonymous information, which falls outside the GDPR (Recital~26) and outside the KVKK's definition of personal data (Art.~3). This differs from synthetic data derived from confidential microdata, whose disclosure risk and analytic utility must be evaluated \cite{drechsler2011,liu2024synthetic}. The generator aims at functional realism, injecting the irregularities the pipeline must handle (missing enrolments, retakes, sentinel zeros), not at reproducing the statistics of any real cohort, in the spirit of reference generators for learning-analytics infrastructure \cite{berg2016}.
+
+The design targets teacher education first. The 2018 national English Language Teaching (ELT) programme of the Turkish Council of Higher Education (Y\"OK) \cite{yok2018} was introduced as a common curriculum from the 2018--2019 intake; since a 2020 decision, universities may adapt courses, curricula, and credits within its three course categories \cite{yok2020}. CurricuMap ships five taxonomies: an ELT taxonomy written from the national programmes and tested on real data (Section~\ref{sec:validation}), and four compact illustrations, not tested on real exports, for mathematics education, engineering accreditation, medicine (CanMEDS), and the descriptors of the Bologna Process and the European Qualifications Framework. This paper describes CurricuMap v0.2.0.
 
 %% ============================================================
 \section{Software description}
 
 \subsection{Software architecture}
 
-CurricuMap is organised library-first: the Python package exposes every processing step as an importable function, and a thin command-line interface wraps the common workflows. The core is a five-stage pipeline that carries data from a raw registrar export to an analysis-ready matrix, and each stage writes an explicit intermediate that the next stage consumes. Figure~\ref{fig:dataflow} shows the overall data flow.
+CurricuMap is library-first: every processing step is an importable function, and a thin command-line interface (CLI) wraps the common workflows. The package has six modules: \texttt{taxonomy} (specification loading, schema validation, and locale-aware text matching), \texttt{classify}, \texttt{prepare} (ingest, cleaning, and aggregation), \texttt{audit} (statistics and report), \texttt{synth}, and \texttt{cli}. Figure~\ref{fig:dataflow} shows the data flow. The ingest stage reads a CSV or XLSX export into a tidy table \cite{wickham2014} with one row per grade record (student, course, and attempt) and the required columns \texttt{student\_id}, \texttt{course\_name}, and \texttt{grade}. An optional run-configuration file maps any registrar's column names onto this schema, sets the cleaning policy, and chooses how the audit treats missing grades, so no source file is edited by hand.
 
 \begin{figure}[t]
 \centering
 \resizebox{\linewidth}{!}{%
-\begin{tikzpicture}[font=\footnotesize,>={Latex[length=1.8mm]},node distance=4mm and 5mm,
-  inp/.style={draw,rounded corners=2pt,fill=black!5,align=center,inner sep=3pt,minimum height=8mm},
-  st/.style={draw,fill=black!10,align=center,minimum height=8mm,minimum width=11mm},
-  outp/.style={draw,dashed,align=center,inner sep=3pt}]
-\node[inp] (tx) {taxonomy spec\\(YAML)};
-\node[inp,above=of tx] (tr) {transcript export\\(CSV/XLSX)};
-\node[inp,below=of tx] (cf) {run-config\\(YAML, opt.)};
-\node[st,right=8mm of tx] (io) {io};
+\begin{tikzpicture}[font=\footnotesize,>={Latex[length=1.8mm]},node distance=5mm and 19mm,
+  inp/.style={draw,rounded corners=2pt,fill=black!5,align=center,inner sep=3pt,minimum height=9mm,text width=24mm},
+  opt/.style={inp,dashed,fill=none},
+  st/.style={draw,fill=black!10,align=center,minimum height=9mm,minimum width=13mm,inner sep=2pt},
+  outp/.style={draw,align=center,inner sep=3pt,font=\footnotesize\ttfamily},
+  lab/.style={font=\footnotesize\itshape,inner sep=1.5pt},
+  fmt/.style={font=\footnotesize\ttfamily,inner sep=1.5pt},
+  over/.style={preaction={draw,white,line width=3pt,-}}]
+\node[inp] (tr) {transcript export\\(CSV or XLSX)};
+\node[st,right=12mm of tr] (io) {ingest};
 \node[st,right=of io] (cl) {classify};
 \node[st,right=of cl] (pr) {prepare};
 \node[st,right=of pr] (au) {audit};
 \node[st,right=of au] (rp) {report};
-\node[outp,right=7mm of rp] (o) {matrix,\\provenance,\\audit (JSON/HTML)};
-\draw[->] (tr.east) -- (io.west);
-\draw[->] (tx.east) -- (io.west);
-\draw[->] (cf.east) -- (io.west);
-\draw[->] (io)--(cl);\draw[->](cl)--(pr);\draw[->](pr)--(au);\draw[->](au)--(rp);
-\draw[->] (rp.east) -- (o.west);
+\node[inp,above=14mm of tr] (tx) {taxonomy spec\\(YAML)};
+\node[opt,below=12mm of tr] (cf) {run-config\\(YAML, optional)};
+\draw[->] (tr) -- node[fmt,above] {file} (io);
+\draw[->] (io) -- node[lab,above] {course list} node[fmt,below] {DataFrame} (cl);
+\draw[->] (cl) -- node[lab,above] {provenance} node[fmt,below] {DataFrame} (pr);
+\draw[->] (pr) -- node[lab,above,align=center] {matrix,\\counts} node[fmt,below,align=center] {DataFrame,\\dict} (au);
+\draw[->] (au) -- node[lab,above] {statistics} node[fmt,below] {dict} (rp);
+\draw ([xshift=3mm]io.south) |- node[lab,above,pos=0.75] {tidy table} node[fmt,below,pos=0.75] {DataFrame}
+  ([xshift=-3mm,yshift=-6mm]au.south);
+\draw[->] ([xshift=-3mm,yshift=-6mm]pr.south) -- ([xshift=-3mm]pr.south);
+\draw[->] ([xshift=-3mm,yshift=-6mm]au.south) -- ([xshift=-3mm]au.south);
+\draw[->] ([xshift=4mm]cl.north) |- node[lab,above,pos=0.89] {provenance} ([xshift=-3mm,yshift=5mm]au.north) -- ([xshift=-3mm]au.north);
+\draw[->] (tx.east) -| node[lab,pos=0.25,above] {schema-validated rules} ([xshift=-3mm]cl.north);
+\draw[->] (tx.east) -| node[lab,pos=0.93,right] {domains} ([xshift=3mm]au.north);
+\draw[dashed] (cf.east) -- ($(cf.east -| au.south)+(3mm,0)$);
+\draw[->,dashed] ($(cf.east -| io.south)+(-3mm,0)$) -- node[lab,right,pos=0.45] {column mapping} ([xshift=-3mm]io.south);
+\draw[->,dashed,over] ($(cf.east -| pr.south)+(3mm,0)$) -- node[lab,right,pos=0.45] {cleaning policy} ([xshift=3mm]pr.south);
+\draw[->,dashed] ($(cf.east -| au.south)+(3mm,0)$) -- node[lab,right,pos=0.45,align=left] {cleaning policy,\\missing-grade option} ([xshift=3mm]au.south);
+\node[outp,anchor=south] (op) at ($(cl.north)+(14mm,11mm)$) {provenance.csv};
+\node[outp,anchor=south] (om) at ($(pr.north)+(14mm,11mm)$) {matrix\_wide.csv\\matrix\_long.csv};
+\node[outp,anchor=south] (oa) at ($(rp.north)+(0,11mm)$) {audit.json\\audit.html};
+\draw[->] ([xshift=4mm]cl.north) -- ++(0,11mm);
+\draw[->,over] ([xshift=4mm]pr.north) -- ++(0,11mm);
+\draw[->] (rp.north) -- (oa.south);
 \end{tikzpicture}}
-\caption{Data flow. A transcript export, a taxonomy specification, and an optional run-config feed the five-stage pipeline, which writes the student-by-domain matrix, the per-course classification provenance, and the audit report in JSON and HTML.}
+\caption{Data flow. A transcript export and a taxonomy specification are required; a run-configuration file (dashed) is optional and supplies the column mapping, the cleaning policy, and the audit's missing-grade option. Arrow labels give what each arrow carries (italic) and its in-memory format (monospace). Classify reads only the course columns of the tidy table; prepare and audit read all of it, and audit re-applies the cleaning so that Cronbach's alpha uses the course grades.}
 \label{fig:dataflow}
 \end{figure}
 
-The \texttt{io} stage ingests transcript exports into a canonical tidy schema, one row per student per course, with the required columns \texttt{student\_id}, \texttt{course\_name}, and \texttt{grade} (\texttt{course\_id} is optional and defaults to the course name; \texttt{term}, \texttt{date}, and \texttt{credits} are also optional). A few rows of such an export are:
-\begin{verbatim}
-student_id,course_id,course_name,grade
-1,LIT101,English Literature I,85
-1,PED101,Instructional Methods,78
-1,PE100,Physical Education,74
-\end{verbatim}
-Because registrar systems name and order their columns arbitrarily, a column-mapping adapter renames the fields of any CSV or Excel export (the latter read through \texttt{openpyxl}) onto this schema, so no source file has to be edited by hand. The \texttt{classify} stage assigns each course to a competency domain and records how the decision was made. The \texttt{prepare} stage applies registrar hygiene and aggregates grades to one value per student per domain. The \texttt{audit} stage measures coverage, reliability, and distribution. The \texttt{report} stage serialises the results. Two further modules sit beside the pipeline: \texttt{synth} generates synthetic transcripts and course catalogues, and \texttt{cli} exposes the \texttt{validate-taxonomy}, \texttt{synth}, and \texttt{run} subcommands. A full run is a single command: given an input file, a taxonomy, and a configuration that holds the cleaning options, \texttt{curricumap run} executes \texttt{io} through \texttt{report} and writes the matrices, the provenance table, and the audit to one output directory. In all, the package comprises ten modules (\texttt{text}, \texttt{taxonomy}, \texttt{io}, \texttt{classify}, \texttt{prepare}, \texttt{audit}, \texttt{report}, \texttt{synth}, \texttt{cli}, and \texttt{\_\_init\_\_}).
-
-The reuse contract is the declarative taxonomy specification written in YAML. It names the competency domains and the rules that map courses onto them, and CurricuMap validates it against a JSON Schema, then cross-checks that every rule and override refers to a defined domain. Adopting the tool for a new curriculum therefore means writing or editing a specification, not writing code; the five example taxonomies of Section~\ref{sec:examples} serve as worked references.
-
 \subsection{Software functionalities}
 
-\textbf{Course classification with provenance.} Classification runs ordered keyword and regular-expression rules against each course name. Rules are evaluated in the order the specification lists them and the first match wins, so an author can place specific rules ahead of general ones and predict the outcome. Explicit per-course overrides take precedence over rules, and an optional fuzzy fallback (via \texttt{rapidfuzz}) resolves near-misses that the rules leave unmatched. For every course, CurricuMap emits a provenance record giving the method used (\texttt{rule}, \texttt{override}, \texttt{fuzzy}, or \texttt{unmatched}), the pattern that matched, the match score, and an ambiguity flag, so each assignment can be inspected and reproduced.
+\textbf{Classification with provenance.} For every course, CurricuMap records the method (\texttt{override}, \texttt{rule}, \texttt{fuzzy}, or \texttt{unmatched}), the pattern and the text it matched, a score, and whether rules for more than one domain matched, so each matrix cell can be traced to the rules behind it, a derivation record of the kind data-provenance standards formalise \cite{provdm}. An optional fuzzy fallback (via \texttt{rapidfuzz}) assigns near-misses above a threshold. A course that matches nothing is flagged and listed in the audit rather than given a default domain, and a course code that the export uses for more than one title is reported, because its grades are pooled under the domain of its first title.
 
-\textbf{Locale-aware casefolding.} Keyword matching casefolds course names in a language-aware way. Turkish distinguishes a dotted from a dotless \emph{i}, and the naive \texttt{str.lower()} or \texttt{str.casefold()} used by most pipelines is wrong for it: casefolding \texttt{\.I} yields \texttt{i} followed by a combining dot, so a course title silently fails to match its keyword. CurricuMap maps the Turkish pairs (\texttt{\.I}$\rightarrow$\texttt{i}, \texttt{I}$\rightarrow$\texttt{\i}) before casefolding, and a unit test records the failure of the naive approach. The behaviour is configurable per language.
+\textbf{Locale-aware case folding.} Turkish distinguishes a dotted from a dotless \emph{i}; case-folding \texttt{\.I} with \texttt{str.lower()} or \texttt{str.casefold()} yields \texttt{i} plus a combining dot, so an upper-case registrar title silently fails to match its keyword. CurricuMap maps the Turkish pairs before case folding, and a unit test records the naive failure.
 
-\textbf{Registrar cleaning.} The \texttt{prepare} stage resolves the irregularities of real grade records. It deduplicates retaken courses under a configurable policy (\texttt{max}, \texttt{last}, or \texttt{mean}), drops sentinel grades that encode non-numeric outcomes, and removes students who cover fewer domains than a minimum-coverage threshold. When exam dates are present, it can reconstruct each student's study year. It then aggregates grades to per-student per-domain means and emits both a wide student-by-domain matrix and a tidy long form.
+\textbf{Registrar cleaning.} The \texttt{prepare} stage drops declared sentinel grades and records without a numeric grade, resolves retaken courses under a configurable policy (keep the maximum, the mean, or the latest attempt by date), and removes students who cover fewer domains than a minimum, reporting how many records and students each step removed. It then aggregates grades to per-student, per-domain means or medians and writes the matrix in wide and long form.
 
-\textbf{Audit.} The \texttt{audit} stage reports coverage, listing unmapped and ambiguous courses and the number of courses per domain. It computes Cronbach's alpha \cite{cronbach1951} for each domain on the same sentinel-cleaned data that produced the matrix, and summarises each domain with mean, standard deviation, skew, and missing-data percentage. Computing reliability on the cleaned data, rather than on a separate extract, keeps the reported statistics consistent with the delivered matrix.
+\textbf{Audit.} The \texttt{audit} stage reports coverage (unmapped and ambiguous courses, courses per domain), descriptive statistics per domain, and Cronbach's alpha \cite{cronbach1951}, computed with the domain's courses as items on the cleaned grades of the students in the delivered matrix. A course a student did not take is a missing item. By default it is replaced by the course mean, which lowers alpha as the share of missing grades grows; listwise or pairwise treatment can be chosen, and the report gives each domain's share of missing grades. Alpha assumes essentially tau-equivalent items and is a lower bound to reliability rather than evidence that a domain is unidimensional \cite{cortina1993,sijtsma2009,mcneish2018}; the report states these assumptions and shows alpha without a colour grade when it rests on fewer than 30 students, where even unrelated grades can reach .70. Results are written as \texttt{audit.json} and as a self-contained \texttt{audit.html} (Figure~\ref{fig:audit}).
 
-\textbf{Reporting.} Results are written both as a machine-readable \texttt{audit.json} and as a self-contained, themed \texttt{audit.html} that embeds its own styling and requires no external assets.
+\textbf{Reproducibility and packaging.} Classification, cleaning, and aggregation are deterministic, and the generator is seeded, so identical inputs reproduce identical outputs. CurricuMap is MIT-licensed and installs with \texttt{pip}; its seven dependencies are listed in Table~\ref{tab:codemeta}. Following common practice for scientific software \cite{wilson2014}, \nTests{} tests with \covPct\% statement coverage run under GitHub Actions on Linux and macOS. Regression tests run Listing~\ref{lst:run} verbatim and pin the counts and alphas of the illustrative example, and pin the bundled taxonomy's results of Section~\ref{sec:validation}. \texttt{requirements.txt} pins the dependency versions used for Section~\ref{sec:walkthrough}, and \texttt{validation/requirements.txt} those of the validation baselines.
 
-\textbf{Synthetic data.} The \texttt{synth} generator produces seeded, deliberately messy transcripts and a matching catalogue for any taxonomy, so a reviewer or new user can run the whole pipeline with zero real student data, and the software stays clear of the personal data governed by KVKK \cite{kvkk} and the GDPR.
+\subsection{Sample code snippets analysis}
 
-\textbf{Reproducibility and packaging.} Every stage is deterministic and golden-file testable, so identical inputs and seeds reproduce identical outputs. CurricuMap is released under the MIT licence, installs with \texttt{pip} from the public repository, and depends only on \texttt{pandas}, \texttt{numpy}, \texttt{pyyaml}, \texttt{jsonschema}, \texttt{rapidfuzz}, \texttt{openpyxl}, and \texttt{jinja2}. A suite of 40 unit and integration tests runs under GitHub Actions continuous integration.
+The reuse contract is the taxonomy specification (Listing~\ref{lst:yaml}). It names the domains and an ordered list of rules. Each rule lists substring keywords (\texttt{any}) and/or regular expressions (\texttt{regex}), which are matched against the case-folded course title, and the first matching rule wins, so specific rules can precede general ones. Overrides assign exact titles and take precedence over rules. CurricuMap validates the file against a JSON Schema that rejects unknown keys, checks that every rule and override refers to a defined domain and that every regular expression compiles, and \texttt{curricumap validate-taxonomy} reports any error. Adopting the tool for a new curriculum means writing or adapting a specification, not code.
+
+\begin{lstlisting}[float=!htbp,caption={Excerpt of the bundled ELT taxonomy (\texttt{elt\_yok\_2018.yaml}); lines starting with \texttt{\# ...} replace omitted lines, and inline comments are removed. Rules are evaluated in order; the pedagogy expression accepts \emph{e\u{g}itim} bare or with the endings \emph{-e}, \emph{-de}, and \emph{-in}, but not the possessive form in \emph{Beden E\u{g}itimi} (physical education). The full file has \eltRules{} rules with \eltKeywords{} keywords and \eltRegexes{} regular expressions (Table~\ref{tab:effort}).},label={lst:yaml}]
+taxonomy:
+  id: elt_yok_2018
+  label: "ELT Teacher Education Curriculum (YÖK 2018)"
+  # ... locale: Turkish (language: tr)
+  domains:
+    - { id: language_skills, label: "Language Skills" }
+    # ... pedagogy, linguistics, literature, general_ed
+  # ... match: fuzzy matching off
+  rules:
+    # ... rule 1: general_ed (Atatürk, Türk Dili, ...)
+    - domain: literature
+      any:
+        - edebiyat
+      regex:
+        - '\bedeb(?![iı]l)'
+        # ... one more
+    # ... linguistics, language skills (2), pedagogy (öğretim)
+    - domain: pedagogy
+      any:
+        - eğitimde
+        # ... four more
+      regex:
+        - '(?<!beden )(?<!m[üu]z[iı]k )\be[gğ][iı]t[iı]m(e|de|[iı]n)?\b'
+        # ... six more
+    # ... a third pedagogy rule; general_ed electives
+  overrides: []
+  # ... defaults: unmatched courses are flagged
+\end{lstlisting}
 
 %% ============================================================
 \section{Illustrative examples}
 \label{sec:examples}
 
-We demonstrate CurricuMap on the ELT-YOK taxonomy, which encodes the 2018 Turkish undergraduate English Language Teaching curriculum \cite{yok2018} as five competency domains: Language Skills, Pedagogy, Linguistics, Literature, and General Education. Because real transcripts are personal data, the walkthrough uses the packaged synthetic generator, so it reproduces exactly on any machine without access to student records.
+\subsection{A synthetic walkthrough}
+\label{sec:walkthrough}
 
-Two commands run the full pipeline (Listing~1). The first synthesizes a messy transcript export and a matching catalog for 60 students from the taxonomy; the second ingests that export, classifies each course, cleans the records, and writes the audit.
+The bundled ELT taxonomy has five domains: Language Skills, Pedagogy, Linguistics, Literature, and General Education. Because real transcripts are personal data, the walkthrough uses the synthetic generator, so it reproduces exactly on any machine. After \texttt{pip install .} in a clone of the repository, two commands run the full pipeline from any directory (Listing~\ref{lst:run}): the first synthesises a transcript export for 60 students, and the second classifies, cleans, and audits it. A bundled taxonomy is named rather than given as a path.
 
-\begin{verbatim}
-curricumap synth --taxonomy elt_yok_2018.yaml \
-    --out data/ --n-students 60 --seed 7
-curricumap run --input data/transcript.csv \
-    --taxonomy elt_yok_2018.yaml \
-    --config config.yaml --out out/
-\end{verbatim}
+\begin{lstlisting}[float=!htbp,caption={Running the illustrative example.},label={lst:run}]
+curricumap synth --taxonomy elt_yok_2018 --out data \
+    --n-students 60 --seed 7
+curricumap run --input data/transcript.csv --taxonomy elt_yok_2018 \
+    --out out
+\end{lstlisting}
 
-With seed 7 the generator emits 878 grade records across 15 distinct courses, including the retakes and sentinel zeros it injects for realism. The \texttt{run} command reduces these to a $60\times5$ student-by-domain matrix. Classification maps all 15 courses to a domain by keyword rule, with none ambiguous and none left unmapped. Coverage is reported either way, so a run in which a course falls outside the taxonomy surfaces it explicitly rather than dropping it silently. Every per-course decision, with its matched pattern and method, is recorded in \texttt{provenance.csv}, so each cell of the matrix traces back to the rule that produced it.
-
-The audit stage computes Cronbach's alpha \cite{cronbach1951} for each domain, with $n=60$ students and $k=3$ courses per domain: Language Skills .769, Pedagogy .767, Linguistics .761, Literature .819, and General Education .781. All five values fall in the acceptable-to-good range, and reporting them next to the matrix lets a reader judge internal consistency before running any downstream model. The run writes five artifacts to \texttt{out/}: the wide matrix (\texttt{matrix\_wide.csv}), its tidy long form (\texttt{matrix\_long.csv}), the provenance table (\texttt{provenance.csv}), a machine-readable \texttt{audit.json}, and a self-contained \texttt{audit.html} report (Figure~\ref{fig:audit}).
+With seed 7 the generator emits \exRecords{} grade records across \exCourses{} courses. Its sentinel zeros always accompany a real grade, so the default retake policy (keep the highest grade) removes them with the retakes; declaring the sentinel value in the run-configuration file matters when a zero is a student's only grade in a course, as in the bundled sample transcript. The run produces a \mbox{60-by-5} student-by-domain matrix. All \exCourses{} courses are classified by rule, none ambiguous and none unmapped, and every decision, with its matched pattern, is recorded in \texttt{provenance.csv}. With $k=3$ courses per domain and \exMissMin--\exMissMax\% of course grades missing, Cronbach's alpha is \exAlphaLS{} for Language Skills, \exAlphaPed{} for Pedagogy, \exAlphaLing{} for Linguistics, \exAlphaLit{} for Literature, and \exAlphaGE{} for General Education (Figure~\ref{fig:audit}).
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.92\linewidth]{figures/fig1_audit_report.png}
-\caption{The self-contained \texttt{audit.html} report from the illustrative run (ELT-YOK taxonomy, seed 7, 60 synthetic students). It pairs the coverage summary (five domains, fifteen mapped courses, none unmapped, none ambiguous) with per-domain descriptives and Cronbach's alpha shown as banded bars.}
+\includegraphics[width=\linewidth]{figures/fig2_audit_report.png}
+\caption{Coverage tiles and domain table of the \texttt{audit.html} of the illustrative run (ELT taxonomy, seed 7, 60 synthetic students; labels enlarged for print). The bar and value of $\alpha$ are green for $\alpha \geq .80$, amber for $.70 \leq \alpha < .80$, and red for $\alpha < .70$; a negative $\alpha$ shows an empty bar with a note, and an $\alpha$ resting on fewer than 30 students is shown in grey.}
 \label{fig:audit}
 \end{figure}
 
-\subsection{Shipped taxonomies}
+Table~\ref{tab:bench} reports run time and peak memory of \texttt{curricumap run} on synthetic transcripts from 60 to \mbox{100{,}000} students, with catalogues of 15 or 150 courses. Below about $10^5$ grade records the time is dominated by interpreter start-up; the largest transcript, with \benchMaxRecords{} million records, is processed in \benchMaxTime~s using \benchMaxMem~MB of memory, so a programme's full history fits on a laptop.
 
-CurricuMap ships five example taxonomies that span distinct disciplines and two languages, which shows the tool is not tied to one institution or field. Three target Turkish teacher education and accreditation: ELT-YOK, described above; a Mathematics-Education YOK specification; and an Engineering ABET/MUDEK specification that maps a cross-disciplinary course catalog onto accreditation outcomes. Two are English-language: CanMEDS, which encodes the seven physician competency roles, and a generic Bologna/EQF specification organized around knowledge, skills, and competence. Each taxonomy ships with a synthetic dataset and a golden end-to-end test that asserts every synthetic course classifies as intended, so continuous integration exercises the complete ingest-to-report pipeline on all five taxonomies at each commit.
+\begin{table}[t]
+\centering\footnotesize
+\input{generated/table_benchmark.tex}
+\caption{Run time (median of three runs) and peak resident memory of \texttt{curricumap run} on synthetic transcripts (generator seed 1). Each run is a fresh Python process, so the times include interpreter start-up and imports (about \benchStartup~s). Hardware: Apple M2 Max with 32~GB of memory, macOS~26, Python~3.13, pandas~3.0.}
+\label{tab:bench}
+\end{table}
+
+\subsection{Validation on a real registrar catalogue}
+\label{sec:validation}
+
+We tested how a taxonomy written from curriculum documents assigns the courses of a real registrar export, what its rules add to a lookup of the labelled official titles, and how NLP and LLM classifiers given the same information compare; data, prompts, model outputs, and scripts are in the repository's \texttt{validation} directory.
+
+\textbf{Data and reference.} The test set is the \nTitles{} distinct course titles in the 2017--2026 transcript export of the ELT programme at \.Istanbul University-Cerrahpa\c{s}a, spelled as exported, in upper case with numerals and abbreviations. After CurricuMap's normalisation, \nExact{} titles are identical to an entry of the 2018 national programme \cite{yok2018} or its 2006 predecessor \cite{yok2006}, \nVariant{} are other renderings of an entry, and \nUnseen{} are in neither programme (three local or elective courses and two versions of an official course for international students). Reference domains follow a fixed convention. Teaching-profession courses are Pedagogy, and general-culture courses are General Education; these two rules follow from the official category, which the programmes or the registrar's course codes record, and settle 79 titles. Field courses go to the domain of their subject matter, and English-language-teaching methodology courses to Pedagogy; these 62 decisions are ours. A 2006 second-foreign-language course is General Education like its 2018 successor, and a university-wide elective is General Education, a rule we added when labelling the test set. One official title, \emph{T\"urk E\u{g}itim Tarihi}, is a teaching-profession course in 2018 and a general-culture course in 2006; a title-level specification can follow only one programme, and the test set labels it by 2018.
+
+\textbf{Systems.} The bundled taxonomy was drafted by an LLM coding assistant (Claude Opus~5.5 in Claude Code) from the convention and the 158 labelled entries (150 distinct titles) of the two national programmes, critiqued by three further instances (for over-fitting, false positives, and fidelity to the convention), and revised by a fifth, in 85 minutes; by design, no author edited or reviewed the rules before they were frozen. The released tool-call logs, which replay to the frozen file, show that no agent opened the catalogue, which had been moved out of the repository. Their instructions, however, were written by an assistant that had seen it: they quote one registrar variant verbatim and name two hypothetical courses resembling catalogue titles, and the reviser probed a second variant verbatim, so neither the variant nor the unseen titles are a fully blind test. The drafter, which saw none of these, had already assigned all exact and variant titles correctly, and three of the five unseen ones. Claude Code also placed a memory index and a file listing from the first author's private workspace in each agent's context; neither contains a course title, and no agent opened a listed file. The specification was frozen and applied once. The alternatives receive the labelled official titles (L), definitions of the five domains (D), or both. An exact-title lookup runs the labelled titles in CurricuMap as overrides; string similarity (\texttt{rapidfuzz}) and multilingual-E5 embeddings \cite{wang2024e5,reimers2019} assign the label of the most similar title; a character 2--5-gram logistic regression \cite{pedregosa2011} is trained on them; E5 zero-shot picks the most similar definition. Two LLMs classify every title zero-shot (D) or few-shot (L+D): Gemma~4 12B \cite{gemma4}, an open-weight model run locally in 4-bit quantisation, greedily and in five sampled runs, and Claude Opus~5.5 \cite{claudeopus55}, a proprietary model run five times through its command-line client on 1 October 2026. The definitions were also written with knowledge of the catalogue, which can only favour the systems that receive them.
+
+\begin{table}[t]
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{generated/table_validation.tex}
+\caption{Classification of the \nTitles{} registrar titles. Input: labelled official titles (L), domain definitions (D), both, or neither (--). Cov.: titles assigned a domain (CurricuMap flags the rest). Acc.: titles assigned the reference domain (flags count as errors), with a Wilson 95\% interval; with the \nClusters{} title stems as units (numbered courses share one), the bound for 100\% is \clusterLo\%. Correct titles per stratum ($n$): exact official titles, other registrar renderings, titles in neither programme. $p$: exact McNemar test against the first row; a difference of five titles or fewer cannot reach $p<0.05$. String similarity breaks ties by the plain ratio, a rule set after its first run's tie errors were seen. Gemma: greedy decoding; Claude: five runs with identical labels.}
+\label{tab:validation}
+\end{table}
+
+\textbf{Results.} The frozen taxonomy assigned all \nTitles{} titles by rule, each to its reference domain (Table~\ref{tab:validation}). For \nAmbiguous{} compound titles, such as ``Dil ve Edebiyat \"O\u{g}retimi'' (teaching language through literature), a subject rule and a teaching rule both matched; rule order resolved each correctly, and the ambiguity flag marks them for review. The exact lookup assigned the \nExact{} exact titles and flagged the other \lookFlagged{} without error, so the rules contributed the \nVariant{} registrar variants (a lookup that also ignored punctuation, spaces, and diacritics would recover \nVariantLooseW{} of them) and the \nUnseenW{} unseen titles, which general stems (\emph{\"o\u{g}retim}, \emph{Atat\"urk}, \emph{k\"ult\"ur}) placed correctly but without a flag. The other methods given the labelled titles reached \listAccMin--\listAccMax\%, none significantly different from CurricuMap ($p \geq \listPMin$). Without them, E5 zero-shot reached \eZSAcc\% and the open-weight LLM \gmZSgAcc\% (sampled runs \gmZSAccMin--\gmZSAccMax\%, with identical labels for only \gmZSIdentical\% of the titles), both below CurricuMap (\gmZSgPt{} greedy; $p \leq \gmZSPMaxUp$ for each sampled run). The proprietary LLM reached \clZSAcc\% zero-shot (\clZSPt{} against CurricuMap), with identical labels in all \clZSRunsW{} runs; its \clZSWrongW{} errors were general-culture courses of the 2006 programme, such as ``Drama'', whose category only the programme documents settle. The taxonomy released with v0.1.0, written for synthetic data, assigned only \vOneCov\% of the titles and \vOneAcc\% correctly.
+
+\begin{table}[t]
+\centering\scriptsize
+\input{generated/table_effort.tex}
+\caption{Size of the bundled taxonomy specifications; YAML lines exclude blank and comment lines. \texttt{elt\_yok\_2018\_v0.1.0} is the ELT taxonomy released with v0.1.0.}
+\label{tab:effort}
+\end{table}
+
+\textbf{Specification size.} The validated ELT taxonomy has \eltRules{} rules with \eltKeywords{} keywords, \eltRegexes{} regular expressions, and no overrides in \eltYamllines{} lines of YAML (Table~\ref{tab:effort}). Keywords alone correctly assign \eltKwOnlyCorrect{} of the \eltKwOnlyEntries{} official entries. Regular expressions assign all but one of the rest, mostly because a plain stem would also take look-alike courses (\emph{e\u{g}itim}, education, also occurs in \emph{Beden E\u{g}itimi}, physical education); the remaining entry, the 2006 \emph{T\"urk E\u{g}itim Tarihi}, needs an override. Most other regular expressions accept registrar renderings, such as ASCII spellings (\texttt{OGRETIM}) and abbreviations (\texttt{\"O\u{G}R.}).
+
+\textbf{What the comparison shows.} Given the labelled official list, every method that generalises beyond exact titles was about equally accurate on this catalogue (\listAccMin--\listAccMax\%); only the exact lookup, which flags every title it has not seen, fell short (\lookAcc\%). Accuracy therefore does not separate CurricuMap from those methods; they differ in what they leave behind. CurricuMap executes and records whichever mapping is chosen: rules generalise to registrar renderings at a cost in readability, overrides record single decisions, and an LLM or a nearest-neighbour lookup can propose either. A hosted LLM can change or be withdrawn, identical requests can return different answers \cite{atil2025,reiss2023}, and its stated reasons are not guaranteed to be faithful or reproducible. A reviewed specification, versioned with the study, states every decision, runs identically without sending data anywhere, and is cited with the software.
+
+\textbf{Limitations.} The test set comes from one institution that follows the national curriculum closely: \nExact{} of its \nTitles{} titles are official titles in upper case, which any method given the labelled list recognises, and only \nUnseenW{} are outside both programmes. The reference for the 62 field courses reflects our convention; no independent experts labelled the titles, so expert agreement was not measured. Rules match stems, so an off-curriculum course containing one is assigned rather than flagged: \emph{Rus Dili Dilbilgisi} (Russian grammar) would go to Language Skills through \emph{dilbilgisi}, and the provenance table, not the absence of flags, is what a reviewer must check. The rules were written by LLM agents and should be reviewed by a curriculum expert before reuse. The evaluation scores course titles, not the matrices built from them; matrix construction is tested on synthetic data.
 
 %% ============================================================
 \section{Impact}
 
-CurricuMap addresses a specific bottleneck in learning analytics. Institutional grade records already document what students learned across a curriculum, yet turning a registrar export into an analysis-ready competency matrix is normally a manual spreadsheet task that is slow to redo and hard to reproduce. By making that conversion declarative, deterministic, and provenance-tracked, the software supports competency-level secondary analysis of existing records while preserving an audit trail of how every course was assigned to a domain.
+CurricuMap removes a bottleneck in competency-level learning analytics: turning records that institutions already hold into a matrix that can be analysed and reported. For existing research questions, the main gain is that the preprocessing becomes part of the evidence: a study can cite its taxonomy file and software version, and reviewers can inspect every course assignment in the provenance table. Because a specification is a small file, a study can also rebuild its matrix under alternative course mappings and report how much its findings depend on them, in the spirit of multiverse analyses of learning-analytics pipelines \cite{tang2025}. Programmes that follow the same national curriculum can share a taxonomy and add only their local courses: the bundled taxonomy assigned all \vTwoCorrect{} course titles of one institution without any local addition (Section~\ref{sec:validation}).
 
-Two empirical studies by the present authors show the kind of work the tool makes possible. In the first, the student-by-domain matrix produced by CurricuMap was the input to a principal component analysis and a latent-profile analysis that tested whether curricular knowledge domains are empirically separable \cite{can2025a} ($N=183$ students across 143 courses). In the second, per-domain means fed a hierarchical regression and a dominance analysis examining whether pedagogy coursework predicts teaching-practicum performance \cite{can2025b}, framed by Shulman's pedagogical content knowledge \cite{shulman1986} ($N=78$). The substantive findings are reported in those manuscripts; what is relevant here is that both analyses depended on the same preprocessing step, which the software now records and shares rather than leaving in an undocumented worksheet.
+Some questions may become practical, such as comparing competency profiles across institutions that share a national programme, or following the same domains across a curriculum reform. The bundled taxonomy covers both the 2006 and the 2018 Turkish ELT programmes except for the one course whose category changed between them, which needs an override for 2006 cohorts.
 
-A concrete user base already exists. The 2018 YOK curriculum \cite{yok2018} is standardized across Turkish English language teaching programs, so their transcript exports are structurally identical and the shipped ELT-YOK taxonomy applies to each without modification. The same field-by-field standardization holds across Turkish teacher education more broadly, and the bundled mathematics-education taxonomy demonstrates that reach. The engineering ABET/MUDEK taxonomy extends the applicability to accreditation self-studies, where programs must document how course-level performance maps to declared program outcomes.
-
-Beyond any single study, CurricuMap makes the preprocessing itself reproducible. A versioned specification and a deterministic pipeline replace the hand-built spreadsheet, so the coverage audit and the provenance table document which courses were unmapped or ambiguous and which rule or override produced each assignment. Collaborators and reviewers can then regenerate a competency matrix exactly from the same inputs, which an ad hoc spreadsheet cannot guarantee.
+CurricuMap grew out of the preprocessing for two ongoing studies of English-language-teacher education by the authors, to be reported separately. Its repository was made public in July 2026, and v0.1.0 was released in August 2026. The repository, its Zenodo archive, and the open validation data allow every result here to be rerun or, for the hosted LLM, recomputed from the released outputs. We invite curriculum and learning-analytics researchers to contribute taxonomies for their own programmes.
 
 %% ============================================================
 \section{Conclusions}
 \label{sec:conclusions}
 
-CurricuMap converts a raw registrar transcript export and a declarative YAML taxonomy into an analysis-ready student-by-domain competency matrix. Its five-stage pipeline automates the course-to-domain mapping, registrar hygiene, and per-domain reliability reporting that competency-level studies otherwise carry out by hand and rarely document. Four design choices distinguish the tool. The JSON-Schema-validated taxonomy specification is the reuse contract, so adoption means writing a spec rather than editing code. Every course assignment carries provenance, and a coverage-and-quality audit is a first-class output. The pipeline is deterministic and golden-file tested, and the package is MIT-licensed and pip-installable, with a synthetic transcript generator so reviewers run it without any personal data.
+CurricuMap converts a registrar transcript export and a declarative YAML taxonomy into an analysis-ready student-by-domain matrix, with per-course provenance, documented registrar cleaning, and an audit of coverage and reliability. Its contribution is not a new classifier but an explicit, versioned, and testable record of the course-to-domain mapping, executed the same way every time on local data. On a real registrar catalogue, an LLM-drafted taxonomy frozen before testing assigned all \vTwoCorrect{} course titles as its convention prescribes, as did the best alternatives given the same labelled course list, and each decision can be traced to a rule a reader can check. Future work will validate taxonomies for further programmes against independent expert labels and support LLM-assisted drafting in which an expert approves each rule.
 
-Future work will broaden the shipped taxonomy library beyond the five current examples, add ingestion adapters for further registrar export formats, and offer an optional analytics layer that packages common downstream models. We invite curriculum and learning-analytics researchers to contribute taxonomies and adapters through the public repository.
+\section*{Ethics statement}
+The validation uses the 2017--2026 transcript export of the authors' programme, processed locally by the authors. Only course-level information is released: titles, registrar course codes, official categories, and reference labels; no student identifiers, grades, or enrolment counts are shared. \tbd{[Authors: name the institutional permission or ethics-committee decision (body, date, number) under which the export was used, or the exemption that applies, and state which data, if any, were processed with hosted AI tools.]}
 
 \section*{Data availability}
-The source code and the five example taxonomies are openly available under the
-MIT license (Table~\ref{tab:codemeta}). The exact version described in this paper
-is archived at \texttt{https://doi.org/10.5281/zenodo.22140690}.
-No personal data are distributed: the
-packaged synthetic generator reproduces every example without access to student
-records.
+The source code, the five taxonomies, and the validation data (course titles, registrar course codes, official categories, reference labels, prompts, raw model outputs, and all predictions) are openly available under the MIT licence (Table~\ref{tab:codemeta}). Student-level transcript records are confidential and are not shared; the synthetic generator reproduces every example without them.
+
+\section*{Declaration of competing interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Funding}
+\tbd{[Authors: funding sources, or ``This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.'']}
+
+\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
+During the preparation of this work the authors used Claude (Anthropic) to assist with software development; the validation and benchmark scripts; the labelling convention, the reference labels, and the domain definitions; and drafting and language editing of the manuscript. After using this tool, the authors reviewed and edited this content as needed and take full responsibility for the content of the publication. The rules of the bundled ELT taxonomy were written and revised by Claude Opus~5.5 agents and, for the validation, deliberately not edited by the authors (Section~\ref{sec:validation}); Claude Opus~5.5 was also one of the baseline classifiers evaluated there.
 
 \bibliographystyle{elsarticle-num}
 \bibliography{references}

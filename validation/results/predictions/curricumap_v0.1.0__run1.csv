@@ -1,0 +1,144 @@
+title,predicted,detail
+AFET KÜLTÜRÜ,unmatched,unmatched:
+ANLATIM BECERİLERİ,unmatched,unmatched:
+ATATÜRK İLKELERİ VE İNKILAP TARİHİ 1,general_ed,rule:atatürk
+ATATÜRK İLKELERİ VE İNKILAP TARİHİ 2,general_ed,rule:atatürk
+ATATÜRK İLKELERİ VE İNKILAP TARİHİ I,general_ed,rule:atatürk
+AÇIK VE UZAKTAN ÖĞRENME,unmatched,unmatched:
+BAĞIMLILIK VE BAĞIMLILIKLA MÜCADELE,unmatched,unmatched:
+BAĞLAMSAL DİLBİLGİSİ I,language_skills,rule:dilbilgisi
+BAĞLAMSAL DİLBİLGİSİ II,language_skills,rule:dilbilgisi
+BESLENME VE SAĞLIK,unmatched,unmatched:
+BİLGİSAYAR I,unmatched,unmatched:
+BİLGİSAYAR II,unmatched,unmatched:
+BİLİM TARİHİ VE FELSEFESİ,unmatched,unmatched:
+BİLİM VE ARAŞTIRMA ETİĞİ,unmatched,unmatched:
+BİLİMSEL ARAŞTIRMA YÖNTEMLERİ,pedagogy,rule:yöntem
+BİLİŞİM TEKNOLOJİLERİ,general_ed,rule:bilişim
+DRAMA,literature,rule:drama
+DİKKAT EKSİKLİĞİ VE HİPERAKTİVİTE BOZUKLUĞU,unmatched,unmatched:
+DİL BECERİLERİNİN ÖĞR. I,unmatched,unmatched:
+DİL EDİNİMİ,unmatched,unmatched:
+DİL VE EDEBİYAT ÖĞRETİMİ 1,literature,rule:edebiyat:ambiguous
+DİL VE EDEBİYAT ÖĞRETİMİ 2,literature,rule:edebiyat:ambiguous
+DİL VE TOPLUM,unmatched,unmatched:
+DİLBİLİM I,linguistics,rule:dilbilim
+DİLBİLİM II,linguistics,rule:dilbilim
+DİLBİLİMİ 1,linguistics,rule:dilbilim
+DİLBİLİMİ 2,linguistics,rule:dilbilim
+DİNLEME VE SESLETİM 1,language_skills,rule:dinleme
+DİNLEME VE SESLETİM 2,language_skills,rule:dinleme
+DİNLEME VE SESLETİM I,language_skills,rule:dinleme
+DİNLEME VE SESLETİM II,language_skills,rule:dinleme
+EDEBİYAT VE DİL ÖĞR I,literature,rule:edebiyat
+EDİMBİLİMİ VE DİL ÖĞRETİMİ,pedagogy,rule:öğretim
+EKONOMİ VE GİRİŞİMCİLİK,unmatched,unmatched:
+ELEŞTİREL OKUMA VE YAZMA,language_skills,rule:okuma
+ELEŞTİREL VE ANALİTİK DÜŞÜNME,unmatched,unmatched:
+ETKİLİ İLETİŞİM,unmatched,unmatched:
+EĞİTİM ANTROPOLOJİSİ,unmatched,unmatched:
+EĞİTİM BİLİMİNE GİRİŞ,unmatched,unmatched:
+EĞİTİM FELSEFESİ,unmatched,unmatched:
+EĞİTİM HUKUKU,unmatched,unmatched:
+EĞİTİM PSİKOLOJİSİ,unmatched,unmatched:
+EĞİTİM SOSYOLOJİSİ,unmatched,unmatched:
+EĞİTİM TARİHİ,unmatched,unmatched:
+EĞİTİMDE AHLAK VE ETİK,unmatched,unmatched:
+EĞİTİMDE ARAŞTIRMA YÖNTEMLERİ,pedagogy,rule:yöntem
+EĞİTİMDE DRAMA,literature,rule:drama
+EĞİTİMDE PROGRAM DIŞI ETKİNLİKLER,unmatched,unmatched:
+EĞİTİMDE PROGRAM GELİŞTİRME,unmatched,unmatched:
+EĞİTİMDE PROJE HAZIRLAMA,unmatched,unmatched:
+EĞİTİMDE ÖLÇME VE DEĞERLENDİRME,pedagogy,rule:ölçme
+EĞİTİME GİRİŞ,unmatched,unmatched:
+GELENEKSEL TÜRK EL SANATLARI,unmatched,unmatched:
+KAPSAYICI EĞİTİM,unmatched,unmatched:
+KARAKTER VE DEĞER EĞİTİMİ,unmatched,unmatched:
+KARİYER PLANLAMA VE GELİŞTİRME,unmatched,unmatched:
+KARŞILAŞTIRMALI EĞİTİM,unmatched,unmatched:
+KÜLTÜR VE DİL,unmatched,unmatched:
+KİTLE İLETİŞİMİNDE İNGİLİZCE,unmatched,unmatched:
+MEDYA OKUR YAZARLIĞI,unmatched,unmatched:
+MESLEKİ İNGİLİZCE,unmatched,unmatched:
+MÜZE EĞİTİMİ,unmatched,unmatched:
+MİKRO ÖĞRETİM,pedagogy,rule:öğretim
+OKUL DENEYİMİ,unmatched,unmatched:
+OKUL DIŞI ÖĞRENME ORTAMLARI,unmatched,unmatched:
+OKULLARDA REHBERLİK,unmatched,unmatched:
+OKUMA BECERİLERİ 1,language_skills,rule:okuma
+OKUMA BECERİLERİ 2,language_skills,rule:okuma
+REHBERLİK,unmatched,unmatched:
+SANAT VE ESTETİK,unmatched,unmatched:
+SINIF YÖNETİMİ,unmatched,unmatched:
+SOSYODİLBİLİM VE DİL ÖĞRETİMİ,linguistics,rule:dilbilim:ambiguous
+SÖYLEM ÇÖZÜMLEMESİ VE DİL ÖĞRETİMİ,pedagogy,rule:öğretim
+SÖZCÜK BİLGİSİ,unmatched,unmatched:
+SÖZLÜ İLETİŞİM BECERİLERİ 1,unmatched,unmatched:
+SÖZLÜ İLETİŞİM BECERİLERİ 2,unmatched,unmatched:
+SÖZLÜ İLETİŞİM BECERİLERİ I,unmatched,unmatched:
+SÖZLÜ İLETİŞİM BECERİLERİ II,unmatched,unmatched:
+SÜRDÜRÜLEBİLİR KALKINMA VE EĞİTİM,unmatched,unmatched:
+TOPLUMA HİZMET UYGULAMALARI,general_ed,rule:topluma hizmet
+TÜMLEŞİK DİL BECERİLERİNİN ÖĞRETİMİ,pedagogy,rule:öğretim
+TÜRK DİLİ 1,unmatched,unmatched:
+TÜRK DİLİ 2,unmatched,unmatched:
+TÜRK EĞİTİM SİSTEMİ VE OKUL YÖNETİMİ,unmatched,unmatched:
+TÜRK EĞİTİM TARİHİ,unmatched,unmatched:
+TÜRK KÜLTÜR COĞRAFYASI,unmatched,unmatched:
+TÜRK MUSİKİSİ,unmatched,unmatched:
+TÜRK SANATI TARİHİ,unmatched,unmatched:
+TÜRK İŞARET DİLİ,unmatched,unmatched:
+TÜRKÇE 2SÖZLÜ ANLATIM,general_ed,rule:türkçe
+TÜRKÇE I YAZILI ANLATIM,general_ed,rule:türkçe
+TÜRKÇE-İNGİLİZCE ÇEVİRİ,general_ed,rule:türkçe
+YABANCI DİL 1,unmatched,unmatched:
+YABANCI DİL 1 (ALMANCA),unmatched,unmatched:
+YABANCI DİL 2,unmatched,unmatched:
+YABANCI DİL 2 (ALMANCA),unmatched,unmatched:
+YABANCI DİL OLARAK İNGİLİZCE ÖĞRETİMİNDE TEKNOLOJİ KULLANIMI,pedagogy,rule:öğretim
+YABANCI DİL ÖĞRETİMİNDE ELEŞTİREL DÜŞÜNCE BECERİLERİ,pedagogy,rule:öğretim
+YABANCI DİL ÖĞRETİMİNDE MATERYAL İNCELEME VE GELİŞTİRME,pedagogy,rule:öğretim
+YABANCI ÖĞRENCİLER İÇİN ATATÜRK İLKELERİ VE İNKILAP TARİHİ 1,general_ed,rule:atatürk
+YABANCI ÖĞRENCİLER İÇİN ATATÜRK İLKELERİ VE İNKILAP TARİHİ 2,general_ed,rule:atatürk
+YAZMA BECERİLERİ 1,language_skills,rule:yazma
+YAZMA BECERİLERİ 2,language_skills,rule:yazma
+YETİŞKİN EĞİTİMİ VE HAYAT BOYU ÖĞRENME,unmatched,unmatched:
+ÇEVİRİ,unmatched,unmatched:
+ÇOCUK PSİKOLOJİSİ,unmatched,unmatched:
+ÇOCUKLARA YABANCI DİL ÖĞRETİMİ 1,pedagogy,rule:öğretim
+ÇOCUKLARA YABANCI DİL ÖĞRETİMİ 2,pedagogy,rule:öğretim
+ÇOCUKLARA YABANCI DİL ÖĞRETİMİ I,pedagogy,rule:öğretim
+ÖZEL EĞİTİM,unmatched,unmatched:
+ÖZEL EĞİTİM VE KAYNAŞTIRMA,unmatched,unmatched:
+ÖZEL ÖĞRETİM YÖNTEMLERİ I,pedagogy,rule:öğretim
+ÖZEL ÖĞRETİM YÖNTEMLERİ II,pedagogy,rule:öğretim
+ÖĞRENME GÜÇLÜĞÜ,unmatched,unmatched:
+ÖĞRETMENLİK UYGULAMASI 1,pedagogy,rule:öğretmenlik
+ÖĞRETMENLİK UYGULAMASI 2,pedagogy,rule:öğretmenlik
+ÖĞRETİM TEKNOLOJİLERİ,pedagogy,rule:öğretim
+ÖĞRETİM TEKNOLOJİLERİ VE MATERYAL TASARIMI,pedagogy,rule:öğretim
+ÖĞRETİM İLKE VE YÖNTEMLERİ,pedagogy,rule:öğretim
+İKİNCİ YABANCI DİL I,unmatched,unmatched:
+İLERİ OKUMA VE YAZMA I,language_skills,rule:okuma
+İLERİ OKUMA VE YAZMA II,language_skills,rule:okuma
+İNGİLİZ EDEBİYATI 1,literature,rule:edebiyat
+İNGİLİZ EDEBİYATI 2,literature,rule:edebiyat
+İNGİLİZ EDEBİYATI I,literature,rule:edebiyat
+İNGİLİZ EDEBİYATI II,literature,rule:edebiyat
+İNGİLİZCE DERS KİTABI İNCELEMESİ,unmatched,unmatched:
+İNGİLİZCE DİL BECERİLERİNİN ÖĞRETİMİ 1,pedagogy,rule:öğretim
+İNGİLİZCE DİL BECERİLERİNİN ÖĞRETİMİ 2,pedagogy,rule:öğretim
+İNGİLİZCE SÖZCÜK BİLGİSİ ÖĞRETİMİ,pedagogy,rule:öğretim
+İNGİLİZCE TÜRKÇE ÇEVİRİ,general_ed,rule:türkçe
+İNGİLİZCE ÖĞRENME VE ÖĞRETİM YAKLAŞIMLARI,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİM PROGRAMLARI,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE DERS İÇERİĞİ GELİŞTİRME,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE DRAMA,literature,rule:drama:ambiguous
+İNGİLİZCE ÖĞRETİMİNDE MATERYAL TASARIMI,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE SINAV HAZIRLAMA,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE YAKLAŞIMLAR I,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE YAKLAŞIMLAR II,pedagogy,rule:öğretim
+İNGİLİZCE ÖĞRETİMİNDE YENİ YAKLAŞIMLAR,pedagogy,rule:öğretim
+İNGİLİZCENİN YAPISI,unmatched,unmatched:
+İNSAN HAKLARI VE DEMOKRASİ EĞİTİMİ,unmatched,unmatched:
+İNSAN İLİŞKİLERİ VE İLETİŞİM,unmatched,unmatched:

@@ -1,84 +1,58 @@
 # Quickstart
 
-This is a standalone copy of the two-command walkthrough from the top-level
-`README.md`.
-
-> Prefer a ready-made, realistic input? A bundled sample transcript lets you run
-> the pipeline in one command, with no synthesis step — see
-> [`sample_transcript.csv`](sample_transcript.csv) and [`README.md`](README.md).
+A standalone copy of the walkthrough in the top-level `README.md`, identical to the
+illustrative example in the paper.
 
 ## Install
 
 ```bash
-pip install -e .
+git clone https://github.com/tkucukdeniz2/curricumap.git
+cd curricumap
+python3 -m venv .venv && source .venv/bin/activate
+pip install .
 ```
 
 ## 1. Generate a synthetic transcript
 
 ```bash
-curricumap synth \
-  --taxonomy src/curricumap/examples/elt_yok_2018.yaml \
-  --out /tmp/cm_demo \
-  --n-students 40 \
-  --seed 1
+curricumap synth --taxonomy elt_yok_2018 --out data --n-students 60 --seed 7
+```
+
+This writes `data/transcript.csv` (878 grade records: `student_id, course_id,
+course_name, grade`, including injected retakes and sentinel zeros) and `data/catalog.csv`
+(the 15 synthetic courses). `elt_yok_2018` names a bundled taxonomy, so after
+`pip install .` the commands work from any directory.
+
+## 2. Run the pipeline
+
+```bash
+curricumap run --input data/transcript.csv --taxonomy elt_yok_2018 --out out
 ```
 
 Output:
 
 ```
-Wrote synthetic data to /tmp/cm_demo
+Wrote outputs to out: 60 students x 5 domains; 15 courses (0 unmapped, 0 ambiguous); dropped 0 sentinel grades, 64 retake records and 0 low-coverage students
 ```
 
-This writes two files:
+Without a run-config no grade counts as a sentinel, so each injected zero is resolved with
+the retakes (the highest grade is kept). With `--config examples/sample_config.yaml`, run
+from the repository root, the line reports 24 sentinel grades and 40 retake records instead,
+and the matrices are the same.
 
-- `/tmp/cm_demo/transcript.csv` — columns `student_id, course_id,
-  course_name, grade`, one row per (student, course) enrollment.
-- `/tmp/cm_demo/catalog.csv` — the synthetic course catalog used to
-  generate the transcript.
+`out/` now holds `matrix_wide.csv`, `matrix_long.csv`, `provenance.csv`, `audit.json`
+and `audit.html`. The per-domain Cronbach's alphas are .769 (Language Skills),
+.767 (Pedagogy), .761 (Linguistics), .819 (Literature) and .781 (General Education).
 
-## 2. Run the classification/audit pipeline
+## Optional: validate a taxonomy
+
+Give a bundled taxonomy name or the path to your own YAML file:
 
 ```bash
-curricumap run \
-  --input /tmp/cm_demo/transcript.csv \
-  --taxonomy src/curricumap/examples/elt_yok_2018.yaml \
-  --out /tmp/cm_out
+curricumap validate-taxonomy elt_yok_2018
 ```
 
-Output:
+## Other bundled taxonomies
 
-```
-Wrote outputs to /tmp/cm_out
-```
-
-This writes five files to `/tmp/cm_out/`:
-
-- **`matrix_wide.csv`** — one row per student, one column per competency
-  domain, average grade per domain.
-- **`matrix_long.csv`** — the same data in tidy long form:
-  `student_id, domain, grade`.
-- **`provenance.csv`** — one row per course, recording which domain it was
-  assigned to, the method (`rule` or `fuzzy`), the matched
-  pattern/keyword and span, the match score, and whether the assignment
-  was ambiguous (matched more than one domain).
-- **`audit.json`** — coverage statistics (unmapped/ambiguous course
-  counts, domain sizes) and per-domain reliability/descriptives
-  (Cronbach's alpha, number of items `k`, `n` students, mean, sd, skew,
-  missing %).
-- **`audit.html`** — a human-readable HTML rendering of `audit.json`.
-
-## Optional: validate a taxonomy first
-
-```bash
-curricumap validate-taxonomy src/curricumap/examples/elt_yok_2018.yaml
-```
-
-```
-Taxonomy is valid.
-```
-
-## Other bundled example taxonomies
-
-`src/curricumap/examples/` also includes `bologna.yaml`, `canmeds.yaml`,
-`engineering_mudek.yaml`, and `math_ed_yok.yaml` — swap `--taxonomy` in
-either command above to try the pipeline against any of them.
+`math_ed_yok`, `engineering_mudek`, `canmeds` and `bologna` illustrate the specification
+format for other disciplines; swap the `--taxonomy` value to try them.

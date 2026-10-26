@@ -2,32 +2,43 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "required": ["taxonomy"],
+  "additionalProperties": false,
   "properties": {
     "taxonomy": {
       "type": "object",
       "required": ["id", "label", "domains", "rules"],
+      "additionalProperties": false,
       "properties": {
         "id": {"type": "string", "minLength": 1},
         "label": {"type": "string"},
-        "locale": {"type": "object", "properties": {
-          "language": {"type": "string"}, "casefold": {"type": "string"}}},
+        "locale": {"type": "object", "additionalProperties": false, "properties": {
+          "language": {"type": "string"},
+          "casefold": {"enum": ["locale-aware"],
+                       "$comment": "accepted for compatibility with v0.1 files; has no effect"}}},
         "domains": {"type": "array", "minItems": 1, "items": {
-          "type": "object", "required": ["id", "label"],
-          "properties": {"id": {"type": "string"}, "label": {"type": "string"}}}},
-        "match": {"type": "object", "properties": {
-          "strategy": {"type": "string", "enum": ["ordered_rules"]},
-          "fuzzy": {"type": "object", "properties": {
+          "type": "object", "required": ["id", "label"], "additionalProperties": false,
+          "properties": {"id": {"type": "string", "minLength": 1}, "label": {"type": "string"}}}},
+        "match": {"type": "object", "additionalProperties": false, "properties": {
+          "strategy": {"enum": ["ordered_rules"],
+                       "$comment": "accepted for compatibility with v0.1 files; has no effect"},
+          "fuzzy": {"type": "object", "additionalProperties": false, "properties": {
             "enabled": {"type": "boolean"},
             "threshold": {"type": "number", "minimum": 0, "maximum": 1},
-            "scorer": {"type": "string"}}}}},
+            "scorer": {"type": "string", "enum": ["token_set_ratio", "token_sort_ratio", "ratio"]}}}}},
         "rules": {"type": "array", "items": {
-          "type": "object", "required": ["domain", "any"],
+          "type": "object", "required": ["domain"], "additionalProperties": false,
+          "anyOf": [{"required": ["any"]}, {"required": ["regex"]}],
           "properties": {"domain": {"type": "string"},
-                         "any": {"type": "array", "minItems": 1, "items": {"type": "string"}}}}},
+                         "any": {"type": "array", "minItems": 1,
+                                 "items": {"type": "string", "minLength": 1}},
+                         "regex": {"type": "array", "minItems": 1,
+                                   "items": {"type": "string", "minLength": 1}}}}},
         "overrides": {"type": "array", "items": {
-          "type": "object", "required": ["course", "domain"],
-          "properties": {"course": {"type": "string"}, "domain": {"type": "string"}}}},
-        "defaults": {"type": "object", "properties": {"unmatched": {"type": "string"}}}
+          "type": "object", "required": ["course", "domain"], "additionalProperties": false,
+          "properties": {"course": {"type": "string", "minLength": 1}, "domain": {"type": "string"}}}},
+        "defaults": {"type": "object", "additionalProperties": false, "properties": {
+          "unmatched": {"enum": ["flag"],
+                        "$comment": "accepted for compatibility with v0.1 files; has no effect"}}}
       }
     }
   }

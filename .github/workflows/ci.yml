@@ -2,12 +2,32 @@ name: ci
 on: [push, pull_request]
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
-      matrix: { python-version: ["3.10", "3.12"] }
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.10", "3.12", "3.13"]
+        include:
+          - { os: macos-latest, python-version: "3.13" }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "${{ matrix.python-version }}" }
       - run: pip install -e ".[dev]"
-      - run: pytest -q
+      - run: pytest -q --cov=curricumap --cov-report=term-missing
+  wheel:
+    # the installed package, not the source tree: pinned dependencies, then the wheel alone
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip wheel --no-deps -w dist .
+      - run: pip install -r requirements.txt && pip install --no-deps dist/*.whl
+      - working-directory: ${{ runner.temp }}
+        run: |
+          curricumap --version
+          curricumap validate-taxonomy elt_yok_2018
+          curricumap synth --taxonomy elt_yok_2018 --out data --n-students 60 --seed 7
+          curricumap run --input data/transcript.csv --taxonomy elt_yok_2018 --out out
+          test -s out/audit.html

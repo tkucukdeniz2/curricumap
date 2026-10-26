@@ -1,0 +1,19 @@
+\begin{tabular}{@{}llrrcrrrr@{}}
+\toprule
+ & & & & & \multicolumn{3}{c}{Correct titles} & \\ \cmidrule(lr){6-8}
+System & Input & Cov. & Acc. & 95\% CI & Exact & Variant & Unseen & $p$ \\
+ & & (\%) & (\%) & (\%) & (128) & (10) & (5) & \\
+\midrule
+CurricuMap rules (v0.2.0) & L & 100.0 & 100.0 & 97.4--100.0 & 128 & 10 & 5 & -- \\
+CurricuMap exact lookup & L & 89.5 & 89.5 & 83.4--93.5 & 128 & 0 & 0 & $<$0.001 \\
+CurricuMap, v0.1.0 taxonomy & -- & 49.0 & 40.6 & 32.9--48.8 & 50 & 4 & 4 & $<$0.001 \\
+String similarity & L & 100.0 & 98.6 & 95.0--99.6 & 128 & 10 & 3 & 0.500 \\
+Character $n$-grams & L & 100.0 & 100.0 & 97.4--100.0 & 128 & 10 & 5 & 1.000 \\
+E5, nearest title & L & 100.0 & 100.0 & 97.4--100.0 & 128 & 10 & 5 & 1.000 \\
+E5, zero-shot & D & 100.0 & 68.5 & 60.5--75.6 & 92 & 3 & 3 & $<$0.001 \\
+Gemma 4 12B, zero-shot & D & 100.0 & 91.6 & 85.9--95.1 & 118 & 8 & 5 & $<$0.001 \\
+Gemma 4 12B, few-shot & L+D & 100.0 & 100.0 & 97.4--100.0 & 128 & 10 & 5 & 1.000 \\
+Claude Opus 5.5, zero-shot & D & 100.0 & 98.6 & 95.0--99.6 & 126 & 10 & 5 & 0.500 \\
+Claude Opus 5.5, few-shot & L+D & 100.0 & 100.0 & 97.4--100.0 & 128 & 10 & 5 & 1.000 \\
+\bottomrule
+\end{tabular}
