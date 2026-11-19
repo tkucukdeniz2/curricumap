@@ -1,5 +1,11 @@
 # CurricuMap
 
+[![CI](https://github.com/tkucukdeniz2/curricumap/actions/workflows/ci.yml/badge.svg)](https://github.com/tkucukdeniz2/curricumap/actions/workflows/ci.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22140689.svg)](https://doi.org/10.5281/zenodo.22140689)
+[![SoftwareX](https://img.shields.io/badge/SoftwareX-accepted%202026-FF6C00)](#citing)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-%E2%89%A53.10-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+
 Turn registrar transcripts into auditable student-by-domain competency matrices.
 
 CurricuMap ingests a transcript export (CSV/XLSX) and assigns each course to a competency
